@@ -16,16 +16,31 @@ export type Database = {
     Tables: {
       "Motolab 09/24": {
         Row: {
+          category: string | null
+          content: string | null
           created_at: string
           id: number
+          image_url: string | null
+          summary: string | null
+          title: string | null
         }
         Insert: {
+          category?: string | null
+          content?: string | null
           created_at?: string
           id?: number
+          image_url?: string | null
+          summary?: string | null
+          title?: string | null
         }
         Update: {
+          category?: string | null
+          content?: string | null
           created_at?: string
           id?: number
+          image_url?: string | null
+          summary?: string | null
+          title?: string | null
         }
         Relationships: []
       }
