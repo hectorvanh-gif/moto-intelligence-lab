@@ -16,7 +16,7 @@ from urllib.parse import quote
 SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_KEY = os.environ["SUPABASE_SERVICE_KEY"]
 ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
-TABLE_NAME = "Motolab 09/24"
+TABLE_NAME = "moto_news"
 TABLE_PATH = quote(TABLE_NAME, safe="")
 
 RSS_FEEDS = [

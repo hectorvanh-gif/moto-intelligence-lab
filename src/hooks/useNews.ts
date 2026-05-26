@@ -16,7 +16,7 @@ export const useNews = () => {
     queryKey: ["news"],
     queryFn: async (): Promise<NewsArticle[]> => {
       const { data, error } = await supabase
-        .from("Motolab 09/24")
+        .from("moto_news")
         .select("*")
         .order("created_at", { ascending: false });
 
