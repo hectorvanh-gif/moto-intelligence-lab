@@ -8,14 +8,16 @@ import os
 import json
 import re
 import feedparser
+import httpx
 import anthropic
 from datetime import datetime, timezone, timedelta
-from supabase import create_client
+from urllib.parse import quote
 
 SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_KEY = os.environ["SUPABASE_SERVICE_KEY"]
 ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
 TABLE_NAME = "Motolab 09/24"
+TABLE_PATH = quote(TABLE_NAME, safe="")
 
 RSS_FEEDS = [
     "https://www.motociclismo.es/feed/",
@@ -25,10 +27,18 @@ RSS_FEEDS = [
     "https://www.formulamoto.es/feed/",
     "https://es.motorsport.com/rss/moto/news/",
     "https://www.autopista.es/motos/feed/",
-    "https://www.motorbike.tv/es/feed/",
 ]
 
 MAX_ARTICLES_PER_RUN = 12
+
+
+def db_headers() -> dict:
+    return {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal",
+    }
 
 
 def fetch_recent_articles(hours: int = 25) -> list[dict]:
@@ -54,7 +64,6 @@ def fetch_recent_articles(hours: int = 25) -> list[dict]:
                 elif hasattr(entry, "summary"):
                     content = entry.summary
 
-                # Strip HTML tags for cleaner text
                 content_clean = re.sub(r"<[^>]+>", " ", content).strip()
 
                 articles.append({
@@ -87,13 +96,19 @@ def _extract_image(entry, raw_content: str) -> str | None:
     return None
 
 
-def get_existing_titles(db) -> set[str]:
+def get_existing_titles() -> set[str]:
     try:
-        res = db.table(TABLE_NAME).select("title").order("created_at", desc=True).limit(300).execute()
-        return {row["title"] for row in res.data if row.get("title")}
+        r = httpx.get(
+            f"{SUPABASE_URL}/rest/v1/{TABLE_PATH}",
+            headers=db_headers(),
+            params={"select": "title", "order": "created_at.desc", "limit": "300"},
+        )
+        if r.status_code == 200:
+            return {row["title"] for row in r.json() if row.get("title")}
+        print(f"  ⚠️  DB fetch status: {r.status_code} — {r.text[:200]}")
     except Exception as e:
         print(f"  ⚠️  Could not fetch existing titles: {e}")
-        return set()
+    return set()
 
 
 def summarize_with_claude(article: dict) -> dict:
@@ -125,7 +140,7 @@ Contenido: {article['content'][:1500]}"""
         }
 
 
-def insert_article(db, article: dict, processed: dict) -> bool:
+def insert_article(article: dict, processed: dict) -> bool:
     record = {
         "title": processed.get("title", article["title"])[:80],
         "content": article["content"][:5000],
@@ -134,8 +149,15 @@ def insert_article(db, article: dict, processed: dict) -> bool:
         "category": processed.get("category", "NOTICIA"),
     }
     try:
-        db.table(TABLE_NAME).insert(record).execute()
-        return True
+        r = httpx.post(
+            f"{SUPABASE_URL}/rest/v1/{TABLE_PATH}",
+            headers=db_headers(),
+            json=record,
+        )
+        if r.status_code in (200, 201):
+            return True
+        print(f"    ❌ DB insert status: {r.status_code} — {r.text[:200]}")
+        return False
     except Exception as e:
         print(f"    ❌ DB error: {e}")
         return False
@@ -144,8 +166,6 @@ def insert_article(db, article: dict, processed: dict) -> bool:
 def main():
     print("🏍️  Moto Intelligence Lab — News Agent")
     print(f"📅  {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n")
-
-    db = create_client(SUPABASE_URL, SUPABASE_KEY)
 
     print("📡 Fetching RSS feeds...")
     articles = fetch_recent_articles(hours=25)
@@ -156,7 +176,7 @@ def main():
         return
 
     print("🔍 Checking for duplicates...")
-    existing = get_existing_titles(db)
+    existing = get_existing_titles()
     new_articles = [a for a in articles if a["title"] and a["title"] not in existing]
     print(f"   {len(new_articles)} new articles to process\n")
 
@@ -170,7 +190,7 @@ def main():
         print(f"  [{i+1}/{min(len(new_articles), MAX_ARTICLES_PER_RUN)}] {article['title'][:65]}...")
         try:
             processed = summarize_with_claude(article)
-            if insert_article(db, article, processed):
+            if insert_article(article, processed):
                 saved += 1
                 print(f"    ✅ [{processed.get('category', 'NOTICIA')}] {processed.get('title', '')[:60]}")
         except Exception as e:
