@@ -20,17 +20,20 @@ TABLE_NAME = "moto_news"
 TABLE_PATH = quote(TABLE_NAME, safe="")
 
 RSS_FEEDS = [
+    # Google News RSS — agrega cientos de fuentes en español automáticamente
+    "https://news.google.com/rss/search?q=motocicletas&hl=es-419&gl=MX&ceid=MX:es-419",
+    "https://news.google.com/rss/search?q=motos+noticias&hl=es-419&gl=MX&ceid=MX:es-419",
+    "https://news.google.com/rss/search?q=MotoGP&hl=es-419&gl=MX&ceid=MX:es-419",
+    "https://news.google.com/rss/search?q=motociclismo&hl=es&gl=ES&ceid=ES:es",
+    "https://news.google.com/rss/search?q=moto+GP+2025&hl=es&gl=ES&ceid=ES:es",
+    "https://news.google.com/rss/search?q=superbike+motos&hl=es&gl=ES&ceid=ES:es",
+    "https://news.google.com/rss/search?q=motos+electricas&hl=es-419&gl=MX&ceid=MX:es-419",
+    # Feeds directos como respaldo
     "https://www.motociclismo.es/feed/",
     "https://www.moto1pro.com/feed/",
     "https://www.motofichas.com/feed/",
     "https://www.masmoto.es/feed/",
-    "https://www.formulamoto.es/feed/",
     "https://es.motorsport.com/rss/moto/news/",
-    "https://www.autopista.es/motos/feed/",
-    "https://www.motorpasionmoto.com/feeds/posts/default",
-    "https://www.motorbike.tv/es/feed/",
-    "https://www.mundomotero.com/feed/",
-    "https://www.solo-moto.com/feed/",
 ]
 
 MAX_ARTICLES_PER_RUN = 12
