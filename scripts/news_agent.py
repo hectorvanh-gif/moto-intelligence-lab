@@ -18,25 +18,28 @@ SUPABASE_KEY = os.environ["SUPABASE_SERVICE_KEY"]
 ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
 TABLE_NAME = "moto_news"
 TABLE_PATH = quote(TABLE_NAME, safe="")
+MAX_ARTICLES_PER_RUN = 15
+
+# User-Agent para que los sitios no bloqueen las peticiones
+HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MotoNewsBot/1.0; +https://github.com)"}
 
 RSS_FEEDS = [
     # Google News RSS — agrega cientos de fuentes en español automáticamente
-    "https://news.google.com/rss/search?q=motocicletas&hl=es-419&gl=MX&ceid=MX:es-419",
-    "https://news.google.com/rss/search?q=motos+noticias&hl=es-419&gl=MX&ceid=MX:es-419",
-    "https://news.google.com/rss/search?q=MotoGP&hl=es-419&gl=MX&ceid=MX:es-419",
-    "https://news.google.com/rss/search?q=motociclismo&hl=es&gl=ES&ceid=ES:es",
-    "https://news.google.com/rss/search?q=moto+GP+2025&hl=es&gl=ES&ceid=ES:es",
-    "https://news.google.com/rss/search?q=superbike+motos&hl=es&gl=ES&ceid=ES:es",
-    "https://news.google.com/rss/search?q=motos+electricas&hl=es-419&gl=MX&ceid=MX:es-419",
-    # Feeds directos como respaldo
-    "https://www.motociclismo.es/feed/",
-    "https://www.moto1pro.com/feed/",
-    "https://www.motofichas.com/feed/",
-    "https://www.masmoto.es/feed/",
-    "https://es.motorsport.com/rss/moto/news/",
+    ("Google:motocicletas MX",  "https://news.google.com/rss/search?q=motocicletas&hl=es-419&gl=MX&ceid=MX:es-419"),
+    ("Google:motos noticias MX","https://news.google.com/rss/search?q=motos+noticias&hl=es-419&gl=MX&ceid=MX:es-419"),
+    ("Google:MotoGP MX",        "https://news.google.com/rss/search?q=MotoGP+2025&hl=es-419&gl=MX&ceid=MX:es-419"),
+    ("Google:motociclismo ES",  "https://news.google.com/rss/search?q=motociclismo&hl=es&gl=ES&ceid=ES:es"),
+    ("Google:superbike ES",     "https://news.google.com/rss/search?q=superbike+moto&hl=es&gl=ES&ceid=ES:es"),
+    ("Google:motos electricas", "https://news.google.com/rss/search?q=motos+electricas+2025&hl=es-419&gl=MX&ceid=MX:es-419"),
+    ("Google:Harley Honda MX",  "https://news.google.com/rss/search?q=Harley+Davidson+Honda+moto&hl=es-419&gl=MX&ceid=MX:es-419"),
+    ("Google:nuevas motos 2025","https://news.google.com/rss/search?q=nuevas+motos+2025&hl=es&gl=ES&ceid=ES:es"),
+    # Feeds directos
+    ("motociclismo.es",         "https://www.motociclismo.es/feed/"),
+    ("moto1pro.com",            "https://www.moto1pro.com/feed/"),
+    ("motofichas.com",          "https://www.motofichas.com/feed/"),
+    ("masmoto.es",              "https://www.masmoto.es/feed/"),
+    ("motorsport.com ES",       "https://es.motorsport.com/rss/moto/news/"),
 ]
-
-MAX_ARTICLES_PER_RUN = 12
 
 
 def db_headers() -> dict:
@@ -48,20 +51,30 @@ def db_headers() -> dict:
     }
 
 
-def fetch_recent_articles(hours: int = 25) -> list[dict]:
+def fetch_recent_articles(hours: int = 168) -> list[dict]:
     cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
     articles = []
+    seen_titles: set[str] = set()
 
-    for feed_url in RSS_FEEDS:
+    for name, feed_url in RSS_FEEDS:
         try:
-            feed = feedparser.parse(feed_url)
+            # Fetch con timeout y User-Agent para evitar bloqueos
+            r = httpx.get(feed_url, headers=HEADERS, timeout=15, follow_redirects=True)
+            feed = feedparser.parse(r.text)
+
+            count = 0
             for entry in feed.entries:
+                title = entry.get("title", "").strip()
+                if not title or title in seen_titles:
+                    continue
+
                 pub_date = None
                 if hasattr(entry, "published_parsed") and entry.published_parsed:
                     pub_date = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
                 elif hasattr(entry, "updated_parsed") and entry.updated_parsed:
                     pub_date = datetime(*entry.updated_parsed[:6], tzinfo=timezone.utc)
 
+                # Saltar solo si tiene fecha Y es más viejo que el límite
                 if pub_date and pub_date < cutoff:
                     continue
 
@@ -73,14 +86,19 @@ def fetch_recent_articles(hours: int = 25) -> list[dict]:
 
                 content_clean = re.sub(r"<[^>]+>", " ", content).strip()
 
+                seen_titles.add(title)
+                count += 1
                 articles.append({
-                    "title": entry.get("title", "").strip(),
+                    "title": title,
                     "link": entry.get("link", ""),
-                    "content": content_clean,
+                    "content": content_clean or title,
                     "image_url": _extract_image(entry, content),
                 })
+
+            print(f"   [{name}] → {count} artículos")
+
         except Exception as e:
-            print(f"  ⚠️  Error fetching {feed_url}: {e}")
+            print(f"   [{name}] ⚠️  Error: {e}")
 
     return articles
 
@@ -90,16 +108,13 @@ def _extract_image(entry, raw_content: str) -> str | None:
         for m in entry.media_content:
             if m.get("type", "").startswith("image"):
                 return m.get("url")
-
     if hasattr(entry, "enclosures") and entry.enclosures:
         for enc in entry.enclosures:
             if enc.get("type", "").startswith("image"):
                 return enc.get("href")
-
     match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', raw_content)
     if match:
         return match.group(1)
-
     return None
 
 
@@ -108,7 +123,7 @@ def get_existing_titles() -> set[str]:
         r = httpx.get(
             f"{SUPABASE_URL}/rest/v1/{TABLE_PATH}",
             headers=db_headers(),
-            params={"select": "title", "order": "created_at.desc", "limit": "300"},
+            params={"select": "title", "order": "created_at.desc", "limit": "500"},
         )
         if r.status_code == 200:
             return {row["title"] for row in r.json() if row.get("title")}
@@ -175,8 +190,8 @@ def main():
     print(f"📅  {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n")
 
     print("📡 Fetching RSS feeds...")
-    articles = fetch_recent_articles(hours=168)  # 7 días para el primer run
-    print(f"   {len(articles)} articles found\n")
+    articles = fetch_recent_articles(hours=168)
+    print(f"\n   TOTAL: {len(articles)} artículos encontrados\n")
 
     if not articles:
         print("No articles found. Done.")
@@ -185,7 +200,7 @@ def main():
     print("🔍 Checking for duplicates...")
     existing = get_existing_titles()
     new_articles = [a for a in articles if a["title"] and a["title"] not in existing]
-    print(f"   {len(new_articles)} new articles to process\n")
+    print(f"   {len(new_articles)} nuevos artículos a procesar\n")
 
     if not new_articles:
         print("All articles already saved. Done.")
@@ -203,7 +218,7 @@ def main():
         except Exception as e:
             print(f"    ❌ Error: {e}")
 
-    print(f"\n✅ Done! {saved} articles saved to Supabase.")
+    print(f"\n✅ Done! {saved} artículos guardados en Supabase.")
 
 
 if __name__ == "__main__":
