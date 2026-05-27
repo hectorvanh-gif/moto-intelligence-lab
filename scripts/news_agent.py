@@ -24,21 +24,23 @@ MAX_ARTICLES_PER_RUN = 15
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MotoNewsBot/1.0; +https://github.com)"}
 
 RSS_FEEDS = [
-    # Google News RSS — agrega cientos de fuentes en español automáticamente
-    ("Google:motocicletas MX",  "https://news.google.com/rss/search?q=motocicletas&hl=es-419&gl=MX&ceid=MX:es-419"),
-    ("Google:motos noticias MX","https://news.google.com/rss/search?q=motos+noticias&hl=es-419&gl=MX&ceid=MX:es-419"),
-    ("Google:MotoGP MX",        "https://news.google.com/rss/search?q=MotoGP+2025&hl=es-419&gl=MX&ceid=MX:es-419"),
-    ("Google:motociclismo ES",  "https://news.google.com/rss/search?q=motociclismo&hl=es&gl=ES&ceid=ES:es"),
-    ("Google:superbike ES",     "https://news.google.com/rss/search?q=superbike+moto&hl=es&gl=ES&ceid=ES:es"),
-    ("Google:motos electricas", "https://news.google.com/rss/search?q=motos+electricas+2025&hl=es-419&gl=MX&ceid=MX:es-419"),
-    ("Google:Harley Honda MX",  "https://news.google.com/rss/search?q=Harley+Davidson+Honda+moto&hl=es-419&gl=MX&ceid=MX:es-419"),
-    ("Google:nuevas motos 2025","https://news.google.com/rss/search?q=nuevas+motos+2025&hl=es&gl=ES&ceid=ES:es"),
-    # Feeds directos
-    ("motociclismo.es",         "https://www.motociclismo.es/feed/"),
-    ("moto1pro.com",            "https://www.moto1pro.com/feed/"),
-    ("motofichas.com",          "https://www.motofichas.com/feed/"),
-    ("masmoto.es",              "https://www.masmoto.es/feed/"),
-    ("motorsport.com ES",       "https://es.motorsport.com/rss/moto/news/"),
+    # Bing News RSS — agrega muchas fuentes, no bloquea servidores
+    ("Bing:motocicletas",     "https://www.bing.com/news/search?q=motocicletas+2025&format=rss&setlang=es"),
+    ("Bing:MotoGP",           "https://www.bing.com/news/search?q=MotoGP+2025&format=rss&setlang=es"),
+    ("Bing:motos electricas", "https://www.bing.com/news/search?q=motos+electricas+2025&format=rss&setlang=es"),
+    ("Bing:superbike",        "https://www.bing.com/news/search?q=superbike+moto+2025&format=rss&setlang=es"),
+    ("Bing:nuevas motos",     "https://www.bing.com/news/search?q=nuevas+motocicletas+lanzamiento&format=rss&setlang=es"),
+    ("Bing:motociclismo",     "https://www.bing.com/news/search?q=motociclismo+noticias&format=rss&setlang=es"),
+    # Feeds directos españoles
+    ("motociclismo.es",       "https://www.motociclismo.es/feed/"),
+    ("moto1pro.com",          "https://www.moto1pro.com/feed/"),
+    ("motofichas.com",        "https://www.motofichas.com/feed/"),
+    ("masmoto.es",            "https://www.masmoto.es/feed/"),
+    ("motorpasionmoto.com",   "https://www.motorpasionmoto.com/feeds/posts/default"),
+    ("formulamoto.es",        "https://www.formulamoto.es/feed/"),
+    ("motorsport.com ES",     "https://es.motorsport.com/rss/moto/news/"),
+    ("elperiodicodelmoto.com","https://www.elperiodicodelmoto.com/feed/"),
+    ("solo-moto.com",         "https://www.solo-moto.com/feed/"),
 ]
 
 
