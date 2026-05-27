@@ -27,6 +27,10 @@ RSS_FEEDS = [
     "https://www.formulamoto.es/feed/",
     "https://es.motorsport.com/rss/moto/news/",
     "https://www.autopista.es/motos/feed/",
+    "https://www.motorpasionmoto.com/feeds/posts/default",
+    "https://www.motorbike.tv/es/feed/",
+    "https://www.mundomotero.com/feed/",
+    "https://www.solo-moto.com/feed/",
 ]
 
 MAX_ARTICLES_PER_RUN = 12
@@ -168,7 +172,7 @@ def main():
     print(f"📅  {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n")
 
     print("📡 Fetching RSS feeds...")
-    articles = fetch_recent_articles(hours=25)
+    articles = fetch_recent_articles(hours=72)
     print(f"   {len(articles)} articles found\n")
 
     if not articles:
