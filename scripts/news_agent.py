@@ -118,18 +118,19 @@ def _extract_image(entry, raw_content: str) -> str | None:
     return None
 
 
-def get_existing_titles() -> set[str]:
+def get_existing_urls() -> set[str]:
+    """Fetch saved source URLs to avoid duplicates (URL is more reliable than title)."""
     try:
         r = httpx.get(
             f"{SUPABASE_URL}/rest/v1/{TABLE_PATH}",
             headers=db_headers(),
-            params={"select": "title", "order": "created_at.desc", "limit": "500"},
+            params={"select": "source_url", "order": "created_at.desc", "limit": "500"},
         )
         if r.status_code == 200:
-            return {row["title"] for row in r.json() if row.get("title")}
+            return {row["source_url"] for row in r.json() if row.get("source_url")}
         print(f"  ⚠️  DB fetch status: {r.status_code} — {r.text[:200]}")
     except Exception as e:
-        print(f"  ⚠️  Could not fetch existing titles: {e}")
+        print(f"  ⚠️  Could not fetch existing urls: {e}")
     return set()
 
 
@@ -169,6 +170,7 @@ def insert_article(article: dict, processed: dict) -> bool:
         "summary": processed.get("summary", "")[:500],
         "image_url": article.get("image_url"),
         "category": processed.get("category", "NOTICIA"),
+        "source_url": article.get("link", "")[:500],
     }
     try:
         r = httpx.post(
@@ -198,8 +200,8 @@ def main():
         return
 
     print("🔍 Checking for duplicates...")
-    existing = get_existing_titles()
-    new_articles = [a for a in articles if a["title"] and a["title"] not in existing]
+    existing_urls = get_existing_urls()
+    new_articles = [a for a in articles if a["link"] and a["link"] not in existing_urls]
     print(f"   {len(new_articles)} nuevos artículos a procesar\n")
 
     if not new_articles:
