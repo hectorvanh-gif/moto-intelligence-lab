@@ -172,7 +172,7 @@ def main():
     print(f"📅  {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n")
 
     print("📡 Fetching RSS feeds...")
-    articles = fetch_recent_articles(hours=72)
+    articles = fetch_recent_articles(hours=168)  # 7 días para el primer run
     print(f"   {len(articles)} articles found\n")
 
     if not articles:
