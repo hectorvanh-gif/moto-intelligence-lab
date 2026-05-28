@@ -233,11 +233,11 @@ def main():
 
     # Fuente principal: NewsAPI
     print("📡 Fetching from NewsAPI...")
-    articles = fetch_from_newsapi(days=7)
+    articles = fetch_from_newsapi(days=1)
 
     # Respaldo: RSS directos
     print("\n📡 Fetching from RSS feeds...")
-    rss_articles = fetch_from_rss(hours=168)
+    rss_articles = fetch_from_rss(hours=25)
 
     # Combinar y deduplicar por URL
     seen = {a["link"] for a in articles}
