@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { NeonInput } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { ChevronDown } from "lucide-react";
 
 const Hero = () => {
   const [email, setEmail] = useState("");
@@ -107,6 +108,19 @@ const Hero = () => {
             +500 pilotos ya reciben noticias cada semana
           </p>
         </div>
+      </div>
+
+      {/* Scroll down indicator */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2">
+        <span className="font-display text-xs tracking-[0.3em] text-primary/70">SCROLL</span>
+        <button
+          onClick={() => document.getElementById("noticias")?.scrollIntoView({ behavior: "smooth" })}
+          className="flex flex-col items-center gap-1 cursor-pointer group"
+          aria-label="Scroll hacia abajo"
+        >
+          <ChevronDown className="w-6 h-6 text-primary animate-bounce" />
+          <ChevronDown className="w-6 h-6 text-primary/50 animate-bounce [animation-delay:150ms] -mt-4" />
+        </button>
       </div>
 
       {/* Bottom fade */}
