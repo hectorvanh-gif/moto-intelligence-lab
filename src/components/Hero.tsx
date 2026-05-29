@@ -2,11 +2,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NeonInput } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import heroBg from "@/assets/hero-bg.jpg";
 const Hero = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) {
       toast({
@@ -17,15 +18,31 @@ const Hero = () => {
       return;
     }
     setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
+    const { error } = await supabase
+      .from("subscribers")
+      .insert({ email: email.trim().toLowerCase() });
+
+    if (error) {
+      if (error.code === "23505") {
+        toast({
+          title: "Ya estás registrado",
+          description: "Este email ya forma parte del Lab 09/24.",
+        });
+      } else {
+        toast({
+          title: "Error al registrarse",
+          description: "Intenta de nuevo en un momento.",
+          variant: "destructive",
+        });
+      }
+    } else {
       toast({
         title: "¡Bienvenido al Lab!",
         description: "Pronto recibirás inteligencia de alto octanaje."
       });
       setEmail("");
-      setIsLoading(false);
-    }, 1000);
+    }
+    setIsLoading(false);
   };
   return <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 lg:pt-20">
       {/* Background Image */}
