@@ -1,18 +1,17 @@
+import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import type { NewsArticle } from "@/hooks/useNews";
 
 interface NewsCardProps {
   article: NewsArticle;
-  onClick: () => void;
 }
 
-const NewsCard = ({ article, onClick }: NewsCardProps) => {
+const NewsCard = ({ article }: NewsCardProps) => {
   const formattedDate = article.created_at
     ? format(new Date(article.created_at), "yyyy.MM.dd // HH:mm 'UTC'", { locale: es })
     : "";
 
-  // Get first 20 words for summary
   const getSummary = () => {
     if (article.summary) return article.summary;
     if (article.content) {
@@ -23,9 +22,9 @@ const NewsCard = ({ article, onClick }: NewsCardProps) => {
   };
 
   return (
-    <article
-      onClick={onClick}
-      className="group relative bg-card rounded-lg overflow-hidden border border-border/50 hover:border-primary/50 transition-all duration-300 cursor-pointer electric-hover"
+    <Link
+      to={`/noticias/${article.id}`}
+      className="group relative bg-card rounded-lg overflow-hidden border border-border/50 hover:border-primary/50 transition-all duration-300 electric-hover block"
     >
       {/* Image Container */}
       <div className="relative h-48 overflow-hidden">
@@ -66,7 +65,7 @@ const NewsCard = ({ article, onClick }: NewsCardProps) => {
 
       {/* Hover glow effect */}
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none rounded-lg shadow-[0_0_30px_rgba(255,30,30,0.15)]" />
-    </article>
+    </Link>
   );
 };
 

@@ -1,7 +1,6 @@
-import { useState } from "react";
-import { useNews, type NewsArticle } from "@/hooks/useNews";
+import { Link } from "react-router-dom";
+import { useNews } from "@/hooks/useNews";
 import NewsCard from "./NewsCard";
-import NewsDetailModal from "./NewsDetailModal";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const NewsCardSkeleton = () => (
@@ -18,13 +17,6 @@ const NewsCardSkeleton = () => (
 
 const NewsSection = () => {
   const { data: news, isLoading, error } = useNews();
-  const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const handleCardClick = (article: NewsArticle) => {
-    setSelectedArticle(article);
-    setModalOpen(true);
-  };
 
   return (
     <section id="noticias" className="relative py-20 lg:py-32 bg-background">
@@ -59,7 +51,7 @@ const NewsSection = () => {
         {/* Loading State */}
         {isLoading && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {[...Array(6)].map((_, i) => (
+            {[...Array(9)].map((_, i) => (
               <NewsCardSkeleton key={i} />
             ))}
           </div>
@@ -67,20 +59,29 @@ const NewsSection = () => {
 
         {/* News Grid */}
         {!isLoading && !error && news && news.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {news.map((article, index) => (
-              <div
-                key={article.id}
-                className="animate-slide-up"
-                style={{ animationDelay: `${index * 100}ms` }}
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+              {news.map((article, index) => (
+                <div
+                  key={article.id}
+                  className="animate-slide-up"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <NewsCard article={article} />
+                </div>
+              ))}
+            </div>
+
+            {/* Link to full archive */}
+            <div className="text-center mt-12">
+              <Link
+                to="/noticias"
+                className="inline-flex items-center gap-2 px-8 py-3 border border-primary/50 text-primary font-display text-sm tracking-widest hover:bg-primary hover:text-white transition-all duration-300 rounded"
               >
-                <NewsCard
-                  article={article}
-                  onClick={() => handleCardClick(article)}
-                />
-              </div>
-            ))}
-          </div>
+                VER TODAS LAS NOTICIAS →
+              </Link>
+            </div>
+          </>
         )}
 
         {/* Empty State */}
@@ -95,13 +96,6 @@ const NewsSection = () => {
           </div>
         )}
       </div>
-
-      {/* News Detail Modal */}
-      <NewsDetailModal
-        article={selectedArticle}
-        open={modalOpen}
-        onOpenChange={setModalOpen}
-      />
 
       {/* Background decoration */}
       <div className="absolute inset-0 circuit-lines opacity-10 pointer-events-none" />
