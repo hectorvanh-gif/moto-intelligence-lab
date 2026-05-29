@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { NeonInput } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
@@ -7,41 +7,6 @@ import { supabase } from "@/integrations/supabase/client";
 const Hero = () => {
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const vantaRef = useRef<HTMLDivElement>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const vantaEffect = useRef<any>(null);
-
-  useEffect(() => {
-    let mounted = true;
-
-    const loadVanta = async () => {
-      const THREE = await import("three");
-      // @ts-ignore
-      const NET = await import("vanta/dist/vanta.net.min");
-      if (mounted && vantaRef.current && !vantaEffect.current) {
-        vantaEffect.current = NET.default({
-          el: vantaRef.current,
-          THREE,
-          color: 0xef4444,
-          backgroundColor: 0x0a0a0a,
-          points: 10.0,
-          maxDistance: 22.0,
-          spacing: 17.0,
-          showDots: true,
-        });
-      }
-    };
-
-    loadVanta();
-
-    return () => {
-      mounted = false;
-      if (vantaEffect.current) {
-        vantaEffect.current.destroy();
-        vantaEffect.current = null;
-      }
-    };
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,11 +48,20 @@ const Hero = () => {
 
   return (
     <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 lg:pt-20">
-      {/* Vanta 3D NET animated background */}
-      <div ref={vantaRef} className="absolute inset-0" />
+      {/* Video background */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+      >
+        <source src="/Ducati.mp4" type="video/mp4" />
+      </video>
 
-      {/* Overlay gradients for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background/60 via-transparent to-background pointer-events-none" />
+      {/* Dark overlay for text readability */}
+      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background" />
       <div className="absolute inset-0 circuit-lines opacity-20 pointer-events-none" />
 
       {/* Content */}
