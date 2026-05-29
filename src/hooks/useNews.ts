@@ -19,7 +19,7 @@ export const useNews = () => {
         .from("moto_news")
         .select("*")
         .order("created_at", { ascending: false })
-        .limit(3);
+        .limit(9);
 
       if (error) {
         throw error;
