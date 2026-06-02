@@ -177,26 +177,36 @@ def get_existing_urls() -> set[str]:
     return set()
 
 
-def summarize_with_claude(article: dict) -> dict:
+def summarize_with_claude(article: dict) -> dict | None:
+    """Returns None if the article is not about motorcycles/motociclismo."""
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     prompt = f"""Eres editor de un portal de noticias de motociclismo en español.
-Analiza este artículo y responde SOLO con un JSON válido (sin texto adicional) con:
-- "title": título atractivo en español, máx 80 caracteres
-- "summary": resumen claro en español, 2-3 oraciones, máx 250 caracteres
-- "category": MOTOGP | SUPERBIKE | ENDURO | AVENTURA | NAKED | SPORT | ELECTRICA | NOTICIA
+
+PASO 1 — Verifica si el artículo es REALMENTE sobre motocicletas, motos, motociclismo, MotoGP, Superbike, scooters, enduro, o industria de motos.
+
+Si el artículo NO es sobre motos (política, violencia, fútbol, tecnología genérica, coches, etc.) responde SOLO:
+{{"es_moto": false}}
+
+Si SÍ es sobre motos, responde SOLO con este JSON válido (sin texto adicional):
+{{"es_moto": true, "title": "título atractivo en español máx 80 chars", "summary": "resumen 2-3 oraciones máx 250 chars", "category": "MOTOGP|SUPERBIKE|ENDURO|AVENTURA|NAKED|SPORT|ELECTRICA|NOTICIA"}}
 
 Título: {article['title']}
 Contenido: {article['content'][:1500]}"""
 
     message = client.messages.create(
         model="claude-haiku-4-5-20251001",
-        max_tokens=350,
+        max_tokens=400,
         messages=[{"role": "user", "content": prompt}],
     )
     try:
-        return json.loads(message.content[0].text)
+        result = json.loads(message.content[0].text)
+        if not result.get("es_moto", True):
+            return None  # Artículo descartado — no es de motos
+        return result
     except json.JSONDecodeError:
+        # Si no parsea, asumimos que es válido y usamos fallback
         return {
+            "es_moto": True,
             "title": article["title"][:80],
             "summary": article["content"][:250] if article["content"] else article["title"],
             "category": "NOTICIA",
@@ -267,6 +277,9 @@ def main():
         print(f"  [{i+1}/{min(len(new_articles), MAX_ARTICLES_PER_RUN)}] {article['title'][:65]}...")
         try:
             processed = summarize_with_claude(article)
+            if processed is None:
+                print(f"    ⏭️  Descartado — no es de motos")
+                continue
             if insert_article(article, processed):
                 saved += 1
                 print(f"    ✅ [{processed.get('category', 'NOTICIA')}] {processed.get('title', '')[:60]}")
