@@ -1,18 +1,25 @@
 #!/usr/bin/env python3
 """
 Moto Intelligence Lab - News Agent
-Fetches motorcycle news via NewsAPI + RSS fallback, summarizes with Claude, saves to Supabase.
+Fetches motorcycle news via NewsAPI + RSS fallback, summarizes with Claude,
+generates Instagram images with Pillow, saves to Supabase.
 """
 
 import os
 import json
 import re
-import feedparser
-import httpx
-import anthropic
+import textwrap
+import urllib.request
+from io import BytesIO
 from datetime import datetime, timezone, timedelta
 from urllib.parse import quote
 
+import feedparser
+import httpx
+import anthropic
+from PIL import Image, ImageDraw, ImageFont
+
+# ── Env vars ────────────────────────────────────────────────────────────────
 SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_KEY = os.environ["SUPABASE_SERVICE_KEY"]
 ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
@@ -20,10 +27,11 @@ NEWSAPI_KEY = os.environ["NEWSAPI_KEY"]
 
 TABLE_NAME = "moto_news"
 TABLE_PATH = quote(TABLE_NAME, safe="")
+IG_BUCKET  = "ig-images"
 MAX_ARTICLES_PER_RUN = 15
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MotoNewsBot/1.0)"}
 
-# Búsquedas en NewsAPI — devuelve noticias de cientos de fuentes
+# ── NewsAPI queries ──────────────────────────────────────────────────────────
 NEWSAPI_QUERIES = [
     "motocicletas",
     "MotoGP 2025",
@@ -32,18 +40,19 @@ NEWSAPI_QUERIES = [
     "superbike moto",
 ]
 
-# RSS directos como respaldo
+# ── RSS feeds (fallback) ─────────────────────────────────────────────────────
 RSS_FEEDS = [
-    ("motociclismo.es",   "https://www.motociclismo.es/feed/"),
-    ("moto1pro.com",      "https://www.moto1pro.com/feed/"),
-    ("motofichas.com",    "https://www.motofichas.com/feed/"),
-    ("masmoto.es",        "https://www.masmoto.es/feed/"),
-    ("motorsport ES",     "https://es.motorsport.com/rss/moto/news/"),
-    ("formulamoto.es",    "https://www.formulamoto.es/feed/"),
-    ("motorpasionmoto",   "https://www.motorpasionmoto.com/feeds/posts/default"),
+    ("motociclismo.es",  "https://www.motociclismo.es/feed/"),
+    ("moto1pro.com",     "https://www.moto1pro.com/feed/"),
+    ("motofichas.com",   "https://www.motofichas.com/feed/"),
+    ("masmoto.es",       "https://www.masmoto.es/feed/"),
+    ("motorsport ES",    "https://es.motorsport.com/rss/moto/news/"),
+    ("formulamoto.es",   "https://www.formulamoto.es/feed/"),
+    ("motorpasionmoto",  "https://www.motorpasionmoto.com/feeds/posts/default"),
 ]
 
 
+# ── Supabase helpers ─────────────────────────────────────────────────────────
 def db_headers() -> dict:
     return {
         "apikey": SUPABASE_KEY,
@@ -53,9 +62,145 @@ def db_headers() -> dict:
     }
 
 
-def fetch_from_newsapi(days: int = 7) -> list[dict]:
-    """Fetch articles from NewsAPI — works from any server, returns rich content."""
-    articles = []
+# ── Font loader ──────────────────────────────────────────────────────────────
+def _load_font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
+    """Load a system font with multiple fallbacks, then download if needed."""
+    candidates = (
+        [
+            "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+            "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",
+        ]
+        if bold
+        else [
+            "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+            "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+            "/usr/share/fonts/truetype/freefont/FreeSans.ttf",
+        ]
+    )
+    for path in candidates:
+        try:
+            return ImageFont.truetype(path, size)
+        except (IOError, OSError):
+            continue
+    # Download Roboto as last resort
+    try:
+        variant = "Bold" if bold else "Regular"
+        url = f"https://github.com/google/fonts/raw/main/apache/roboto/static/Roboto-{variant}.ttf"
+        dest = f"/tmp/roboto_{variant.lower()}.ttf"
+        if not os.path.exists(dest):
+            urllib.request.urlretrieve(url, dest)
+        return ImageFont.truetype(dest, size)
+    except Exception:
+        return ImageFont.load_default()
+
+
+# ── Instagram image generator ─────────────────────────────────────────────────
+def generate_ig_image(article: dict, processed: dict, article_id: int) -> str | None:
+    """
+    Build a 1080x1080 Instagram image:
+      • Article photo as background (center-cropped)
+      • Dark gradient overlay
+      • MOTO LAB 09/24 brand badge
+      • ig_title (large bold) + red separator + ig_caption
+    Uploads to Supabase Storage and returns the public URL.
+    """
+    SIZE = (1080, 1080)
+    ig_title   = (processed.get("ig_title") or processed.get("title", ""))[:55].upper()
+    ig_caption = (processed.get("ig_caption") or processed.get("summary", ""))[:120]
+
+    # 1 — Background
+    img = None
+    if article.get("image_url"):
+        try:
+            r = httpx.get(article["image_url"], timeout=20, follow_redirects=True)
+            if r.status_code == 200:
+                img = Image.open(BytesIO(r.content)).convert("RGB")
+                w, h = img.size
+                d = min(w, h)
+                img = img.crop(((w - d) // 2, (h - d) // 2,
+                                (w + d) // 2, (h + d) // 2))
+                img = img.resize(SIZE, Image.LANCZOS)
+        except Exception as e:
+            print(f"      ⚠️  BG image error: {e}")
+
+    if img is None:
+        img = Image.new("RGB", SIZE, (10, 10, 10))
+
+    # 2 — Dark gradient overlay (bottom 80%)
+    overlay = Image.new("RGBA", SIZE, (0, 0, 0, 0))
+    draw_o  = ImageDraw.Draw(overlay)
+    for y in range(SIZE[1]):
+        t     = max(0.0, (y - SIZE[1] * 0.20) / (SIZE[1] * 0.80))
+        alpha = int(min(t ** 0.65 * 235, 235))
+        draw_o.line([(0, y), (SIZE[0], y)], fill=(0, 0, 0, alpha))
+    img = Image.alpha_composite(img.convert("RGBA"), overlay).convert("RGB")
+    draw = ImageDraw.Draw(img)
+
+    # 3 — Brand badge (top-left)
+    font_brand = _load_font(22, bold=True)
+    draw.rectangle([40, 38, 320, 76], fill=(239, 68, 68))
+    draw.text((54, 45), "MOTO LAB 09/24", font=font_brand, fill=(255, 255, 255))
+
+    # 4 — Red vertical accent bar
+    draw.rectangle([54, SIZE[1] - 420, 63, SIZE[1] - 110], fill=(239, 68, 68))
+
+    # 5 — ig_title
+    font_title   = _load_font(54, bold=True)
+    wrapped_title = textwrap.fill(ig_title, width=20)
+    draw.text((82, SIZE[1] - 410), wrapped_title, font=font_title, fill=(255, 255, 255))
+
+    # 6 — Red separator
+    n_lines = wrapped_title.count("\n") + 1
+    sep_y   = SIZE[1] - 410 + n_lines * 62 + 14
+    draw.rectangle([82, sep_y, 360, sep_y + 3], fill=(239, 68, 68))
+
+    # 7 — ig_caption
+    font_caption   = _load_font(29, bold=False)
+    wrapped_caption = textwrap.fill(ig_caption, width=40)
+    draw.text((82, sep_y + 18), wrapped_caption, font=font_caption, fill=(205, 205, 205))
+
+    # 8 — Upload to Supabase Storage
+    buf = BytesIO()
+    img.save(buf, format="JPEG", quality=90)
+    buf.seek(0)
+
+    filename = f"ig_{article_id}.jpg"
+    try:
+        r = httpx.put(
+            f"{SUPABASE_URL}/storage/v1/object/{IG_BUCKET}/{filename}",
+            content=buf.read(),
+            headers={
+                "Authorization": f"Bearer {SUPABASE_KEY}",
+                "Content-Type": "image/jpeg",
+                "x-upsert": "true",
+            },
+            timeout=30,
+        )
+        if r.status_code in (200, 201):
+            return f"{SUPABASE_URL}/storage/v1/object/public/{IG_BUCKET}/{filename}"
+        print(f"      ⚠️  Storage {r.status_code}: {r.text[:120]}")
+    except Exception as e:
+        print(f"      ⚠️  Storage error: {e}")
+    return None
+
+
+def update_ig_image(article_id: int, ig_image_url: str) -> None:
+    """Patch the ig_image_url column after the image is generated."""
+    try:
+        httpx.patch(
+            f"{SUPABASE_URL}/rest/v1/{TABLE_PATH}?id=eq.{article_id}",
+            headers=db_headers(),
+            json={"ig_image_url": ig_image_url},
+            timeout=15,
+        )
+    except Exception as e:
+        print(f"      ⚠️  ig_image_url update error: {e}")
+
+
+# ── News fetchers ────────────────────────────────────────────────────────────
+def fetch_from_newsapi(days: int = 1) -> list[dict]:
+    articles  = []
     seen_urls: set[str] = set()
     from_date = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d")
 
@@ -64,20 +209,14 @@ def fetch_from_newsapi(days: int = 7) -> list[dict]:
             r = httpx.get(
                 "https://newsapi.org/v2/everything",
                 params={
-                    "q": query,
-                    "language": "es",
-                    "from": from_date,
-                    "sortBy": "publishedAt",
-                    "pageSize": 20,
-                    "apiKey": NEWSAPI_KEY,
+                    "q": query, "language": "es", "from": from_date,
+                    "sortBy": "publishedAt", "pageSize": 20, "apiKey": NEWSAPI_KEY,
                 },
-                headers=HEADERS,
-                timeout=15,
+                headers=HEADERS, timeout=15,
             )
             if r.status_code == 200:
-                data = r.json()
                 count = 0
-                for item in data.get("articles", []):
+                for item in r.json().get("articles", []):
                     url = item.get("url", "")
                     if not url or url in seen_urls or "[Removed]" in item.get("title", ""):
                         continue
@@ -92,58 +231,50 @@ def fetch_from_newsapi(days: int = 7) -> list[dict]:
                     })
                 print(f"   [NewsAPI:{query}] → {count} artículos")
             else:
-                print(f"   [NewsAPI:{query}] ⚠️  Status {r.status_code}: {r.text[:150]}")
+                print(f"   [NewsAPI:{query}] ⚠️  {r.status_code}: {r.text[:100]}")
         except Exception as e:
-            print(f"   [NewsAPI:{query}] ⚠️  Error: {e}")
-
+            print(f"   [NewsAPI:{query}] ⚠️  {e}")
     return articles
 
 
-def fetch_from_rss(hours: int = 168) -> list[dict]:
-    """RSS feeds as fallback."""
-    cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
-    articles = []
+def fetch_from_rss(hours: int = 25) -> list[dict]:
+    cutoff    = datetime.now(timezone.utc) - timedelta(hours=hours)
+    articles  = []
     seen_urls: set[str] = set()
 
     for name, feed_url in RSS_FEEDS:
         try:
-            r = httpx.get(feed_url, headers=HEADERS, timeout=15, follow_redirects=True)
+            r    = httpx.get(feed_url, headers=HEADERS, timeout=15, follow_redirects=True)
             feed = feedparser.parse(r.text)
             count = 0
             for entry in feed.entries:
                 title = entry.get("title", "").strip()
-                link = entry.get("link", "")
+                link  = entry.get("link", "")
                 if not title or link in seen_urls:
                     continue
-
-                pub_date = None
+                pub = None
                 if hasattr(entry, "published_parsed") and entry.published_parsed:
-                    pub_date = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
+                    pub = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
                 elif hasattr(entry, "updated_parsed") and entry.updated_parsed:
-                    pub_date = datetime(*entry.updated_parsed[:6], tzinfo=timezone.utc)
-
-                if pub_date and pub_date < cutoff:
+                    pub = datetime(*entry.updated_parsed[:6], tzinfo=timezone.utc)
+                if pub and pub < cutoff:
                     continue
-
                 content = ""
                 if hasattr(entry, "content"):
                     content = entry.content[0].value
                 elif hasattr(entry, "summary"):
                     content = entry.summary
                 content_clean = re.sub(r"<[^>]+>", " ", content).strip()
-
                 seen_urls.add(link)
                 count += 1
                 articles.append({
-                    "title": title,
-                    "link": link,
+                    "title": title, "link": link,
                     "content": content_clean or title,
                     "image_url": _extract_image(entry, content),
                 })
             print(f"   [RSS:{name}] → {count} artículos")
         except Exception as e:
-            print(f"   [RSS:{name}] ⚠️  Error: {e}")
-
+            print(f"   [RSS:{name}] ⚠️  {e}")
     return articles
 
 
@@ -157,9 +288,139 @@ def _extract_image(entry, raw_content: str) -> str | None:
             if enc.get("type", "").startswith("image"):
                 return enc.get("href")
     match = re.search(r'<img[^>]+src=["\']([^"\']+)["\']', raw_content)
-    if match:
-        return match.group(1)
+    return match.group(1) if match else None
+
+
+# ── Claude ───────────────────────────────────────────────────────────────────
+def summarize_with_claude(article: dict) -> dict | None:
+    """Returns None if the article is not about motorcycles."""
+    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+    prompt = f"""Eres editor de un portal de noticias de motociclismo en español.
+
+PASO 1 — ¿Es el artículo REALMENTE sobre motocicletas, motos, MotoGP, Superbike, scooters, enduro o industria de motos?
+
+Si NO es sobre motos responde SOLO: {{"es_moto": false}}
+
+Si SÍ es sobre motos responde SOLO con este JSON (sin texto adicional):
+{{
+  "es_moto": true,
+  "title": "título atractivo en español, máx 80 caracteres",
+  "summary": "resumen claro 2-3 oraciones, máx 250 caracteres",
+  "category": "MOTOGP|SUPERBIKE|ENDURO|AVENTURA|NAKED|SPORT|ELECTRICA|NOTICIA",
+  "ig_title": "TÍTULO IMPACTANTE EN MAYÚSCULAS, máx 55 caracteres",
+  "ig_caption": "1-2 frases breves y emocionantes, máx 120 caracteres, para imagen Instagram"
+}}
+
+Título: {article['title']}
+Contenido: {article['content'][:1500]}"""
+
+    msg = client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=500,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    try:
+        result = json.loads(msg.content[0].text)
+        if not result.get("es_moto", True):
+            return None
+        return result
+    except json.JSONDecodeError:
+        return {
+            "es_moto": True,
+            "title": article["title"][:80],
+            "summary": (article["content"][:250] if article["content"] else article["title"]),
+            "category": "NOTICIA",
+            "ig_title": article["title"][:55].upper(),
+            "ig_caption": (article["content"][:120] if article["content"] else article["title"]),
+        }
+
+
+# ── DB insert ─────────────────────────────────────────────────────────────────
+def insert_article(article: dict, processed: dict) -> int | None:
+    """Insert article and return its new ID (or None on failure)."""
+    record = {
+        "title":      processed.get("title", article["title"])[:80],
+        "content":    article["content"][:5000],
+        "summary":    processed.get("summary", "")[:500],
+        "image_url":  article.get("image_url"),
+        "category":   processed.get("category", "NOTICIA"),
+        "source_url": article.get("link", "")[:500],
+        "ig_title":   processed.get("ig_title", "")[:55],
+        "ig_caption": processed.get("ig_caption", "")[:120],
+    }
+    headers = {**db_headers(), "Prefer": "return=representation"}
+    try:
+        r = httpx.post(
+            f"{SUPABASE_URL}/rest/v1/{TABLE_PATH}",
+            headers=headers, json=record, timeout=15,
+        )
+        if r.status_code in (200, 201):
+            data = r.json()
+            if data:
+                return data[0]["id"]
+        print(f"    ❌ DB insert {r.status_code}: {r.text[:150]}")
+    except Exception as e:
+        print(f"    ❌ DB error: {e}")
     return None
+
+
+# ── Main ──────────────────────────────────────────────────────────────────────
+def main():
+    print("🏍️  Moto Intelligence Lab — News Agent")
+    print(f"📅  {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n")
+
+    print("📡 Fetching from NewsAPI...")
+    articles = fetch_from_newsapi(days=1)
+
+    print("\n📡 Fetching from RSS feeds...")
+    rss = fetch_from_rss(hours=25)
+    seen = {a["link"] for a in articles}
+    for a in rss:
+        if a["link"] not in seen:
+            articles.append(a)
+            seen.add(a["link"])
+
+    print(f"\n   TOTAL: {len(articles)} artículos únicos\n")
+    if not articles:
+        print("No articles found. Done.")
+        return
+
+    print("🔍 Checking duplicates in DB...")
+    existing_urls = get_existing_urls()
+    new_articles  = [a for a in articles if a["link"] and a["link"] not in existing_urls]
+    print(f"   {len(new_articles)} nuevos artículos a procesar\n")
+    if not new_articles:
+        print("All articles already saved. Done.")
+        return
+
+    print("🤖 Claude: summarizing, filtering and generating Instagram images...")
+    saved = 0
+    for i, article in enumerate(new_articles[:MAX_ARTICLES_PER_RUN]):
+        print(f"  [{i+1}/{min(len(new_articles), MAX_ARTICLES_PER_RUN)}] {article['title'][:65]}...")
+        try:
+            processed = summarize_with_claude(article)
+            if processed is None:
+                print("    ⏭️  Descartado — no es de motos")
+                continue
+
+            article_id = insert_article(article, processed)
+            if not article_id:
+                continue
+
+            # Generate Instagram image
+            print("    📸 Generando imagen Instagram...")
+            ig_url = generate_ig_image(article, processed, article_id)
+            if ig_url:
+                update_ig_image(article_id, ig_url)
+                print(f"    ✅ [{processed.get('category','NOTICIA')}] {processed.get('title','')[:55]} 🖼️")
+            else:
+                print(f"    ✅ [{processed.get('category','NOTICIA')}] {processed.get('title','')[:55]}")
+            saved += 1
+
+        except Exception as e:
+            print(f"    ❌ Error: {e}")
+
+    print(f"\n✅ Done! {saved} artículos guardados en Supabase.")
 
 
 def get_existing_urls() -> set[str]:
@@ -171,132 +432,10 @@ def get_existing_urls() -> set[str]:
         )
         if r.status_code == 200:
             return {row["source_url"] for row in r.json() if row.get("source_url")}
-        print(f"  ⚠️  DB fetch status: {r.status_code} — {r.text[:200]}")
+        print(f"  ⚠️  DB fetch {r.status_code}: {r.text[:150]}")
     except Exception as e:
         print(f"  ⚠️  DB error: {e}")
     return set()
-
-
-def summarize_with_claude(article: dict) -> dict | None:
-    """Returns None if the article is not about motorcycles/motociclismo."""
-    client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-    prompt = f"""Eres editor de un portal de noticias de motociclismo en español.
-
-PASO 1 — Verifica si el artículo es REALMENTE sobre motocicletas, motos, motociclismo, MotoGP, Superbike, scooters, enduro, o industria de motos.
-
-Si el artículo NO es sobre motos (política, violencia, fútbol, tecnología genérica, coches, etc.) responde SOLO:
-{{"es_moto": false}}
-
-Si SÍ es sobre motos, responde SOLO con este JSON válido (sin texto adicional):
-{{
-  "es_moto": true,
-  "title": "título atractivo en español, máx 80 caracteres",
-  "summary": "resumen claro 2-3 oraciones, máx 250 caracteres",
-  "category": "MOTOGP|SUPERBIKE|ENDURO|AVENTURA|NAKED|SPORT|ELECTRICA|NOTICIA",
-  "ig_title": "TÍTULO IMPACTANTE EN MAYÚSCULAS, máx 55 caracteres, para imagen de Instagram",
-  "ig_caption": "Resumen brevísimo 1-2 frases, máx 120 caracteres, lenguaje directo y emocionante para Instagram"
-}}
-
-Título: {article['title']}
-Contenido: {article['content'][:1500]}"""
-
-    message = client.messages.create(
-        model="claude-haiku-4-5-20251001",
-        max_tokens=500,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    try:
-        result = json.loads(message.content[0].text)
-        if not result.get("es_moto", True):
-            return None  # Artículo descartado — no es de motos
-        return result
-    except json.JSONDecodeError:
-        return {
-            "es_moto": True,
-            "title": article["title"][:80],
-            "summary": article["content"][:250] if article["content"] else article["title"],
-            "category": "NOTICIA",
-            "ig_title": article["title"][:55].upper(),
-            "ig_caption": article["content"][:120] if article["content"] else article["title"],
-        }
-
-
-def insert_article(article: dict, processed: dict) -> bool:
-    record = {
-        "title": processed.get("title", article["title"])[:80],
-        "content": article["content"][:5000],
-        "summary": processed.get("summary", "")[:500],
-        "image_url": article.get("image_url"),
-        "category": processed.get("category", "NOTICIA"),
-        "source_url": article.get("link", "")[:500],
-        "ig_title": processed.get("ig_title", "")[:55],
-        "ig_caption": processed.get("ig_caption", "")[:120],
-    }
-    try:
-        r = httpx.post(
-            f"{SUPABASE_URL}/rest/v1/{TABLE_PATH}",
-            headers=db_headers(),
-            json=record,
-        )
-        if r.status_code in (200, 201):
-            return True
-        print(f"    ❌ DB insert status: {r.status_code} — {r.text[:200]}")
-        return False
-    except Exception as e:
-        print(f"    ❌ DB error: {e}")
-        return False
-
-
-def main():
-    print("🏍️  Moto Intelligence Lab — News Agent")
-    print(f"📅  {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n")
-
-    # Fuente principal: NewsAPI
-    print("📡 Fetching from NewsAPI...")
-    articles = fetch_from_newsapi(days=1)
-
-    # Respaldo: RSS directos
-    print("\n📡 Fetching from RSS feeds...")
-    rss_articles = fetch_from_rss(hours=25)
-
-    # Combinar y deduplicar por URL
-    seen = {a["link"] for a in articles}
-    for a in rss_articles:
-        if a["link"] not in seen:
-            articles.append(a)
-            seen.add(a["link"])
-
-    print(f"\n   TOTAL: {len(articles)} artículos únicos encontrados\n")
-
-    if not articles:
-        print("No articles found. Done.")
-        return
-
-    print("🔍 Checking for duplicates in DB...")
-    existing_urls = get_existing_urls()
-    new_articles = [a for a in articles if a["link"] and a["link"] not in existing_urls]
-    print(f"   {len(new_articles)} nuevos artículos a procesar\n")
-
-    if not new_articles:
-        print("All articles already saved. Done.")
-        return
-
-    print("🤖 Summarizing with Claude and saving...")
-    saved = 0
-    for i, article in enumerate(new_articles[:MAX_ARTICLES_PER_RUN]):
-        print(f"  [{i+1}/{min(len(new_articles), MAX_ARTICLES_PER_RUN)}] {article['title'][:65]}...")
-        try:
-            processed = summarize_with_claude(article)
-            if processed is None:
-                print(f"    ⏭️  Descartado — no es de motos")
-                continue
-            if insert_article(article, processed):
-                saved += 1
-                print(f"    ✅ [{processed.get('category', 'NOTICIA')}] {processed.get('title', '')[:60]}")
-        except Exception as e:
-            print(f"    ❌ Error: {e}")
-
-    print(f"\n✅ Done! {saved} artículos guardados en Supabase.")
 
 
 if __name__ == "__main__":
