@@ -188,14 +188,21 @@ Si el artículo NO es sobre motos (política, violencia, fútbol, tecnología ge
 {{"es_moto": false}}
 
 Si SÍ es sobre motos, responde SOLO con este JSON válido (sin texto adicional):
-{{"es_moto": true, "title": "título atractivo en español máx 80 chars", "summary": "resumen 2-3 oraciones máx 250 chars", "category": "MOTOGP|SUPERBIKE|ENDURO|AVENTURA|NAKED|SPORT|ELECTRICA|NOTICIA"}}
+{{
+  "es_moto": true,
+  "title": "título atractivo en español, máx 80 caracteres",
+  "summary": "resumen claro 2-3 oraciones, máx 250 caracteres",
+  "category": "MOTOGP|SUPERBIKE|ENDURO|AVENTURA|NAKED|SPORT|ELECTRICA|NOTICIA",
+  "ig_title": "TÍTULO IMPACTANTE EN MAYÚSCULAS, máx 55 caracteres, para imagen de Instagram",
+  "ig_caption": "Resumen brevísimo 1-2 frases, máx 120 caracteres, lenguaje directo y emocionante para Instagram"
+}}
 
 Título: {article['title']}
 Contenido: {article['content'][:1500]}"""
 
     message = client.messages.create(
         model="claude-haiku-4-5-20251001",
-        max_tokens=400,
+        max_tokens=500,
         messages=[{"role": "user", "content": prompt}],
     )
     try:
@@ -204,12 +211,13 @@ Contenido: {article['content'][:1500]}"""
             return None  # Artículo descartado — no es de motos
         return result
     except json.JSONDecodeError:
-        # Si no parsea, asumimos que es válido y usamos fallback
         return {
             "es_moto": True,
             "title": article["title"][:80],
             "summary": article["content"][:250] if article["content"] else article["title"],
             "category": "NOTICIA",
+            "ig_title": article["title"][:55].upper(),
+            "ig_caption": article["content"][:120] if article["content"] else article["title"],
         }
 
 
@@ -221,6 +229,8 @@ def insert_article(article: dict, processed: dict) -> bool:
         "image_url": article.get("image_url"),
         "category": processed.get("category", "NOTICIA"),
         "source_url": article.get("link", "")[:500],
+        "ig_title": processed.get("ig_title", "")[:55],
+        "ig_caption": processed.get("ig_caption", "")[:120],
     }
     try:
         r = httpx.post(
