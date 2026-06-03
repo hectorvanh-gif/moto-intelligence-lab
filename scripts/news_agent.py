@@ -33,12 +33,15 @@ MAX_ARTICLES_PER_RUN = 15
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; MotoNewsBot/1.0)"}
 
 # ── NewsAPI queries ──────────────────────────────────────────────────────────
+# Usamos queries específicas + exclusión de términos bélicos/violentos
 NEWSAPI_QUERIES = [
-    "motocicletas",
-    "MotoGP 2025",
-    "motociclismo",
-    "motos electricas",
-    "superbike moto",
+    "motociclismo -sicarios -violencia -muertos -crimen -guerra -militares -delincuentes",
+    "MotoGP 2026",
+    "Superbike campeonato",
+    "motos electricas nuevos modelos",
+    "motocicleta nueva presentacion",
+    "enduro rally dakar moto",
+    "ducati honda yamaha kawasaki suzuki moto",
 ]
 
 # ── RSS feeds (fallback) ─────────────────────────────────────────────────────
@@ -298,9 +301,23 @@ def summarize_with_claude(article: dict) -> dict | None:
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     prompt = f"""Eres editor de un portal de noticias de motociclismo en español.
 
-PASO 1 — ¿Es el artículo REALMENTE sobre motocicletas, motos, MotoGP, Superbike, scooters, enduro o industria de motos?
+PASO 1 — ¿Es el artículo REALMENTE sobre motocicletas como DEPORTE, INDUSTRIA o TECNOLOGÍA?
 
-Si NO es sobre motos responde SOLO: {{"es_moto": false}}
+RECHAZA (responde {{"es_moto": false}}) si el artículo trata de:
+- Violencia, crimen, sicarios o delincuentes usando motos
+- Guerra, conflictos bélicos o militares
+- Accidentes de tráfico sin relevancia para el motociclismo
+- Política, economía general o temas que solo mencionan motos de pasada
+- Ciclismo, bicicletas u otros vehículos que no son motocicletas
+
+ACEPTA (continúa) si es sobre:
+- MotoGP, Superbike, Enduro, Rally, competencias
+- Nuevos modelos, lanzamientos, tecnología de motos
+- Pilotos, equipos, temporadas de campeonatos
+- Mercado de motos, eléctricos, accesorios
+- Comunidad motociclista, rutas, aventuras
+
+Si NO es sobre motos deportivas/industriales responde SOLO: {{"es_moto": false}}
 
 Si SÍ es sobre motos responde SOLO con este JSON (sin texto adicional):
 {{
