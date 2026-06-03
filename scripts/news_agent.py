@@ -10,6 +10,7 @@ import json
 import re
 import textwrap
 import urllib.request
+import hashlib
 from io import BytesIO
 from datetime import datetime, timezone, timedelta
 from urllib.parse import quote
@@ -96,7 +97,7 @@ def _load_font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
 
 
 # ── Instagram image generator ─────────────────────────────────────────────────
-def generate_ig_image(article: dict, processed: dict, article_id: int) -> str | None:
+def generate_ig_image(article: dict, processed: dict, file_key: str) -> str | None:
     """
     Build a 1080x1080 Instagram image:
       • Article photo as background (center-cropped)
@@ -165,7 +166,7 @@ def generate_ig_image(article: dict, processed: dict, article_id: int) -> str | 
     img.save(buf, format="JPEG", quality=90)
     buf.seek(0)
 
-    filename = f"ig_{article_id}.jpg"
+    filename = f"ig_{file_key}.jpg"
     try:
         r = httpx.put(
             f"{SUPABASE_URL}/storage/v1/object/{IG_BUCKET}/{filename}",
@@ -336,17 +337,18 @@ Contenido: {article['content'][:1500]}"""
 
 
 # ── DB insert ─────────────────────────────────────────────────────────────────
-def insert_article(article: dict, processed: dict) -> int | None:
-    """Insert article and return its new ID (or None on failure)."""
+def insert_article(article: dict, processed: dict, ig_image_url: str | None = None) -> int | None:
+    """Insert article (with ig_image_url already set) and return its new ID."""
     record = {
-        "title":      processed.get("title", article["title"])[:80],
-        "content":    article["content"][:5000],
-        "summary":    processed.get("summary", "")[:500],
-        "image_url":  article.get("image_url"),
-        "category":   processed.get("category", "NOTICIA"),
-        "source_url": article.get("link", "")[:500],
-        "ig_title":   processed.get("ig_title", "")[:55],
-        "ig_caption": processed.get("ig_caption", "")[:120],
+        "title":        processed.get("title", article["title"])[:80],
+        "content":      article["content"][:5000],
+        "summary":      processed.get("summary", "")[:500],
+        "image_url":    article.get("image_url"),
+        "category":     processed.get("category", "NOTICIA"),
+        "source_url":   article.get("link", "")[:500],
+        "ig_title":     processed.get("ig_title", "")[:55],
+        "ig_caption":   processed.get("ig_caption", "")[:120],
+        "ig_image_url": ig_image_url,
     }
     headers = {**db_headers(), "Prefer": "return=representation"}
     try:
@@ -403,18 +405,18 @@ def main():
                 print("    ⏭️  Descartado — no es de motos")
                 continue
 
-            article_id = insert_article(article, processed)
+            # Generate Instagram image BEFORE insert so webhook includes ig_image_url
+            print("    📸 Generando imagen Instagram...")
+            file_key = hashlib.md5(article["link"].encode()).hexdigest()[:12]
+            ig_url = generate_ig_image(article, processed, file_key)
+
+            # INSERT with ig_image_url already populated — webhook fires with complete data
+            article_id = insert_article(article, processed, ig_image_url=ig_url)
             if not article_id:
                 continue
 
-            # Generate Instagram image
-            print("    📸 Generando imagen Instagram...")
-            ig_url = generate_ig_image(article, processed, article_id)
-            if ig_url:
-                update_ig_image(article_id, ig_url)
-                print(f"    ✅ [{processed.get('category','NOTICIA')}] {processed.get('title','')[:55]} 🖼️")
-            else:
-                print(f"    ✅ [{processed.get('category','NOTICIA')}] {processed.get('title','')[:55]}")
+            ig_status = "🖼️" if ig_url else "sin imagen"
+            print(f"    ✅ [{processed.get('category','NOTICIA')}] {processed.get('title','')[:55]} {ig_status}")
             saved += 1
 
         except Exception as e:
