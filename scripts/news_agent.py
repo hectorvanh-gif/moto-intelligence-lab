@@ -389,7 +389,7 @@ def main():
     print(f"📅  {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n")
 
     print("📡 Fetching from NewsAPI...")
-    articles = fetch_from_newsapi(days=1)
+    articles = fetch_from_newsapi(days=2)
 
     print("\n📡 Fetching from RSS feeds...")
     rss = fetch_from_rss(hours=25)
