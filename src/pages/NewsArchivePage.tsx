@@ -51,7 +51,7 @@ const NewsArchivePage = () => {
         <meta property="og:url" content="https://moto-intelligence-lab.vercel.app/noticias" />
       </Helmet>
 
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pt-16 lg:pt-20">
         <Navbar />
 
         <main className="container mx-auto px-4 lg:px-8 py-16">

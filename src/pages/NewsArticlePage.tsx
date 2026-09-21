@@ -112,7 +112,7 @@ const NewsArticlePage = () => {
         )}
       </Helmet>
 
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pt-16 lg:pt-20">
         <Navbar />
 
         <main className="container mx-auto px-4 lg:px-8 py-12 max-w-4xl">
