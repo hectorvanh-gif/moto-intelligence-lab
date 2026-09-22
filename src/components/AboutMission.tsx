@@ -32,7 +32,7 @@ const AboutMission = () => {
               MOTOR + TECNOLOGÍA + COMUNIDAD
             </h2>
             <p className="font-body text-lg text-muted-foreground max-w-2xl mx-auto">
-              Moto Lab 09/24 no es un blog tradicional. Es un centro de
+              Moto Lab 249 no es un blog tradicional. Es un centro de
               inteligencia que utiliza IA para curar las noticias más
               relevantes del mundo motociclista para ti.
             </p>

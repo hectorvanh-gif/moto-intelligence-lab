@@ -46,12 +46,12 @@ const NewsArticlePage = () => {
         dateModified: article.created_at,
         author: {
           "@type": "Organization",
-          name: "Moto Lab 09/24",
+          name: "Moto Lab 249",
           url: siteUrl,
         },
         publisher: {
           "@type": "Organization",
-          name: "Moto Lab 09/24",
+          name: "Moto Lab 249",
           url: siteUrl,
           logo: {
             "@type": "ImageObject",
@@ -70,8 +70,8 @@ const NewsArticlePage = () => {
       <Helmet>
         <title>
           {article?.title
-            ? `${article.title} | Moto Lab 09/24`
-            : "Cargando artículo | Moto Lab 09/24"}
+            ? `${article.title} | Moto Lab 249`
+            : "Cargando artículo | Moto Lab 249"}
         </title>
         <meta
           name="description"
@@ -81,7 +81,7 @@ const NewsArticlePage = () => {
 
         {/* Open Graph */}
         <meta property="og:type" content="article" />
-        <meta property="og:title" content={article?.title || "Moto Lab 09/24"} />
+        <meta property="og:title" content={article?.title || "Moto Lab 249"} />
         <meta
           property="og:description"
           content={article?.summary || "Noticias de motociclismo curadas por IA para México."}
@@ -91,12 +91,12 @@ const NewsArticlePage = () => {
           content={article?.image_url || `${siteUrl}/og-image.jpg`}
         />
         <meta property="og:url" content={articleUrl} />
-        <meta property="og:site_name" content="Moto Lab 09/24" />
+        <meta property="og:site_name" content="Moto Lab 249" />
         <meta property="article:published_time" content={article?.created_at || ""} />
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={article?.title || "Moto Lab 09/24"} />
+        <meta name="twitter:title" content={article?.title || "Moto Lab 249"} />
         <meta
           name="twitter:description"
           content={article?.summary || "Noticias de motociclismo curadas por IA para México."}

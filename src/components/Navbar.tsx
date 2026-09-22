@@ -23,7 +23,7 @@ const Navbar = () => {
               <span className="font-display text-primary text-xs lg:text-sm font-bold">ML</span>
             </div>
             <span className="font-display text-foreground text-sm lg:text-base tracking-widest hidden sm:block">
-              MOTO LAB <span className="text-primary">09/24</span>
+              MOTO LAB <span className="text-primary">249</span>
             </span>
           </div>
 

@@ -40,13 +40,13 @@ const NewsArchivePage = () => {
   return (
     <>
       <Helmet>
-        <title>Archivo de Noticias | Moto Lab 09/24</title>
+        <title>Archivo de Noticias | Moto Lab 249</title>
         <meta
           name="description"
           content="Todas las noticias de motociclismo curadas por IA — MotoGP, Superbike, motos eléctricas y más. El medio de motos en México."
         />
         <link rel="canonical" href="https://moto-intelligence-lab.vercel.app/noticias" />
-        <meta property="og:title" content="Archivo de Noticias | Moto Lab 09/24" />
+        <meta property="og:title" content="Archivo de Noticias | Moto Lab 249" />
         <meta property="og:description" content="Todas las noticias de motociclismo curadas por IA para México." />
         <meta property="og:url" content="https://moto-intelligence-lab.vercel.app/noticias" />
       </Helmet>

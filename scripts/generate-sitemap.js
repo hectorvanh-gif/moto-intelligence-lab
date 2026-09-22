@@ -1,5 +1,5 @@
 /**
- * Moto Lab 09/24 — Sitemap Generator
+ * Moto Lab 249 — Sitemap Generator
  * Runs before vite build. Fetches all article IDs from Supabase and writes public/sitemap.xml
  */
 

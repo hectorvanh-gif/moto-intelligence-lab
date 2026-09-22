@@ -28,7 +28,7 @@ const Hero = () => {
       if (error.code === "23505") {
         toast({
           title: "Ya estás registrado",
-          description: "Este email ya forma parte del Lab 09/24.",
+          description: "Este email ya forma parte del Lab 249.",
         });
       } else {
         toast({
@@ -99,7 +99,7 @@ const Hero = () => {
               className="flex-1"
             />
             <Button type="submit" variant="hero" size="xl" disabled={isLoading} className="whitespace-nowrap">
-              {isLoading ? "PROCESANDO..." : "UNIRME AL LAB 09/24"}
+              {isLoading ? "PROCESANDO..." : "UNIRME AL LAB 249"}
             </Button>
           </form>
 

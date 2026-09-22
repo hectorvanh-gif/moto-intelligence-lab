@@ -105,7 +105,7 @@ def generate_ig_image(article: dict, processed: dict, file_key: str) -> str | No
     Build a 1080x1080 Instagram image:
       • Article photo as background (center-cropped)
       • Dark gradient overlay
-      • MOTO LAB 09/24 brand badge
+      • MOTO LAB 249 brand badge
       • ig_title (large bold) + red separator + ig_caption
     Uploads to Supabase Storage and returns the public URL.
     """
@@ -144,7 +144,7 @@ def generate_ig_image(article: dict, processed: dict, file_key: str) -> str | No
     # 3 — Brand badge (top-left)
     font_brand = _load_font(22, bold=True)
     draw.rectangle([40, 38, 320, 76], fill=(239, 68, 68))
-    draw.text((54, 45), "MOTO LAB 09/24", font=font_brand, fill=(255, 255, 255))
+    draw.text((54, 45), "MOTO LAB 249", font=font_brand, fill=(255, 255, 255))
 
     # 4 — Red vertical accent bar
     draw.rectangle([54, SIZE[1] - 420, 63, SIZE[1] - 110], fill=(239, 68, 68))

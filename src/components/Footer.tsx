@@ -30,7 +30,7 @@ const Footer = () => {
                 </span>
               </div>
               <span className="font-display text-foreground text-sm tracking-widest">
-                MOTO LAB <span className="text-primary">09/24</span>
+                MOTO LAB <span className="text-primary">249</span>
               </span>
             </div>
             <p className="font-body text-muted-foreground text-sm">
@@ -103,7 +103,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t border-border/30 text-center">
           <p className="digital-code">
-            © 2024 MOTO LAB 09/24 // TODOS LOS DERECHOS RESERVADOS // MÉXICO
+            © 2026 MOTO LAB 249 // TODOS LOS DERECHOS RESERVADOS // MÉXICO
           </p>
         </div>
       </div>
