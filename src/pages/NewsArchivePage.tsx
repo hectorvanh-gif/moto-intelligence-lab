@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNewsArchive, PAGE_SIZE } from "@/hooks/useNewsArchive";
+import { SITE_URL } from "@/lib/site";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -45,10 +46,10 @@ const NewsArchivePage = () => {
           name="description"
           content="Todas las noticias de motociclismo curadas por IA — MotoGP, Superbike, motos eléctricas y más. El medio de motos en México."
         />
-        <link rel="canonical" href="https://moto-intelligence-lab.vercel.app/noticias" />
+        <link rel="canonical" href={`${SITE_URL}/noticias`} />
         <meta property="og:title" content="Archivo de Noticias | Moto Lab 249" />
         <meta property="og:description" content="Todas las noticias de motociclismo curadas por IA para México." />
-        <meta property="og:url" content="https://moto-intelligence-lab.vercel.app/noticias" />
+        <meta property="og:url" content={`${SITE_URL}/noticias`} />
       </Helmet>
 
       <div className="min-h-screen bg-background pt-16 lg:pt-20">

@@ -7,7 +7,7 @@ import { writeFileSync } from "fs";
 
 const SUPABASE_URL = "https://rbumxwchxgjbtxsxutbl.supabase.co";
 const SUPABASE_KEY = "sb_publishable_FJ0Skr8u_WADS-KpchPLGA_o3eq9ps3";
-const SITE_URL = "https://moto-intelligence-lab.vercel.app";
+const SITE_URL = "https://motolab249.com";
 
 async function generateSitemap() {
   console.log("🗺️  Generating sitemap...");

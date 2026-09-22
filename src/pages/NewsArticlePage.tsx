@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { ArrowLeft, ExternalLink, Clock, Tag } from "lucide-react";
 import { useArticle } from "@/hooks/useArticle";
+import { SITE_URL } from "@/lib/site";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -23,7 +24,7 @@ const NewsArticlePage = () => {
   const { id } = useParams<{ id: string }>();
   const { data: article, isLoading, error } = useArticle(id);
 
-  const siteUrl = "https://moto-intelligence-lab.vercel.app";
+  const siteUrl = SITE_URL;
   const articleUrl = `${siteUrl}/noticias/${id}`;
 
   const formattedDate = article?.created_at
