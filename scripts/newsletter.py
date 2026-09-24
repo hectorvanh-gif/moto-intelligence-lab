@@ -45,6 +45,12 @@ REMITENTE = (
 SITIO = "https://motolab249.com"
 DESCARTADO = "DESCARTADO"
 
+# El remitente es boletin@motolab249.com, que no tiene buzon: Resend puede
+# enviar desde cualquier direccion del dominio verificado, pero nadie
+# recibe ahi. Como el correo pide "responde BAJA", las respuestas tienen
+# que caer en un buzon real.
+RESPONDER_A = os.environ.get("NEWSLETTER_REPLY_TO") or "motolab249@gmail.com"
+
 # Paleta del sitio, para que el correo se sienta del mismo lugar.
 NEGRO, CARTA, ROJO = "#0a0a0a", "#141414", "#ef4444"
 TEXTO, TENUE, LINEA = "#fafafa", "#a1a1aa", "#27272a"
@@ -249,10 +255,13 @@ def enviar(destino: str, asunto: str, cuerpo: str) -> tuple[bool, str]:
         json={
             "from": REMITENTE,
             "to": [destino],
+            "reply_to": RESPONDER_A,
             "subject": asunto,
             "html": cuerpo,
             # Gmail muestra su propio boton de baja cuando ve esta cabecera.
-            "headers": {"List-Unsubscribe": "<mailto:motolab249@gmail.com?subject=BAJA>"},
+            "headers": {
+                "List-Unsubscribe": f"<mailto:{RESPONDER_A}?subject=BAJA>"
+            },
         },
         timeout=30,
     )
