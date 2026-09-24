@@ -89,8 +89,11 @@ const NewsletterBand = () => {
             </Button>
           </form>
 
+          {/* Aqui decia "+500 pilotos ya reciben noticias cada semana" con la
+              tabla de suscriptores en cero y el formulario rechazando altas.
+              No poner cifras de suscriptores hasta que sean ciertas. */}
           <p className="font-body text-sm text-muted-foreground mt-5">
-            +500 pilotos ya reciben noticias cada semana
+            Cada lunes. Te puedes salir cuando quieras.
           </p>
         </div>
       </div>
