@@ -253,9 +253,11 @@ def main() -> int:
         hechas += 1
         time.sleep(args.sleep)
 
+    corregidas = normalizar_categorias(args.dry_run)
+
     print(
         f"\n✅ Listo. {hechas} reprocesadas · {descartadas} descartadas · "
-        f"{fallidas} con error"
+        f"{fallidas} con error · {corregidas} categorias corregidas"
     )
     return 0
 
