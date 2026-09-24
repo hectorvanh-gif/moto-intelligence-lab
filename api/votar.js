@@ -70,19 +70,26 @@ export default async function handler(req, res) {
       body: JSON.stringify({ news_id: id, ip_hash: hashDe(ipDe(req)) }),
     });
 
-    if (alta.status === 409) {
-      // Ya voto esta nota desde aqui. No es un error del visitante: se le
-      // devuelve el total para que la interfaz quede igual que si acabara
-      // de votar.
-      return res.status(200).json({ total: await totalDe(id), yaVotado: true });
-    }
-
     if (!alta.ok) {
       const detalle = await alta.text();
-      // 23503 es violacion de llave ajena: la nota no existe.
+
+      // PostgREST responde 409 tanto al voto repetido (23505) como a una
+      // nota que no existe (23503), asi que hay que mirar el codigo y no
+      // el estado: si no, votar por una nota inexistente se reportaba como
+      // "ya votaste" y la interfaz marcaba el boton.
       if (detalle.includes("23503")) {
         return res.status(404).json({ error: "esa nota no existe" });
       }
+
+      if (detalle.includes("23505")) {
+        // Ya voto esta nota desde aqui. No es un error del visitante: se
+        // le devuelve el total para que la interfaz quede igual que si
+        // acabara de votar.
+        return res
+          .status(200)
+          .json({ total: await totalDe(id), yaVotado: true });
+      }
+
       console.error("votar: votes_log", alta.status, detalle.slice(0, 200));
       return res.status(502).json({ error: "no se pudo registrar el voto" });
     }
