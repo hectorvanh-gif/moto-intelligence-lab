@@ -1,27 +1,19 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { NeonInput } from "@/components/ui/input";
-import { toast } from "@/hooks/use-toast";
 import { Instagram } from "lucide-react";
+import { COMUNIDAD_URL } from "@/lib/comunidad";
 
+/**
+ * El pie. Tenia un segundo formulario de newsletter que mostraba
+ * "Suscrito!" y no escribia en ninguna parte: ni Supabase, ni endpoint,
+ * nada. Quien se diera de alta desde aqui quedaba convencido de estar
+ * suscrito y su correo se tiraba. Se elimino; la banda de suscripcion real
+ * queda justo encima del pie en todas las paginas.
+ */
 const Footer = () => {
-  const [email, setEmail] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-    toast({
-      title: "¡Suscrito!",
-      description: "Bienvenido al Lab. Prepárate para la inteligencia.",
-    });
-    setEmail("");
-  };
-
   return (
     <footer className="relative bg-background py-16 lg:py-20 border-t border-border/50">
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-16">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-3 mb-4">
@@ -62,6 +54,16 @@ const Footer = () => {
                   >
                     Archivo completo
                   </Link>
+                </li>
+                <li>
+                  <a
+                    href={COMUNIDAD_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-body text-sm text-primary hover:text-primary/80 transition-colors"
+                  >
+                    Entrar a la comunidad
+                  </a>
                 </li>
               </ul>
             </div>
@@ -104,24 +106,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Newsletter */}
-          <div>
-            <h4 className="font-display text-xs tracking-widest text-foreground mb-4">
-              NEWSLETTER
-            </h4>
-            <form onSubmit={handleSubmit} className="flex gap-2">
-              <NeonInput
-                type="email"
-                placeholder="tu@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 h-10"
-              />
-              <Button type="submit" variant="neon" size="sm">
-                UNIRME
-              </Button>
-            </form>
-          </div>
         </div>
 
         {/* Copyright */}

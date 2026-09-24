@@ -1,10 +1,14 @@
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { COMUNIDAD_URL } from "@/lib/comunidad";
 import CategoryBar from "./CategoryBar";
 
 /**
- * La barra de arriba: logotipo, archivo y suscribirse. La navegacion por
+ * La barra de arriba: logotipo, comunidad y suscribirse. La navegacion por
  * tema esta en CategoryBar, el renglon de abajo.
+ *
+ * ARCHIVO salio de aqui; /noticias se sigue alcanzando desde el "VER TODO"
+ * de la portada y desde el pie.
  *
  * Ya no hay menu hamburguesa. Tenia sentido cuando cargaba las cuatro
  * secciones, pero esas se fueron a la fila de categorias y quedaron dos
@@ -13,11 +17,6 @@ import CategoryBar from "./CategoryBar";
  * navegacion que importa.
  */
 const Navbar = () => {
-  const linkClass = ({ isActive }: { isActive: boolean }) =>
-    `font-display text-xs tracking-widest transition-colors ${
-      isActive ? "text-primary" : "text-muted-foreground hover:text-primary"
-    }`;
-
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
@@ -35,9 +34,14 @@ const Navbar = () => {
             </Link>
 
             <div className="flex items-center gap-4 lg:gap-7">
-              <NavLink to="/noticias" className={linkClass}>
-                ARCHIVO
-              </NavLink>
+              <a
+                href={COMUNIDAD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-display text-xs tracking-widest text-muted-foreground hover:text-primary transition-colors"
+              >
+                COMUNIDAD
+              </a>
               <Button variant="nav" size="sm" asChild>
                 <Link to="/#suscribete">SUSCRIBIRSE</Link>
               </Button>

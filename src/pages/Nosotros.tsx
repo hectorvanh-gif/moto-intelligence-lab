@@ -3,6 +3,7 @@ import { ArrowRight, Filter, Bot, Vote } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import NewsletterBand from "@/components/NewsletterBand";
+import CommunityBand from "@/components/CommunityBand";
 import { SITE_URL } from "@/lib/site";
 import { useMeta } from "@/hooks/useMeta";
 
@@ -130,6 +131,7 @@ const Nosotros = () => {
           </div>
         </main>
 
+        <CommunityBand />
         <NewsletterBand />
         <Footer />
       </div>
