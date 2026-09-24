@@ -42,9 +42,24 @@ const NewsletterBand = () => {
         });
       }
     } else {
+      // El correo de bienvenida va aparte del alta, a proposito: si el
+      // envio falla, el suscriptor ya quedo guardado y no se pierde por un
+      // problema de Resend.
+      //
+      // Se espera la respuesta solo para no prometer un correo que no
+      // salio. Prometerlo sin saberlo manda al visitante a buscar en su
+      // bandeja algo que no existe.
+      const envio = await fetch("/api/bienvenida", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim().toLowerCase() }),
+      }).catch(() => null);
+
       toast({
         title: "¡Bienvenido al Lab!",
-        description: "Pronto recibirás inteligencia de alto octanaje.",
+        description: envio?.ok
+          ? "Te mandamos un correo de confirmación. Revisa tu bandeja."
+          : "Cada lunes te llega el resumen de la semana.",
       });
       setEmail("");
     }
