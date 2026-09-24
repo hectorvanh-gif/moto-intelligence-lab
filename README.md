@@ -1,73 +1,78 @@
-# Welcome to your Lovable project
+# Moto Lab 249
 
-## Project info
+Portal de noticias de moto para México: **[motolab249.com](https://motolab249.com)**
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+Un agente junta cada mañana lo que publicó la prensa especializada, Claude lo
+reescribe y lo clasifica, y el sitio lo publica. Los lectores votan las notas y
+cada lunes sale un boletín con lo mejor de la semana.
 
-## How can I edit this code?
+## Cómo está armado
 
-There are several ways of editing your application.
+| Pieza | Qué es |
+|---|---|
+| Sitio | React + Vite + Tailwind, SPA servida en Vercel |
+| Datos | Supabase (`moto_news`, `subscribers`, `votes_log`) |
+| Agente | Python en GitHub Actions, 9:00 CST |
+| Redacción | Claude Haiku |
+| Imágenes | Pillow, 1080x1080 para Instagram |
+| Correo | Resend, desde `boletin@motolab249.com` |
+| Analítica | GTM `GTM-TFG89RFD` → GA4 `G-SBLMWDNHDC` |
 
-**Use Lovable**
+## Los scripts
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+```bash
+# El agente diario: NewsAPI + RSS -> Claude -> Supabase
+python scripts/news_agent.py
 
-Changes made via Lovable will be committed automatically to this repo.
+# Reprocesa notas viejas y normaliza categorías inválidas
+python scripts/backfill.py --limit 0 --dry-run
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# El boletín. Sin --enviar solo escribe boletin.html
+python scripts/newsletter.py --dias 7
 ```
 
-**Edit a file directly in GitHub**
+El boletín **se manda a mano**, por decisión: `gh workflow run newsletter.yml -f enviar=true`.
+El cron está comentado en el workflow hasta llevar varios lunes revisados.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Cosas que hay que saber antes de tocar esto
 
-**Use GitHub Codespaces**
+**La categoría se valida contra un catálogo.** Claude inventa categorías si le
+dejas (devolvió `MOTO3` y `TECNOLOGIA`), y una categoría fuera de
+`src/lib/categories.ts` hace que la nota no aparezca en ninguna sección. Eso lo
+resuelve `categoria_valida()` en `scripts/news_agent.py`.
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+**Claude envuelve el JSON en markdown.** El agente falló en silencio durante
+meses porque `json.loads` no podía con ```json ... ```, y el fallback copiaba el
+texto crudo de la fuente. La firma de ese fallo es `ig_title == title[:55].upper()`.
 
-## What technologies are used for this project?
+**El mismo suceso entra varias veces.** La deduplicación del agente es por URL,
+así que una noticia entra tantas veces como medios la publiquen. El boletín la
+detecta comparando titulares (`misma_historia()` en `scripts/newsletter.py`); el
+sitio todavía no.
 
-This project is built with:
+**Los votos se cuentan en el servidor.** `api/votar.js`, nunca desde el
+navegador. El esquema está en `supabase/votos.sql`, y ahí queda anotado el
+`revoke ... from public` que es fácil de olvidar: sin él, cualquiera puede
+inflar el contador llamando al RPC.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+**El sitemap se regenera en cada build** (`npm run build` lo corre antes de
+Vite). Si pasan días sin desplegar, las notas nuevas no están en el sitemap.
 
-## How can I deploy this project?
+**El rewrite de `vercel.json` excluye `/api`** para que la SPA no se trague las
+funciones. Ese mismo rewrite hace que cualquier URL inventada responda 200 con
+la app, lo que Google reporta como soft 404: es un pendiente conocido.
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+## Secretos
 
-## Can I connect a custom domain to my Lovable project?
+En GitHub Actions: `ANTHROPIC_API_KEY`, `NEWSAPI_KEY`, `SUPABASE_URL`,
+`SUPABASE_SERVICE_KEY`, `RESEND_API_KEY`. La variable `NEWSLETTER_FROM` es
+pública.
 
-Yes, you can!
+En Vercel: `SUPABASE_SERVICE_KEY` y `RESEND_API_KEY`, que usan las funciones de
+`api/`. Cambiarlas **exige un redespliegue**: Vercel las inyecta al desplegar,
+no en caliente.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+La llave publicable de Supabase sí vive en el código del sitio, y está bien: las
+tablas sensibles están cerradas por RLS. `subscribers` acepta inserciones y no
+permite lecturas, así que la lista de correos no se puede descargar desde el
+navegador.

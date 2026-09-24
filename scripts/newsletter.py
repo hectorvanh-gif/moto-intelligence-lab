@@ -86,7 +86,7 @@ def traer_notas(dias: int, cuantas: int) -> list[dict]:
         f"{SUPABASE_URL}/rest/v1/moto_news",
         headers=cabeceras_db(),
         params={
-            "select": "id,title,summary,category,image_url,created_at",
+            "select": "id,title,summary,category,image_url,created_at,votes",
             "category": f"neq.{DESCARTADO}",
             "created_at": f"gte.{desde}",
             "order": "created_at.desc",
@@ -135,10 +135,19 @@ def misma_historia(a: str, b: str) -> bool:
     if not fa or not fb:
         return False
     comunes = len(fa & fb)
-    # 0.5 sobre el titular mas corto. Se probo con 0.45, 0.5 y 0.6 contra
-    # las notas reales: 0.6 dejaba pasar dos veces el titulo de BMW en el
-    # Bol d'Or, y 0.45 no mejoraba nada sobre 0.5.
-    return comunes / min(len(fa), len(fb)) >= 0.5
+
+    # Dos condiciones, y las dos hacen falta.
+    #
+    # El 0.35 sobre el titular mas corto es bajo a proposito: dos medios
+    # cuentan la misma historia con palabras distintas. Con 0.5 entraban
+    # las dos versiones del fichaje de Chantra por Honda, que solo
+    # comparten "chantra" y "honda".
+    #
+    # Y hacen falta al menos dos palabras compartidas, no solo el
+    # porcentaje: un titular con dos palabras significativas que comparta
+    # una sola ya daria 0.5, y se fusionarian dos historias distintas por
+    # coincidir en una marca.
+    return comunes >= 2 and comunes / min(len(fa), len(fb)) >= 0.35
 
 
 def elegir(notas: list[dict], total: int, por_categoria: int) -> list[dict]:
@@ -165,6 +174,38 @@ def elegir(notas: list[dict], total: int, por_categoria: int) -> list[dict]:
     return elegidas
 
 
+def mas_votadas(
+    candidatas: list[dict], ya_elegidas: list[dict], cuantas: int = 3
+) -> list[dict]:
+    """
+    Las que mas votos juntaron, sin repetir las que ya van en el correo.
+
+    Repetir una nota dentro del mismo boletin es el mismo defecto que
+    arreglamos con el deduplicado: el lector la lee dos veces y el correo
+    se siente relleno.
+    """
+    dentro = {n["id"] for n in ya_elegidas}
+    con_votos = [
+        n for n in candidatas if n["id"] not in dentro and (n.get("votes") or 0) > 0
+    ]
+    con_votos.sort(key=lambda n: n.get("votes") or 0, reverse=True)
+
+    # Hay que descartar tambien por historia, no solo por id. Excluyendo
+    # solo el id, la version repetida que el deduplicado saco de las seis
+    # volvia a entrar por aqui: el lector veia el mismo fichaje de Chantra
+    # dos veces en el mismo correo, en dos secciones distintas.
+    elegidas: list[dict] = []
+    for n in con_votos:
+        titulo = n.get("title") or ""
+        previas = ya_elegidas + elegidas
+        if any(misma_historia(titulo, p.get("title") or "") for p in previas):
+            continue
+        elegidas.append(n)
+        if len(elegidas) >= cuantas:
+            break
+    return elegidas
+
+
 def asunto_de(notas: list[dict]) -> str:
     """
     El titular de la nota principal, cortado en palabra completa.
@@ -179,7 +220,45 @@ def asunto_de(notas: list[dict]) -> str:
     return t[:48].rsplit(" ", 1)[0] + "…"
 
 
-def armar_html(notas: list[dict]) -> str:
+def bloque_votadas(votadas: list[dict]) -> str:
+    """
+    El ranking de los lectores.
+
+    Si nadie voto, el bloque no existe: un "lo mas votado" vacio le dice al
+    lector que nadie participa, igual que en el sitio.
+    """
+    if not votadas:
+        return ""
+
+    filas = []
+    for n in votadas:
+        titulo = html.escape((n.get("title") or "").strip())
+        enlace = f"{SITIO}/noticias/{n['id']}"
+        votos = n.get("votes") or 0
+        filas.append(
+            f"""
+        <tr><td style="padding:9px 0;">
+          <span style="display:inline-block;min-width:34px;color:{ROJO};
+            font-size:13px;font-weight:700;">{votos} &#128293;</span>
+          <a href="{enlace}" style="color:{TEXTO};font-size:15px;
+            text-decoration:none;">{titulo}</a>
+        </td></tr>"""
+        )
+
+    return f"""
+    <tr><td style="padding:4px 30px 30px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"
+        style="border-top:1px solid {LINEA};">
+        <tr><td style="padding:24px 0 6px;">
+          <span style="color:{ROJO};font-size:12px;font-weight:700;
+            letter-spacing:2px;">LO MAS VOTADO POR LOS LECTORES</span>
+        </td></tr>
+        {"".join(filas)}
+      </table>
+    </td></tr>"""
+
+
+def armar_html(notas: list[dict], votadas: list[dict] | None = None) -> str:
     """El correo. Estilos en linea, que es lo unico que respetan Gmail y Outlook."""
     bloques = []
     for i, n in enumerate(notas):
@@ -230,6 +309,8 @@ def armar_html(notas: list[dict]) -> str:
         {"".join(bloques)}
       </table>
     </td></tr>
+
+    {bloque_votadas(votadas or [])}
 
     <tr><td style="padding:22px 30px 30px;border-top:1px solid {LINEA};">
       <a href="{SITIO}" style="color:{ROJO};font-size:13px;font-weight:700;
@@ -306,7 +387,15 @@ def main() -> int:
     for n in notas:
         print(f"     [{n.get('category')}] {(n.get('title') or '')[:64]}")
 
-    cuerpo = armar_html(notas)
+    votadas = mas_votadas(candidatas, notas)
+    if votadas:
+        print(f"   + {len(votadas)} en el ranking de los lectores:")
+        for n in votadas:
+            print(f"     {n.get('votes')} votos · {(n.get('title') or '')[:56]}")
+    else:
+        print("   sin votos en la ventana: el ranking no se incluye")
+
+    cuerpo = armar_html(notas, votadas)
     asunto = asunto_de(notas)
 
     if args.solo:
