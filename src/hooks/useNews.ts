@@ -20,6 +20,7 @@ export const useLatestNews = (limit = 9) => {
       const { data, error } = await supabase
         .from("moto_news")
         .select("*")
+        .neq("category", "DESCARTADO")
         .order("created_at", { ascending: false })
         .limit(limit);
 
@@ -38,6 +39,7 @@ export const useNewsByCategory = (value: string, limit = 3) => {
         .from("moto_news")
         .select("*")
         .eq("category", value)
+        .neq("category", "DESCARTADO")
         .order("created_at", { ascending: false })
         .limit(limit);
 
@@ -73,6 +75,7 @@ export const useHubNews = (
         .from("moto_news")
         .select("*")
         .or(conditions)
+        .neq("category", "DESCARTADO")
         .order("created_at", { ascending: false })
         .limit(limit);
 

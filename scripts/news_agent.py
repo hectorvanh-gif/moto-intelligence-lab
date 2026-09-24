@@ -25,7 +25,8 @@ from PIL import Image, ImageDraw, ImageFont
 SUPABASE_URL = os.environ["SUPABASE_URL"]
 SUPABASE_KEY = os.environ["SUPABASE_SERVICE_KEY"]
 ANTHROPIC_API_KEY = os.environ["ANTHROPIC_API_KEY"]
-NEWSAPI_KEY = os.environ["NEWSAPI_KEY"]
+# Opcional a proposito: backfill.py importa este modulo y no necesita NewsAPI.
+NEWSAPI_KEY = os.environ.get("NEWSAPI_KEY", "")
 
 TABLE_NAME = "moto_news"
 TABLE_PATH = quote(TABLE_NAME, safe="")

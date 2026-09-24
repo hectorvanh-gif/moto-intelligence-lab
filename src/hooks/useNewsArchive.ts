@@ -11,6 +11,7 @@ export const useNewsArchive = (page: number = 1, category?: string) => {
       let query = supabase
         .from("moto_news")
         .select("*", { count: "exact" })
+        .neq("category", "DESCARTADO")
         .order("created_at", { ascending: false })
         .range((page - 1) * PAGE_SIZE, page * PAGE_SIZE - 1);
 

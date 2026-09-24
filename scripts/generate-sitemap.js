@@ -14,7 +14,7 @@ async function generateSitemap() {
 
   // Fetch all articles (only id + created_at needed)
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/moto_news?select=id,created_at&order=created_at.desc&limit=1000`,
+    `${SUPABASE_URL}/rest/v1/moto_news?select=id,created_at&category=neq.DESCARTADO&order=created_at.desc&limit=1000`,
     {
       headers: {
         apikey: SUPABASE_KEY,
