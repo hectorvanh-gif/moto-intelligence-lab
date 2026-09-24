@@ -48,7 +48,7 @@ const NewsArchivePage = () => {
   // Un slug que no existe no debe fingir una categoria vacia.
   if (slug && !category) {
     return (
-      <div className="min-h-screen bg-background pt-16 lg:pt-20">
+      <div className="min-h-screen bg-background pt-28 lg:pt-32">
         <Navbar />
         <main className="container mx-auto px-4 lg:px-8 py-24 text-center">
           <h1 className="font-display text-2xl font-bold text-foreground mb-4">
@@ -67,7 +67,7 @@ const NewsArchivePage = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-background pt-16 lg:pt-20">
+      <div className="min-h-screen bg-background pt-28 lg:pt-32">
         <Navbar />
 
         <main className="container mx-auto px-4 lg:px-8 py-16">

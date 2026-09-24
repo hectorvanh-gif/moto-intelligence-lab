@@ -75,7 +75,7 @@ const NewsArticlePage = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-background pt-16 lg:pt-20">
+      <div className="min-h-screen bg-background pt-28 lg:pt-32">
         <Navbar />
 
         <main className="container mx-auto px-4 lg:px-8 py-12 max-w-4xl">

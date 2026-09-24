@@ -34,7 +34,7 @@ const Hero = () => {
   return (
     <section
       id="hero"
-      className="relative min-h-[62vh] lg:min-h-[70vh] flex items-end overflow-hidden pt-16 lg:pt-20"
+      className="relative min-h-[62vh] lg:min-h-[70vh] flex items-end overflow-hidden pt-28 lg:pt-32"
     >
       {/* Fondo: la foto de la nota */}
       {article?.image_url ? (

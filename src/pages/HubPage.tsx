@@ -60,7 +60,7 @@ const HubPage = ({ slug }: Props) => {
 
   return (
     <>
-      <div className="min-h-screen bg-background pt-16 lg:pt-20">
+      <div className="min-h-screen bg-background pt-28 lg:pt-32">
         <Navbar />
 
         {/* Encabezado */}

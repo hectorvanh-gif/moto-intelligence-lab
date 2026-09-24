@@ -31,7 +31,7 @@ const Nosotros = () => {
       <div className="min-h-screen bg-background">
         <Navbar />
 
-        <main className="pt-24 lg:pt-32 pb-8">
+        <main className="pt-36 lg:pt-44 pb-8">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="max-w-3xl mx-auto">
               <p className="font-display text-xs tracking-widest text-primary mb-4">
