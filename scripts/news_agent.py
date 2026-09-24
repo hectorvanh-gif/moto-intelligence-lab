@@ -58,6 +58,50 @@ RSS_FEEDS = [
 ]
 
 
+# ── Catalogo de categorias ───────────────────────────────────────────────────
+# Tiene que coincidir con src/lib/categories.ts: una categoria que no este
+# ahi no aparece en ninguna seccion del sitio. Claude a veces inventa
+# (devolvio "MOTO3" una vez en 486 notas), asi que no se guarda lo que diga
+# sin validar.
+CATEGORIAS = {
+    "MOTOGP", "SUPERBIKE", "ENDURO", "AVENTURA",
+    "NAKED", "SPORT", "ELECTRICA", "NOTICIA",
+}
+
+# Lo que el modelo suele devolver y a donde pertenece de verdad. Moto2 y
+# Moto3 corren el mismo fin de semana que MotoGP y la seccion /motogp habla
+# de las tres categorias, asi que van ahi.
+SINONIMOS = {
+    "MOTO2": "MOTOGP",
+    "MOTO3": "MOTOGP",
+    "MOTO GP": "MOTOGP",
+    "WSBK": "SUPERBIKE",
+    "SBK": "SUPERBIKE",
+    "ELECTRICO": "ELECTRICA",
+    "ELÉCTRICA": "ELECTRICA",
+    "ELECTRICAS": "ELECTRICA",
+    "TRAIL": "AVENTURA",
+    "ADVENTURE": "AVENTURA",
+    "RALLY": "ENDURO",
+    "DAKAR": "ENDURO",
+    "MOTOCROSS": "ENDURO",
+}
+
+
+def categoria_valida(valor: str | None) -> str:
+    """Normaliza la categoria a una del catalogo. Fuera de eso, NOTICIA."""
+    c = (valor or "").strip().upper()
+    if c in CATEGORIAS:
+        return c
+    if c in SINONIMOS:
+        destino = SINONIMOS[c]
+        print(f"      ↪️  Categoria '{c}' normalizada a {destino}")
+        return destino
+    if c:
+        print(f"      ⚠️  Categoria fuera del catalogo: '{c}' -> NOTICIA")
+    return "NOTICIA"
+
+
 # ── Limpieza de texto ────────────────────────────────────────────────────────
 def clean(raw: str | None) -> str:
     """
@@ -412,7 +456,7 @@ def insert_article(article: dict, processed: dict, ig_image_url: str | None = No
         "content":      (processed.get("cuerpo") or article["content"])[:5000],
         "summary":      processed.get("summary", "")[:500],
         "image_url":    article.get("image_url"),
-        "category":     processed.get("category", "NOTICIA"),
+        "category":     categoria_valida(processed.get("category")),
         "source_url":   article.get("link", "")[:500],
         "ig_title":     processed.get("ig_title", "")[:55],
         "ig_caption":   processed.get("ig_caption", "")[:120],

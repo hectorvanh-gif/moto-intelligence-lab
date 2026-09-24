@@ -38,8 +38,10 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 from news_agent import (
+    CATEGORIAS,
     SUPABASE_URL,
     TABLE_PATH,
+    categoria_valida,
     clean,
     db_headers,
     summarize_with_claude,
@@ -116,6 +118,65 @@ def actualizar(article_id: int, campos: dict) -> bool:
     return False
 
 
+def normalizar_categorias(dry_run: bool) -> int:
+    """
+    Corrige filas que quedaron con una categoria fuera del catalogo.
+
+    Claude devolvio "MOTO3" en una de las primeras 486 notas. Esas filas no
+    aparecen en ninguna seccion del sitio, porque src/lib/categories.ts no
+    conoce esa categoria. Esta pasada no llama a Claude: solo reetiqueta.
+    """
+    print("\n🏷️  Revisando categorias fuera del catalogo...")
+    validas = CATEGORIAS | {DESCARTADA}
+    encontradas = 0
+    corregidas = 0
+    offset = 0
+
+    while True:
+        try:
+            r = httpx.get(
+                f"{SUPABASE_URL}/rest/v1/{TABLE_PATH}",
+                headers=db_headers(),
+                params={
+                    "select": "id,category",
+                    "order": "created_at.desc",
+                    "limit": str(PAGE),
+                    "offset": str(offset),
+                },
+                timeout=30,
+            )
+        except Exception as e:
+            print(f"    ❌ Error: {e}")
+            return corregidas
+
+        if r.status_code != 200:
+            print(f"    ❌ DB fetch {r.status_code}: {r.text[:120]}")
+            return corregidas
+
+        lote = r.json()
+        if not lote:
+            break
+
+        for row in lote:
+            actual = row.get("category")
+            if actual in validas:
+                continue
+            nueva = categoria_valida(actual)
+            encontradas += 1
+            print(f"    #{row['id']}: '{actual}' -> {nueva}")
+            if not dry_run and actualizar(row["id"], {"category": nueva}):
+                corregidas += 1
+
+        if len(lote) < PAGE:
+            break
+        offset += PAGE
+
+    if encontradas == 0:
+        print("    nada que corregir")
+    # En simulacro se reporta lo que se corregiria, no lo que se escribio.
+    return encontradas if dry_run else corregidas
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=None, help="cuantas notas procesar")
@@ -131,7 +192,9 @@ def main() -> int:
     print(f"    {len(pendientes)} notas por reprocesar\n")
 
     if not pendientes:
-        print("Nada pendiente. Listo.")
+        print("Nada pendiente que reprocesar.")
+        corregidas = normalizar_categorias(args.dry_run)
+        print(f"\n✅ Listo. {corregidas} categorias corregidas")
         return 0
 
     hechas = descartadas = fallidas = 0
@@ -169,7 +232,7 @@ def main() -> int:
         campos = {
             "title": (procesado.get("title") or row["title"])[:80],
             "summary": (procesado.get("summary") or "")[:500],
-            "category": procesado.get("category", "NOTICIA"),
+            "category": categoria_valida(procesado.get("category")),
             "ig_title": (procesado.get("ig_title") or "")[:55],
             "ig_caption": (procesado.get("ig_caption") or "")[:120],
         }
