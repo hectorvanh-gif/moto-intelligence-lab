@@ -9,23 +9,43 @@ export interface NewsArticle {
   summary: string | null;
   image_url: string | null;
   category: string | null;
+  source_url: string | null;
 }
 
-export const useNews = () => {
+/** Las mas recientes, sin filtrar por categoria. */
+export const useLatestNews = (limit = 9) => {
   return useQuery({
-    queryKey: ["news"],
+    queryKey: ["news", "latest", limit],
     queryFn: async (): Promise<NewsArticle[]> => {
       const { data, error } = await supabase
         .from("moto_news")
         .select("*")
         .order("created_at", { ascending: false })
-        .limit(9);
+        .limit(limit);
 
-      if (error) {
-        throw error;
-      }
-
+      if (error) throw error;
       return data || [];
     },
   });
 };
+
+/** Las mas recientes de una categoria. `value` es el valor que guarda el agente. */
+export const useNewsByCategory = (value: string, limit = 3) => {
+  return useQuery({
+    queryKey: ["news", "category", value, limit],
+    queryFn: async (): Promise<NewsArticle[]> => {
+      const { data, error } = await supabase
+        .from("moto_news")
+        .select("*")
+        .eq("category", value)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      return data || [];
+    },
+  });
+};
+
+/** @deprecated se conserva por compatibilidad; usar useLatestNews. */
+export const useNews = () => useLatestNews(9);

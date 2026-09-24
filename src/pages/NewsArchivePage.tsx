@@ -1,65 +1,93 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { format } from "date-fns";
-import { es } from "date-fns/locale";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNewsArchive, PAGE_SIZE } from "@/hooks/useNewsArchive";
-import { SITE_URL } from "@/lib/site";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import NewsCard from "@/components/NewsCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { CATEGORIES, bySlug } from "@/lib/categories";
+import { SITE_URL } from "@/lib/site";
 
-const CATEGORIES = ["TODAS", "MOTOGP", "SUPERBIKE", "ENDURO", "AVENTURA", "NAKED", "SPORT", "ELECTRICA", "NOTICIA"];
-
-const CATEGORY_COLORS: Record<string, string> = {
-  MOTOGP: "bg-red-600",
-  SUPERBIKE: "bg-orange-600",
-  ENDURO: "bg-green-700",
-  AVENTURA: "bg-blue-700",
-  NAKED: "bg-purple-700",
-  SPORT: "bg-yellow-600",
-  ELECTRICA: "bg-teal-600",
-  NOTICIA: "bg-gray-600",
-};
-
+/**
+ * Sirve dos rutas:
+ *   /noticias            -> todo el archivo
+ *   /categoria/:slug     -> una categoria
+ *
+ * Antes el filtro era estado local, asi que no se podia enlazar ni compartir
+ * "las de MotoGP" y Google veia una sola pagina.
+ */
 const NewsArchivePage = () => {
+  const { slug } = useParams<{ slug?: string }>();
+  const category = bySlug(slug);
   const [page, setPage] = useState(1);
-  const [activeCategory, setActiveCategory] = useState("TODAS");
-  const { data, isLoading } = useNewsArchive(page, activeCategory);
+
+  // Al cambiar de categoria hay que volver a la primera pagina, o se queda
+  // pidiendo la pagina 7 de una categoria que tiene dos.
+  useEffect(() => {
+    setPage(1);
+  }, [slug]);
+
+  const { data, isLoading } = useNewsArchive(page, category?.value ?? "TODAS");
 
   const articles = data?.articles || [];
   const total = data?.total || 0;
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
-  const handleCategory = (cat: string) => {
-    setActiveCategory(cat);
-    setPage(1);
-  };
+  const heading = category ? category.label : "ARCHIVO DE NOTICIAS";
+  const canonical = category ? `${SITE_URL}/categoria/${category.slug}` : `${SITE_URL}/noticias`;
+  const title = category
+    ? `${category.label} | Moto Lab 249`
+    : "Archivo de Noticias | Moto Lab 249";
+  const description = category
+    ? `Todas las noticias de ${category.label.toLowerCase()} del motociclismo, curadas por IA para México.`
+    : "Todas las noticias de motociclismo curadas por IA — MotoGP, Superbike, motos eléctricas y más. El medio de motos en México.";
+
+  // Un slug que no existe no debe fingir una categoria vacia.
+  if (slug && !category) {
+    return (
+      <div className="min-h-screen bg-background pt-16 lg:pt-20">
+        <Navbar />
+        <main className="container mx-auto px-4 lg:px-8 py-24 text-center">
+          <h1 className="font-display text-2xl font-bold text-foreground mb-4">
+            Esa categoría no existe
+          </h1>
+          <Link to="/noticias" className="text-primary hover:underline font-display text-sm tracking-wider">
+            VER TODO EL ARCHIVO
+          </Link>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <>
       <Helmet>
-        <title>Archivo de Noticias | Moto Lab 249</title>
-        <meta
-          name="description"
-          content="Todas las noticias de motociclismo curadas por IA — MotoGP, Superbike, motos eléctricas y más. El medio de motos en México."
-        />
-        <link rel="canonical" href={`${SITE_URL}/noticias`} />
-        <meta property="og:title" content="Archivo de Noticias | Moto Lab 249" />
-        <meta property="og:description" content="Todas las noticias de motociclismo curadas por IA para México." />
-        <meta property="og:url" content={`${SITE_URL}/noticias`} />
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonical} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:url" content={canonical} />
       </Helmet>
 
       <div className="min-h-screen bg-background pt-16 lg:pt-20">
         <Navbar />
 
         <main className="container mx-auto px-4 lg:px-8 py-16">
-          {/* Header */}
+          {/* Encabezado */}
           <div className="text-center mb-12">
             <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4">
-              ARCHIVO DE <span className="text-primary">NOTICIAS</span>
+              {category ? (
+                heading
+              ) : (
+                <>
+                  ARCHIVO DE <span className="text-primary">NOTICIAS</span>
+                </>
+              )}
             </h1>
             <div className="flex items-center justify-center gap-2 mb-4">
               <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary" />
@@ -67,28 +95,40 @@ const NewsArchivePage = () => {
               <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary" />
             </div>
             <p className="text-muted-foreground">
-              {total} artículos publicados — actualizados diariamente por IA
+              {total} {total === 1 ? "artículo" : "artículos"}
+              {category ? ` en ${category.label.toLowerCase()}` : " publicados"} — actualizados
+              diariamente por IA
             </p>
           </div>
 
-          {/* Category filters */}
+          {/* Filtros: ahora son enlaces con URL propia */}
           <div className="flex flex-wrap gap-2 justify-center mb-10">
+            <Link
+              to="/noticias"
+              className={`px-4 py-1.5 text-xs font-display font-bold tracking-widest rounded transition-all duration-200 ${
+                !category
+                  ? "bg-primary text-white"
+                  : "border border-border/50 text-muted-foreground hover:border-primary/50 hover:text-primary"
+              }`}
+            >
+              TODAS
+            </Link>
             {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => handleCategory(cat)}
+              <Link
+                key={cat.slug}
+                to={`/categoria/${cat.slug}`}
                 className={`px-4 py-1.5 text-xs font-display font-bold tracking-widest rounded transition-all duration-200 ${
-                  activeCategory === cat
+                  category?.slug === cat.slug
                     ? "bg-primary text-white"
                     : "border border-border/50 text-muted-foreground hover:border-primary/50 hover:text-primary"
                 }`}
               >
-                {cat}
-              </button>
+                {cat.label}
+              </Link>
             ))}
           </div>
 
-          {/* Loading */}
+          {/* Cargando */}
           {isLoading && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[...Array(9)].map((_, i) => (
@@ -104,61 +144,16 @@ const NewsArchivePage = () => {
             </div>
           )}
 
-          {/* Grid */}
+          {/* Rejilla */}
           {!isLoading && articles.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {articles.map((article) => {
-                const categoryColor = article.category
-                  ? CATEGORY_COLORS[article.category] || "bg-gray-600"
-                  : "bg-gray-600";
-                const date = article.created_at
-                  ? format(new Date(article.created_at), "d MMM yyyy", { locale: es })
-                  : "";
-
-                return (
-                  <Link
-                    key={article.id}
-                    to={`/noticias/${article.id}`}
-                    className="group bg-card rounded-lg overflow-hidden border border-border/50 hover:border-primary/50 transition-all duration-300 flex flex-col"
-                  >
-                    <div className="relative h-48 overflow-hidden">
-                      {article.image_url ? (
-                        <img
-                          src={article.image_url}
-                          alt={article.title || "Noticia"}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-card to-background flex items-center justify-center">
-                          <span className="text-muted-foreground text-sm">Sin imagen</span>
-                        </div>
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
-                      {article.category && (
-                        <span className={`absolute top-3 left-3 px-2 py-1 text-xs font-display font-bold tracking-wider text-white rounded ${categoryColor}`}>
-                          {article.category}
-                        </span>
-                      )}
-                    </div>
-                    <div className="p-4 flex flex-col flex-1 space-y-2">
-                      <h2 className="font-display font-bold text-foreground text-base leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-                        {article.title}
-                      </h2>
-                      <p className="text-muted-foreground text-sm line-clamp-2 flex-1">
-                        {article.summary}
-                      </p>
-                      <time className="text-xs text-muted-foreground/70 font-mono tracking-wider">
-                        {date}
-                      </time>
-                    </div>
-                  </Link>
-                );
-              })}
+              {articles.map((article) => (
+                <NewsCard key={article.id} article={article} />
+              ))}
             </div>
           )}
 
-          {/* Empty state */}
+          {/* Vacio */}
           {!isLoading && articles.length === 0 && (
             <div className="text-center py-20">
               <p className="text-muted-foreground text-lg">
@@ -167,7 +162,7 @@ const NewsArchivePage = () => {
             </div>
           )}
 
-          {/* Pagination */}
+          {/* Paginacion */}
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-4 mt-12">
               <Button

@@ -14,13 +14,20 @@ export type Database = {
   }
   public: {
     Tables: {
-      "Motolab 09/24": {
+      // Columnas verificadas contra la API REST el 22-sep-2026. El agente
+      // (scripts/news_agent.py) escribe todo menos id, created_at e ig_posted_at.
+      moto_news: {
         Row: {
           category: string | null
           content: string | null
           created_at: string
           id: number
+          ig_caption: string | null
+          ig_image_url: string | null
+          ig_posted_at: string | null
+          ig_title: string | null
           image_url: string | null
+          source_url: string | null
           summary: string | null
           title: string | null
         }
@@ -29,7 +36,12 @@ export type Database = {
           content?: string | null
           created_at?: string
           id?: number
+          ig_caption?: string | null
+          ig_image_url?: string | null
+          ig_posted_at?: string | null
+          ig_title?: string | null
           image_url?: string | null
+          source_url?: string | null
           summary?: string | null
           title?: string | null
         }
@@ -38,9 +50,34 @@ export type Database = {
           content?: string | null
           created_at?: string
           id?: number
+          ig_caption?: string | null
+          ig_image_url?: string | null
+          ig_posted_at?: string | null
+          ig_title?: string | null
           image_url?: string | null
+          source_url?: string | null
           summary?: string | null
           title?: string | null
+        }
+        Relationships: []
+      }
+      // El sitio solo escribe `email`. Las demas columnas no se pudieron leer
+      // desde el navegador, asi que van como las declara el formulario.
+      subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: number
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: number
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: number
         }
         Relationships: []
       }
