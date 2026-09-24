@@ -1,0 +1,59 @@
+name: Boletin semanal
+
+# El cron esta apagado a proposito. Un correo enviado no se puede deshacer,
+# asi que primero hay que ver un envio de prueba real. Cuando el dominio
+# este verificado en Resend y la prueba se vea bien, se descomenta:
+#
+# on:
+#   schedule:
+#     - cron: "0 15 * * 1"   # lunes 9:00 CST (15:00 UTC)
+
+on:
+  workflow_dispatch:
+    inputs:
+      enviar:
+        description: "Enviar de verdad. Sin esto solo arma el correo."
+        type: boolean
+        required: false
+        default: false
+      solo:
+        description: "Enviar solo a esta direccion (para probar)"
+        required: false
+        default: ""
+      dias:
+        description: "Ventana de notas en dias"
+        required: false
+        default: "7"
+
+jobs:
+  boletin:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar dependencias
+        run: pip install -r scripts/requirements.txt
+
+      - name: Armar y enviar el boletin
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          NEWSLETTER_FROM: ${{ vars.NEWSLETTER_FROM }}
+        run: |
+          ARGS="--dias ${{ inputs.dias }}"
+          if [ "${{ inputs.enviar }}" = "true" ]; then ARGS="$ARGS --enviar"; fi
+          if [ -n "${{ inputs.solo }}" ]; then ARGS="$ARGS --solo ${{ inputs.solo }}"; fi
+          python scripts/newsletter.py $ARGS
+
+      - name: Guardar la vista previa
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: boletin
+          path: boletin.html
+          if-no-files-found: ignore
