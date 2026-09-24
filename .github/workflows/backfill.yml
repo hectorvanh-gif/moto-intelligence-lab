@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       limit:
-        description: "Cuantas notas procesar (vacio = todas las pendientes)"
+        description: "Cuantas notas procesar. 0 = todas las pendientes"
         required: false
         default: "10"
       dry_run:
@@ -42,7 +42,10 @@ jobs:
         working-directory: scripts
         run: |
           ARGS=""
-          if [ -n "${{ inputs.limit }}" ]; then ARGS="$ARGS --limit ${{ inputs.limit }}"; fi
+          # Un valor vacio no viaja: gh omite el campo y GitHub aplica el
+          # default. Por eso el "todas" se pide explicitamente con 0.
+          LIMIT="${{ inputs.limit }}"
+          if [ -n "$LIMIT" ] && [ "$LIMIT" != "0" ]; then ARGS="$ARGS --limit $LIMIT"; fi
           if [ "${{ inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
           echo "python backfill.py $ARGS"
           python backfill.py $ARGS
