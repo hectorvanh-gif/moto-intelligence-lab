@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import FrontPage from "@/components/FrontPage";
@@ -13,7 +11,6 @@ import { SITE_URL } from "@/lib/site";
 import { useMeta } from "@/hooks/useMeta";
 
 const Index = () => {
-  const { hash } = useLocation();
   const categories = homeCategories();
 
   useMeta({
@@ -23,13 +20,9 @@ const Index = () => {
     canonical: SITE_URL,
   });
 
-  // El boton SUSCRIBIRSE del navbar apunta a /#suscribete. Si se llega desde
-  // otra pagina, react-router no hace el scroll solo.
-  useEffect(() => {
-    if (!hash) return;
-    const el = document.querySelector(hash);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  }, [hash]);
+  // El salto al ancla vive en ScrollToTop, junto con el resto del manejo
+  // del scroll. Aqui solo saltaba una vez, y cuando la portada terminaba de
+  // cargar sus notas el destino ya se habia movido para abajo.
 
   return (
     <>

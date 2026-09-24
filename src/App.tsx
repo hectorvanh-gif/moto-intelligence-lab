@@ -10,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import HubPage from "./pages/HubPage";
 import Nosotros from "./pages/Nosotros";
 import Analytics from "./components/Analytics";
+import ScrollToTop from "./components/ScrollToTop";
 import { HUBS } from "@/lib/hubs";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <Analytics />
           <Routes>
             <Route path="/" element={<Index />} />
