@@ -6,6 +6,7 @@ generates Instagram images with Pillow, saves to Supabase.
 """
 
 import os
+import html
 import json
 import re
 import textwrap
@@ -54,6 +55,21 @@ RSS_FEEDS = [
     ("formulamoto.es",   "https://www.formulamoto.es/feed/"),
     ("motorpasionmoto",  "https://www.motorpasionmoto.com/feeds/posts/default"),
 ]
+
+
+# ── Limpieza de texto ────────────────────────────────────────────────────────
+def clean(raw: str | None) -> str:
+    """
+    Quita etiquetas HTML y entidades.
+
+    NewsAPI entrega description y content con HTML crudo adentro. Sin esto,
+    Claude recibe <li> y <br> y a veces los copia al resumen, que acaba
+    guardado en la base y mostrandose como texto en el sitio.
+    """
+    if not raw:
+        return ""
+    no_tags = re.sub(r"<[^>]+>", " ", raw)
+    return re.sub(r"\s+", " ", html.unescape(no_tags)).strip()
 
 
 # ── Supabase helpers ─────────────────────────────────────────────────────────
@@ -228,9 +244,9 @@ def fetch_from_newsapi(days: int = 1) -> list[dict]:
                     count += 1
                     content = (item.get("description") or "") + " " + (item.get("content") or "")
                     articles.append({
-                        "title": item.get("title", "").strip(),
+                        "title": clean(item.get("title", "")),
                         "link": url,
-                        "content": content.strip(),
+                        "content": clean(content),
                         "image_url": item.get("urlToImage"),
                     })
                 print(f"   [NewsAPI:{query}] → {count} artículos")
@@ -268,12 +284,12 @@ def fetch_from_rss(hours: int = 25) -> list[dict]:
                     content = entry.content[0].value
                 elif hasattr(entry, "summary"):
                     content = entry.summary
-                content_clean = re.sub(r"<[^>]+>", " ", content).strip()
+                content_clean = clean(content)
                 seen_urls.add(link)
                 count += 1
                 articles.append({
-                    "title": title, "link": link,
-                    "content": content_clean or title,
+                    "title": clean(title), "link": link,
+                    "content": content_clean or clean(title),
                     "image_url": _extract_image(entry, content),
                 })
             print(f"   [RSS:{name}] → {count} artículos")
@@ -335,15 +351,35 @@ Contenido: {article['content'][:1500]}"""
     msg = client.messages.create(
         model="claude-haiku-4-5-20251001",
         max_tokens=500,
-        messages=[{"role": "user", "content": prompt}],
+        messages=[
+            {"role": "user", "content": prompt},
+            # Prellenar la respuesta con "{" impide que el modelo escriba
+            # preambulo o envuelva el JSON en un bloque markdown. Sin esto,
+            # json.loads fallaba en el 100% de las llamadas y TODAS las notas
+            # caian al fallback de abajo: sin categoria, sin resumen redactado
+            # y sin filtro de relevancia.
+            {"role": "assistant", "content": "{"},
+        ],
     )
+
+    raw = "{" + msg.content[0].text
     try:
-        result = json.loads(msg.content[0].text)
+        result = json.loads(raw)
+    except json.JSONDecodeError:
+        # Red de seguridad: quedarse con el primer objeto JSON del texto.
+        match = re.search(r"\{.*\}", raw, re.S)
+        try:
+            result = json.loads(match.group(0)) if match else None
+        except json.JSONDecodeError:
+            result = None
+
+    if result is not None:
         if not result.get("es_moto", True):
             return None
         return result
-    except json.JSONDecodeError:
-        return {
+
+    print(f"      ⚠️  Respuesta no parseable, usando texto crudo: {raw[:120]}")
+    return {
             "es_moto": True,
             "title": article["title"][:80],
             "summary": (article["content"][:250] if article["content"] else article["title"]),
