@@ -66,7 +66,7 @@ const NewsArticlePage = () => {
         </title>
         <meta
           name="description"
-          content={cleanText(article?.summary) || "Noticias de motociclismo curadas por IA para México."}
+          content={cleanText(article?.summary) || "Noticias de motociclismo para México."}
         />
         <link rel="canonical" href={articleUrl} />
 
@@ -75,7 +75,7 @@ const NewsArticlePage = () => {
         <meta property="og:title" content={cleanText(article?.title) || "Moto Lab 249"} />
         <meta
           property="og:description"
-          content={cleanText(article?.summary) || "Noticias de motociclismo curadas por IA para México."}
+          content={cleanText(article?.summary) || "Noticias de motociclismo para México."}
         />
         <meta
           property="og:image"
@@ -90,7 +90,7 @@ const NewsArticlePage = () => {
         <meta name="twitter:title" content={cleanText(article?.title) || "Moto Lab 249"} />
         <meta
           name="twitter:description"
-          content={cleanText(article?.summary) || "Noticias de motociclismo curadas por IA para México."}
+          content={cleanText(article?.summary) || "Noticias de motociclismo para México."}
         />
         <meta
           name="twitter:image"

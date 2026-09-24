@@ -42,8 +42,8 @@ const NewsArchivePage = () => {
     ? `${category.label} | Moto Lab 249`
     : "Archivo de Noticias | Moto Lab 249";
   const description = category
-    ? `Todas las noticias de ${category.label.toLowerCase()} del motociclismo, curadas por IA para México.`
-    : "Todas las noticias de motociclismo curadas por IA — MotoGP, Superbike, motos eléctricas y más. El medio de motos en México.";
+    ? `Noticias de ${category.label.toLowerCase()}: resultados, lanzamientos y lo ultimo del motociclismo en México.`
+    : "Archivo completo de noticias de motos: MotoGP, eléctricas, doble propósito, enduro y lanzamientos. El medio de motociclismo de México.";
 
   // Un slug que no existe no debe fingir una categoria vacia.
   if (slug && !category) {
@@ -96,8 +96,8 @@ const NewsArchivePage = () => {
             </div>
             <p className="text-muted-foreground">
               {total} {total === 1 ? "artículo" : "artículos"}
-              {category ? ` en ${category.label.toLowerCase()}` : " publicados"} — actualizados
-              diariamente por IA
+              {category ? ` en ${category.label.toLowerCase()}` : " publicados"} — actualizado
+              todos los días
             </p>
           </div>
 

@@ -34,18 +34,18 @@ const Hero = () => {
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-7 animate-slide-up">
             <div className="w-2 h-2 bg-primary rounded-full animate-pulse-glow" />
             <span className="font-display text-xs tracking-widest text-primary">
-              ACTUALIZADO TODOS LOS DÍAS
+              MÉXICO · ACTUALIZADO TODOS LOS DÍAS
             </span>
           </div>
 
           <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-5 animate-slide-up animation-delay-100">
-            EL MOTOCICLISMO DE MÉXICO,{" "}
-            <span className="text-gradient-red">SIN RELLENO</span>
+            NOTICIAS DE MOTOS,{" "}
+            <span className="text-gradient-red">DIRECTO A LA VENA</span>
           </h1>
 
           <p className="font-body text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-9 animate-slide-up animation-delay-200 leading-relaxed">
-            Noticias globales de motos, filtradas y resumidas por agentes de IA.{" "}
-            <span className="text-foreground font-semibold">Directo a la vena.</span>
+            MotoGP, motos eléctricas, doble propósito y lanzamientos.{" "}
+            <span className="text-foreground font-semibold">Lo que importa del día, sin relleno.</span>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up animation-delay-300">
