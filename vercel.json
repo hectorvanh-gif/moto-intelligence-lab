@@ -1,5 +1,16 @@
 {
   "rewrites": [
+    {
+      "source": "/((?!api/).*)",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(facebookexternalhit|facebookcatalog|twitterbot|whatsapp|slackbot|slack-imgproxy|linkedinbot|discordbot|telegrambot|pinterest|redditbot|skypeuripreview|vkshare|embedly|quora link preview|bitlybot|nuzzel|applebot|flipboard|iframely).*"
+        }
+      ],
+      "destination": "/api/tarjeta?ruta=/$1"
+    },
     { "source": "/((?!api/).*)", "destination": "/" }
   ]
 }
