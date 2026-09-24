@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNewsArchive, PAGE_SIZE } from "@/hooks/useNewsArchive";
 import Navbar from "@/components/Navbar";
@@ -10,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { CATEGORIES, bySlug } from "@/lib/categories";
 import { SITE_URL } from "@/lib/site";
+import { useMeta } from "@/hooks/useMeta";
 
 /**
  * Sirve dos rutas:
@@ -63,17 +63,10 @@ const NewsArchivePage = () => {
     );
   }
 
+  useMeta({ title, description, canonical });
+
   return (
     <>
-      <Helmet>
-        <title>{title}</title>
-        <meta name="description" content={description} />
-        <link rel="canonical" href={canonical} />
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={description} />
-        <meta property="og:url" content={canonical} />
-      </Helmet>
-
       <div className="min-h-screen bg-background pt-16 lg:pt-20">
         <Navbar />
 

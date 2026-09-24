@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -9,6 +8,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useHubNews } from "@/hooks/useNews";
 import { hubBySlug } from "@/lib/hubs";
 import { SITE_URL } from "@/lib/site";
+import { useMeta } from "@/hooks/useMeta";
 
 interface Props {
   slug: string;
@@ -49,18 +49,17 @@ const HubPage = ({ slug }: Props) => {
     })),
   };
 
+  // og:title ahora lleva el sufijo de la marca igual que el <title>; antes
+  // iban distintos sin razon.
+  useMeta({
+    title: `${hub.title} | Moto Lab 249`,
+    description: hub.metaDescription,
+    canonical,
+    jsonLd: faqSchema,
+  });
+
   return (
     <>
-      <Helmet>
-        <title>{`${hub.title} | Moto Lab 249`}</title>
-        <meta name="description" content={hub.metaDescription} />
-        <link rel="canonical" href={canonical} />
-        <meta property="og:title" content={hub.title} />
-        <meta property="og:description" content={hub.metaDescription} />
-        <meta property="og:url" content={canonical} />
-        <script type="application/ld+json">{JSON.stringify(faqSchema)}</script>
-      </Helmet>
-
       <div className="min-h-screen bg-background pt-16 lg:pt-20">
         <Navbar />
 

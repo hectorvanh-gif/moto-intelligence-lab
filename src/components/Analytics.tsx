@@ -35,8 +35,10 @@ const Analytics = () => {
       return;
     }
 
-    // react-helmet actualiza el <title> despues de este efecto. Sin esta
-    // pausa, GA recibiria el titulo de la pagina anterior en cada salto.
+    // El titulo lo pone useMeta en un efecto de la pagina, que corre
+    // despues de este. Sin la pausa, GA recibiria el titulo de la pagina
+    // anterior en cada salto. La pausa ya hacia falta con react-helmet y
+    // sigue haciendo falta por la misma razon.
     const t = window.setTimeout(() => {
       // Si un bloqueador impidio cargar GTM, dataLayer no existe.
       if (!window.dataLayer) return;

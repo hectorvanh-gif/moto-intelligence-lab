@@ -1,5 +1,4 @@
 import { useParams, Link } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import { ArrowLeft, ExternalLink, Clock, Tag } from "lucide-react";
@@ -11,6 +10,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import VoteButton from "@/components/VoteButton";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMeta } from "@/hooks/useMeta";
 
 const NewsArticlePage = () => {
   const { id } = useParams<{ id: string }>();
@@ -57,53 +57,23 @@ const NewsArticlePage = () => {
       }
     : null;
 
+  const titulo = article?.title
+    ? `${cleanText(article.title)} | Moto Lab 249`
+    : "Cargando artículo | Moto Lab 249";
+  const descripcion =
+    cleanText(article?.summary) || "Noticias de motociclismo para México.";
+
+  useMeta({
+    title: titulo,
+    description: descripcion,
+    canonical: articleUrl,
+    image: article?.image_url || `${siteUrl}/og-image.jpg`,
+    type: "article",
+    jsonLd,
+  });
+
   return (
     <>
-      <Helmet>
-        <title>
-          {article?.title
-            ? `${cleanText(article.title)} | Moto Lab 249`
-            : "Cargando artículo | Moto Lab 249"}
-        </title>
-        <meta
-          name="description"
-          content={cleanText(article?.summary) || "Noticias de motociclismo para México."}
-        />
-        <link rel="canonical" href={articleUrl} />
-
-        {/* Open Graph */}
-        <meta property="og:type" content="article" />
-        <meta property="og:title" content={cleanText(article?.title) || "Moto Lab 249"} />
-        <meta
-          property="og:description"
-          content={cleanText(article?.summary) || "Noticias de motociclismo para México."}
-        />
-        <meta
-          property="og:image"
-          content={article?.image_url || `${siteUrl}/og-image.jpg`}
-        />
-        <meta property="og:url" content={articleUrl} />
-        <meta property="og:site_name" content="Moto Lab 249" />
-        <meta property="article:published_time" content={article?.created_at || ""} />
-
-        {/* Twitter Card */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={cleanText(article?.title) || "Moto Lab 249"} />
-        <meta
-          name="twitter:description"
-          content={cleanText(article?.summary) || "Noticias de motociclismo para México."}
-        />
-        <meta
-          name="twitter:image"
-          content={article?.image_url || `${siteUrl}/og-image.jpg`}
-        />
-
-        {/* JSON-LD */}
-        {jsonLd && (
-          <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
-        )}
-      </Helmet>
-
       <div className="min-h-screen bg-background pt-16 lg:pt-20">
         <Navbar />
 

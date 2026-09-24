@@ -1,10 +1,10 @@
-import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import { ArrowRight, Filter, Bot, Vote } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import NewsletterBand from "@/components/NewsletterBand";
 import { SITE_URL } from "@/lib/site";
+import { useMeta } from "@/hooks/useMeta";
 
 /**
  * Quienes somos.
@@ -19,17 +19,15 @@ import { SITE_URL } from "@/lib/site";
  * proporcion real de notas que el filtro descarta (114 de 762).
  */
 const Nosotros = () => {
+  useMeta({
+    title: "Qué es Moto Lab 249 | Noticias de moto en México",
+    description:
+      "Un filtro para la prensa de moto: más de 40 fuentes revisadas cada mañana, sin relleno. Quién está detrás de Moto Lab 249 y cómo trabajamos.",
+    canonical: `${SITE_URL}/nosotros`,
+  });
+
   return (
     <>
-      <Helmet>
-        <title>Qué es Moto Lab 249 | Noticias de moto en México</title>
-        <meta
-          name="description"
-          content="Un filtro para la prensa de moto: más de 40 fuentes revisadas cada mañana, sin relleno. Quién está detrás de Moto Lab 249 y cómo trabajamos."
-        />
-        <link rel="canonical" href={`${SITE_URL}/nosotros`} />
-      </Helmet>
-
       <div className="min-h-screen bg-background">
         <Navbar />
 
