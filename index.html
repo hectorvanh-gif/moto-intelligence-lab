@@ -21,8 +21,13 @@
     
     <meta name="twitter:image" content="https://motolab249.com/og-image.jpg?v=2">
 
+    <!-- Google solo reconoce rel="icon", "shortcut icon" y "apple-touch-icon";
+         "alternate icon" lo ignora, y el PNG de 192 va porque pide un cuadrado
+         multiplo de 48 px. El SVG queda primero: es el que usan las pestanas. -->
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="alternate icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <!-- El canonical y la description los pone react-helmet por pagina (ver
          src/pages/*). Aqui no van, o cada pagina termina con dos. Los og si
          se quedan: los scrapers de redes no ejecutan JS y es lo unico que leen. -->
