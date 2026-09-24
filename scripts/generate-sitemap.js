@@ -12,22 +12,36 @@ const SITE_URL = "https://motolab249.com";
 async function generateSitemap() {
   console.log("🗺️  Generating sitemap...");
 
-  // Fetch all articles (only id + created_at needed)
-  const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/moto_news?select=id,created_at&category=neq.DESCARTADO&order=created_at.desc&limit=1000`,
-    {
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-      },
+  // Se trae por paginas: Supabase corta en 1000 filas por peticion y lo hace
+  // en silencio, asi que un limite fijo dejaria notas fuera del sitemap sin
+  // que nada avisara.
+  const PAGINA = 1000;
+  const articles = [];
+  let offset = 0;
+
+  while (true) {
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/moto_news?select=id,created_at&category=neq.DESCARTADO` +
+        `&order=created_at.desc&limit=${PAGINA}&offset=${offset}`,
+      {
+        headers: {
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${SUPABASE_KEY}`,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      console.warn(`⚠️  Supabase respondio ${res.status}. Sitemap con ${articles.length} articulos.`);
+      break;
     }
-  );
 
-  if (!res.ok) {
-    console.warn(`⚠️  Supabase fetch failed (${res.status}). Generating static-only sitemap.`);
+    const lote = await res.json();
+    articles.push(...lote);
+
+    if (lote.length < PAGINA) break;
+    offset += PAGINA;
   }
-
-  const articles = res.ok ? await res.json() : [];
 
   const today = new Date().toISOString().split("T")[0];
 
