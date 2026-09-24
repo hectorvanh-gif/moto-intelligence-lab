@@ -3,39 +3,35 @@ import { CATEGORIES } from "@/lib/categories";
 import { HUBS } from "@/lib/hubs";
 
 /**
- * La fila de categorias del encabezado.
+ * La unica fila de navegacion por tema del sitio.
  *
- * Cada chip apunta a la mejor pagina que exista para su categoria. Donde
- * hay seccion tematica se usa esa —tiene guia propia y ademas las notas—,
- * y donde no, al archivo filtrado. Sin esta regla el encabezado tendria
- * dos "MOTOGP" llevando a paginas distintas, una debajo de la otra, y el
- * peso de los enlaces se repartiria entre dos paginas parecidas.
+ * Primero las cuatro secciones tematicas, que son las paginas con guia
+ * propia y las que pelean las busquedas con volumen. Despues las
+ * categorias del agente que no tienen seccion, apuntando al archivo
+ * filtrado.
+ *
+ * Esta fila reemplazo los enlaces de seccion del navbar. Cuando estaban
+ * las dos cosas, el encabezado repetia MOTOGP, ELECTRICAS y ENDURO en dos
+ * renglones: mucho ruido para la misma navegacion.
  *
  * NOTICIA se queda fuera: no es un tema, es la etiqueta de lo que el
- * agente no supo clasificar. Un chip que diga "NOTICIA" no le dice nada a
- * nadie.
+ * agente no supo clasificar.
  *
  * En pantallas chicas la fila se desplaza en horizontal en vez de
- * apilarse: siete chips en dos renglones se comen la pantalla del telefono
+ * apilarse; ocho chips en dos renglones se comen la pantalla del telefono
  * antes de que aparezca una sola noticia.
  */
 
-/** La categoria del agente que le corresponde a cada seccion tematica. */
-const SECCION_DE = {
-  MOTOGP: "motogp",
-  ELECTRICA: "motos-electricas",
-  ENDURO: "enduro",
-} as const;
-
-const destinoDe = (value: string) => {
-  const slug = SECCION_DE[value as keyof typeof SECCION_DE];
-  if (slug && HUBS.some((h) => h.slug === slug)) return `/${slug}`;
-  const cat = CATEGORIES.find((c) => c.value === value);
-  return `/categoria/${cat?.slug ?? ""}`;
-};
+/** Categorias del agente que ya cubre una seccion tematica. */
+const CUBIERTAS_POR_SECCION = ["MOTOGP", "ELECTRICA", "ENDURO"];
 
 const CategoryBar = () => {
-  const chips = CATEGORIES.filter((c) => c.value !== "NOTICIA");
+  const destinos = [
+    ...HUBS.map((h) => ({ to: `/${h.slug}`, label: h.navLabel })),
+    ...CATEGORIES.filter(
+      (c) => c.value !== "NOTICIA" && !CUBIERTAS_POR_SECCION.includes(c.value)
+    ).map((c) => ({ to: `/categoria/${c.slug}`, label: c.label })),
+  ];
 
   const clase = ({ isActive }: { isActive: boolean }) =>
     `shrink-0 px-3 py-1.5 rounded-sm border font-display text-xs tracking-widest transition-colors ${
@@ -48,9 +44,9 @@ const CategoryBar = () => {
     <div className="fixed top-16 lg:top-20 left-0 right-0 z-40 bg-background/80 backdrop-blur-md border-b border-border/50">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center gap-2 py-2.5 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-          {chips.map((c) => (
-            <NavLink key={c.value} to={destinoDe(c.value)} className={clase}>
-              {c.label}
+          {destinos.map((d) => (
+            <NavLink key={d.to} to={d.to} className={clase}>
+              {d.label}
             </NavLink>
           ))}
         </div>
