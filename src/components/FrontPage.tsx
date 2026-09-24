@@ -1,19 +1,17 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useLatestNews } from "@/hooks/useNews";
-import FeaturedStory from "./FeaturedStory";
 import NewsCard from "./NewsCard";
 import { Skeleton } from "@/components/ui/skeleton";
 
 /**
- * La portada editorial: una nota destacada grande y las siguientes cuatro
- * en rejilla. Reemplaza la vieja seccion de 9 tarjetas iguales, donde nada
- * tenia mas peso que lo demas.
+ * Las notas que siguen a la principal. La primera ya la muestra el Hero,
+ * asi que aqui se salta: pide las mismas 5 para reusar la cache y arranca
+ * en la segunda.
  */
 const FrontPage = () => {
   const { data: news, isLoading, error } = useLatestNews(5);
 
-  const featured = news?.[0];
   const rest = news?.slice(1) ?? [];
 
   return (
@@ -27,9 +25,7 @@ const FrontPage = () => {
 
         {!error && (
           <>
-            <FeaturedStory article={featured} isLoading={isLoading} />
-
-            <div className="mt-14 lg:mt-20">
+            <div>
               <div className="flex items-end justify-between mb-8 gap-4">
                 <div className="flex items-center gap-3">
                   <span className="w-2.5 h-8 rounded-sm bg-primary" />
@@ -63,7 +59,7 @@ const FrontPage = () => {
                   : rest.map((article) => <NewsCard key={article.id} article={article} />)}
               </div>
 
-              {!isLoading && !featured && (
+              {!isLoading && rest.length === 0 && (
                 <p className="text-center text-muted-foreground py-10">
                   Aún no hay noticias publicadas. Vuelve pronto.
                 </p>
