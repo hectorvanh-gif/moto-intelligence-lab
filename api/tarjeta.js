@@ -26,6 +26,22 @@ const LLAVE_PUBLICA =
 const SITIO = "https://motolab249.com";
 const IMAGEN = `${SITIO}/og-image.jpg?v=2`;
 
+/**
+ * Desde cuando la imagen que genera el agente sirve para compartir.
+ *
+ * El agente estampa un badge con el nombre de la marca en cada imagen, y
+ * hasta el cambio de nombre decia "MOTO LAB 09/24". De las 753 imagenes
+ * generadas, 719 llevan el nombre viejo: usarlas todas haria que el 95%
+ * de lo compartido mostrara una marca que ya no existe, peor que la foto
+ * sin marca del medio original.
+ *
+ * Para las notas anteriores se usa la foto de la fuente. El reparto se
+ * corrige solo conforme el agente publica, y se arregla del todo
+ * regenerando las 719 viejas, que ademas llevan el titular anterior al
+ * reprocesamiento.
+ */
+const DESDE_EL_CAMBIO_DE_MARCA = "2026-09-22";
+
 const POR_OMISION = {
   title: "Noticias de motos en México | Moto Lab 249",
   description:
@@ -89,7 +105,7 @@ const limpiar = (s) =>
 async function notaDe(id) {
   try {
     const r = await fetch(
-      `${SUPABASE_URL}/rest/v1/moto_news?select=title,summary,image_url,created_at,category&id=eq.${id}&limit=1`,
+      `${SUPABASE_URL}/rest/v1/moto_news?select=title,summary,image_url,ig_image_url,created_at,category&id=eq.${id}&limit=1`,
       {
         headers: {
           apikey: LLAVE_PUBLICA,
@@ -121,7 +137,12 @@ export default async function handler(req, res) {
         title: `${limpiar(nota.title)} | Moto Lab 249`,
         description: limpiar(nota.summary) || POR_OMISION.description,
       };
-      imagen = nota.image_url || IMAGEN;
+      // La imagen propia lleva el logotipo; la del medio no. Solo se
+      // prefiere cuando su badge ya trae el nombre nuevo.
+      const propiaSirve =
+        nota.ig_image_url &&
+        (nota.created_at || "") >= DESDE_EL_CAMBIO_DE_MARCA;
+      imagen = (propiaSirve ? nota.ig_image_url : nota.image_url) || IMAGEN;
       tipo = "article";
       publicada = nota.created_at || "";
     }
