@@ -9,6 +9,7 @@ import NewsArticlePage from "./pages/NewsArticlePage";
 import NewsArchivePage from "./pages/NewsArchivePage";
 import NotFound from "./pages/NotFound";
 import HubPage from "./pages/HubPage";
+import Analytics from "./components/Analytics";
 import { HUBS } from "@/lib/hubs";
 
 const queryClient = new QueryClient();
@@ -20,6 +21,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <Analytics />
           <Routes>
             <Route path="/" element={<Index />} />
             {HUBS.map((hub) => (
