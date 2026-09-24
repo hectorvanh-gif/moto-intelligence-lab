@@ -7,8 +7,9 @@ export const SITE_URL = "https://motolab249.com";
 export const SITE_NAME = "Moto Lab 249";
 
 /**
- * ID de medicion de Google Analytics 4, con forma G-XXXXXXXXXX.
- * Se saca en analytics.google.com: Administrar -> Flujos de datos -> web.
- * Vacio = no se carga ningun script de analitica.
+ * Contenedor de Google Tag Manager. El snippet que lo carga vive en
+ * index.html, como lo pide Google. Esta constante queda como referencia:
+ * la medicion de rutas la hace src/components/Analytics.tsx empujando al
+ * dataLayer que crea ese snippet.
  */
-export const GA_MEASUREMENT_ID = "";
+export const GTM_CONTAINER_ID = "GTM-TFG89RFD";

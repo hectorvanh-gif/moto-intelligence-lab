@@ -1,58 +1,55 @@
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { GA_MEASUREMENT_ID } from "@/lib/site";
 
 declare global {
   interface Window {
-    dataLayer?: unknown[];
-    gtag?: (...args: unknown[]) => void;
+    dataLayer?: Record<string, unknown>[];
   }
 }
 
 /**
- * Google Analytics 4 para una SPA.
+ * Medicion de navegacion para Google Tag Manager.
  *
- * El snippet que da Google manda la visita solo al cargar la pagina. Aqui
- * la navegacion no recarga nada, asi que se configura con send_page_view en
- * false y se dispara un page_view propio en cada cambio de ruta. Sin esto,
- * GA registraria la primera pantalla y nada mas: cero navegacion interna y
- * un rebote altisimo que no es real.
+ * El contenedor lo carga el snippet de index.html, y su etiqueta de GA4
+ * manda la primera vista al cargar la pagina. Pero aqui la navegacion no
+ * recarga nada: pasar de la portada a /motos-electricas no dispara nada por
+ * si solo. Este componente empuja un evento propio en cada cambio de ruta.
  *
- * Si GA_MEASUREMENT_ID esta vacio, este componente no hace nada y no carga
- * ningun script.
+ * La primera vista se omite a proposito: de eso ya se encarga la etiqueta de
+ * GA4 del contenedor al inicializarse. Si tambien la mandaramos desde aqui,
+ * la pagina de entrada se contaria doble.
+ *
+ * En GTM hay que armar esto para que el evento llegue a Analytics:
+ *   1. Activador -> Evento personalizado -> nombre: spa_pageview
+ *   2. Etiqueta  -> GA4 Event -> nombre del evento: page_view
+ *      con los parametros page_location, page_path y page_title tomados
+ *      de variables de capa de datos con esos mismos nombres.
  */
 const Analytics = () => {
   const { pathname, search } = useLocation();
-  const cargado = useRef(false);
+  const primeraVista = useRef(true);
 
-  // Carga del script, una sola vez.
   useEffect(() => {
-    if (!GA_MEASUREMENT_ID || cargado.current) return;
+    if (primeraVista.current) {
+      primeraVista.current = false;
+      return;
+    }
 
-    const script = document.createElement("script");
-    script.async = true;
-    script.src = `https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`;
-    document.head.appendChild(script);
+    // react-helmet actualiza el <title> despues de este efecto. Sin esta
+    // pausa, GA recibiria el titulo de la pagina anterior en cada salto.
+    const t = window.setTimeout(() => {
+      // Si un bloqueador impidio cargar GTM, dataLayer no existe.
+      if (!window.dataLayer) return;
 
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function gtag(...args: unknown[]) {
-      window.dataLayer?.push(args);
-    };
-    window.gtag("js", new Date());
-    window.gtag("config", GA_MEASUREMENT_ID, { send_page_view: false });
+      window.dataLayer.push({
+        event: "spa_pageview",
+        page_path: pathname + search,
+        page_location: window.location.href,
+        page_title: document.title,
+      });
+    }, 300);
 
-    cargado.current = true;
-  }, []);
-
-  // Una visita por cambio de ruta, incluida la primera.
-  useEffect(() => {
-    if (!GA_MEASUREMENT_ID || !window.gtag) return;
-
-    window.gtag("event", "page_view", {
-      page_path: pathname + search,
-      page_location: window.location.href,
-      page_title: document.title,
-    });
+    return () => window.clearTimeout(t);
   }, [pathname, search]);
 
   return null;
