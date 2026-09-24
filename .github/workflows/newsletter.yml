@@ -1,8 +1,13 @@
 name: Boletin semanal
 
-# El cron esta apagado a proposito. Un correo enviado no se puede deshacer,
-# asi que primero hay que ver un envio de prueba real. Cuando el dominio
-# este verificado en Resend y la prueba se vea bien, se descomenta:
+# El boletin se manda a mano, por decision del 24-sep-2026:
+#
+#   gh workflow run newsletter.yml -f enviar=true
+#
+# El dominio ya esta verificado en Resend y la prueba llego bien. Se queda
+# manual porque todavia no se sabe que tan bueno es el material que el
+# agente junta en una semana floja, y un correo enviado no se recoge. Tras
+# tres o cuatro lunes revisados a mano, se descomenta:
 #
 # on:
 #   schedule:
