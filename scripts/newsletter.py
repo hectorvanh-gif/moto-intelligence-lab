@@ -34,8 +34,12 @@ import httpx
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
 SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
 RESEND_KEY = os.environ.get("RESEND_API_KEY", "")
-REMITENTE = os.environ.get(
-    "NEWSLETTER_FROM", "Moto Lab 249 <onboarding@resend.dev>"
+# Con `or` y no con el valor por omision de os.environ.get: el workflow
+# pasa la variable como cadena vacia cuando no esta definida en GitHub, y
+# entonces get() devuelve el vacio en vez del respaldo.
+REMITENTE = (
+    os.environ.get("NEWSLETTER_FROM")
+    or "Moto Lab 249 <onboarding@resend.dev>"
 )
 
 SITIO = "https://motolab249.com"
