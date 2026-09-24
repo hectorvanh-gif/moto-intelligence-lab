@@ -9,36 +9,75 @@ import { useLocation } from "react-router-dom";
  * estaba: "COMO TRABAJAMOS" vive al final de la portada y aterrizabas en
  * el pie de /nosotros.
  *
- * Con ancla: al elemento, y reintentando. El salto no se puede hacer una
- * sola vez porque la portada pide sus notas despues del primer pintado:
- * cuando el ancla se resolvia, la pagina medía una fraccion de su alto
- * final y el destino se movia para abajo en cuanto llegaban los datos. El
- * /#suscribete del boton del navbar llevaba anios cayendo en el vacio,
- * dejando el scroll en cero con el formulario 3400px mas abajo.
+ * Con ancla: al elemento. El /#suscribete del boton del navbar nunca
+ * funciono; se comprobo en produccion antes de tocar nada, dejaba el
+ * scroll en cero con el formulario 3400px mas abajo.
  *
- * Se usa el salto instantaneo y no "smooth" a proposito: Chrome cancela la
- * animacion suave cuando el layout cambia tanto mientras corre.
+ * Las dos cosas fallaban por lo mismo: la pagina no mide lo mismo cuando
+ * se navega que un segundo despues. La portada pide sus notas despues del
+ * primer pintado y luego cargan las imagenes, asi que crece por partes; y
+ * el navegador, por su cuenta, restaura la posicion del scroll del
+ * historial y pisa lo que uno acaba de poner.
+ *
+ * Por eso aqui no se coloca el scroll una vez, se insiste hasta que la
+ * pagina deja de moverse: dos lecturas iguales seguidas y se para. Con
+ * tope de tiempo, para no quedarse peleando con una pagina que no se
+ * asienta nunca.
  */
-const INTENTOS = 8;
-const CADA_MS = 250;
+const CADA_MS = 150;
+const TOPE_MS = 4000;
 
 const ScrollToTop = () => {
   const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    if (!hash) {
-      window.scrollTo(0, 0);
-      return;
+    // Sin esto el navegador reaplica la posicion guardada del historial
+    // despues de que nosotros ya la pusimos.
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
     }
+  }, []);
 
-    let intento = 0;
-    const id = window.setInterval(() => {
+  useEffect(() => {
+    const destino = () => {
+      if (!hash) return 0;
       const el = document.querySelector(hash);
-      if (el) el.scrollIntoView({ block: "start" });
-      if (++intento >= INTENTOS) window.clearInterval(id);
+      if (!el) return null;
+      return Math.max(0, window.scrollY + el.getBoundingClientRect().top);
+    };
+
+    let anterior: number | null = null;
+    let transcurrido = 0;
+
+    const colocar = () => {
+      const y = destino();
+      if (y === null) return false;
+
+      window.scrollTo(0, y);
+
+      // Dos veces el mismo destino: la pagina ya no crece.
+      const estable = anterior !== null && Math.abs(anterior - y) < 2;
+      anterior = y;
+      return estable;
+    };
+
+    colocar();
+
+    const id = window.setInterval(() => {
+      transcurrido += CADA_MS;
+      if (colocar() || transcurrido >= TOPE_MS) window.clearInterval(id);
     }, CADA_MS);
 
-    return () => window.clearInterval(id);
+    // Si el lector se mueve por su cuenta, se le deja en paz: insistir
+    // seria jalarlo de vuelta mientras intenta leer.
+    const rendirse = () => window.clearInterval(id);
+    const gestos = ["wheel", "touchstart", "keydown"] as const;
+    gestos.forEach((g) => window.addEventListener(g, rendirse, { passive: true }));
+
+    return () => {
+      window.clearInterval(id);
+      gestos.forEach((g) => window.removeEventListener(g, rendirse));
+    };
   }, [pathname, hash]);
 
   return null;
