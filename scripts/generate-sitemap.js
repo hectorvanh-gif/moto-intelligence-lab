@@ -53,6 +53,9 @@ async function generateSitemap() {
   const staticUrls = [
     { loc: SITE_URL,               changefreq: "daily",  priority: "1.0", lastmod: today },
     { loc: `${SITE_URL}/noticias`, changefreq: "daily",  priority: "0.9", lastmod: today },
+    // Quienes somos: casi nunca cambia, pero Google le da peso a saber
+    // quien esta detras de un sitio de noticias.
+    { loc: `${SITE_URL}/nosotros`, changefreq: "yearly", priority: "0.5", lastmod: today },
     ...HUB_SLUGS.map((slug) => ({
       loc: `${SITE_URL}/${slug}`,
       changefreq: "weekly",

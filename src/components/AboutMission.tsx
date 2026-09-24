@@ -1,8 +1,12 @@
-import { Cpu, Users, Zap } from "lucide-react";
+import { ArrowRight, Cpu, Users, Zap } from "lucide-react";
 
 // Las cifras de aqui son medibles en la base y por eso van redondeadas
 // hacia abajo: hay 50 dominios distintos publicando. No poner "cientos"
-// de fuentes ni prometer una comunidad que todavia no existe.
+// de fuentes.
+//
+// La tarjeta de comunidad decia "estamos construyendo" mientras no habia
+// nada; ahora lleva a la comunidad en amiiigo.com, asi que ya puede
+// afirmarlo. Si ese enlace muere, el texto vuelve a futuro.
 const features = [
   {
     icon: Cpu,
@@ -20,7 +24,9 @@ const features = [
     icon: Users,
     title: "COMUNIDAD",
     description:
-      "Estamos construyendo el lugar donde los pilotos mexicanos siguen lo que pasa en el mundo de la moto.",
+      "El lugar donde los pilotos mexicanos siguen lo que pasa en el mundo de la moto.",
+    href: "https://amiiigo.com/motolab-249",
+    cta: "ENTRAR A LA COMUNIDAD",
   },
 ];
 
@@ -43,22 +49,47 @@ const AboutMission = () => {
 
           {/* Features Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="text-center p-6 lg:p-8 rounded-sm border border-border/50 bg-background/50 hover:border-primary/30 transition-all duration-300 group"
-              >
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-6 group-hover:bg-primary/20 transition-colors duration-300">
-                  <feature.icon className="w-7 h-7 text-primary" />
-                </div>
-                <h3 className="font-display text-xl text-foreground mb-3">
-                  {feature.title}
-                </h3>
-                <p className="font-body text-muted-foreground text-sm leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
+            {features.map((feature, index) => {
+              // La tarjeta con enlace se pinta como <a>; las otras siguen
+              // siendo texto. Asi solo lo que lleva a algun lado invita a
+              // hacerle clic.
+              const Contenedor = feature.href ? "a" : "div";
+              const props = feature.href
+                ? {
+                    href: feature.href,
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                  }
+                : {};
+
+              return (
+                <Contenedor
+                  key={index}
+                  {...props}
+                  className={`block text-center p-6 lg:p-8 rounded-sm border bg-background/50 transition-all duration-300 group ${
+                    feature.href
+                      ? "border-primary/40 hover:border-primary cursor-pointer"
+                      : "border-border/50 hover:border-primary/30"
+                  }`}
+                >
+                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-6 group-hover:bg-primary/20 transition-colors duration-300">
+                    <feature.icon className="w-7 h-7 text-primary" />
+                  </div>
+                  <h3 className="font-display text-xl text-foreground mb-3">
+                    {feature.title}
+                  </h3>
+                  <p className="font-body text-muted-foreground text-sm leading-relaxed">
+                    {feature.description}
+                  </p>
+                  {feature.cta && (
+                    <span className="inline-flex items-center gap-2 mt-5 font-display text-xs tracking-widest text-primary">
+                      {feature.cta}
+                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  )}
+                </Contenedor>
+              );
+            })}
           </div>
 
           {/* Differentiator */}

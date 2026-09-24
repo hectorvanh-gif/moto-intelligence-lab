@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { NeonInput } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
@@ -41,6 +42,29 @@ const Footer = () => {
 
           {/* Links */}
           <div className="flex flex-col sm:flex-row gap-8 lg:justify-center">
+            <div>
+              <h4 className="font-display text-xs tracking-widest text-foreground mb-4">
+                SITIO
+              </h4>
+              <ul className="space-y-2">
+                <li>
+                  <Link
+                    to="/nosotros"
+                    className="font-body text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Qué es Moto Lab 249
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/noticias"
+                    className="font-body text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Archivo completo
+                  </Link>
+                </li>
+              </ul>
+            </div>
             <div>
               <h4 className="font-display text-xs tracking-widest text-foreground mb-4">
                 LEGAL
