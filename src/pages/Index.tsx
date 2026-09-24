@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import FrontPage from "@/components/FrontPage";
@@ -8,6 +9,7 @@ import NewsletterBand from "@/components/NewsletterBand";
 import AboutMission from "@/components/AboutMission";
 import Footer from "@/components/Footer";
 import { homeCategories } from "@/lib/categories";
+import { SITE_URL } from "@/lib/site";
 
 const Index = () => {
   const { hash } = useLocation();
@@ -22,6 +24,16 @@ const Index = () => {
   }, [hash]);
 
   return (
+    <>
+      <Helmet>
+        <title>Noticias de motos en México | Moto Lab 249</title>
+        <meta
+          name="description"
+          content="Lo que pasó hoy en el motociclismo: MotoGP, motos eléctricas, doble propósito y lanzamientos. Resumido y al punto, para México."
+        />
+        <link rel="canonical" href={SITE_URL} />
+      </Helmet>
+
     <div className="min-h-screen bg-background">
       <Navbar />
       <Hero />
@@ -38,6 +50,7 @@ const Index = () => {
       <AboutMission />
       <Footer />
     </div>
+    </>
   );
 };
 

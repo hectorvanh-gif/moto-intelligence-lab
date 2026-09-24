@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Noticias de motos en México | Moto Lab 249</title>
-    <meta name="description" content="Lo que pasó hoy en el motociclismo: MotoGP, motos eléctricas, doble propósito y lanzamientos. Resumido y al punto, para México.">
     <meta name="author" content="Moto Lab 249" />
     <meta name="keywords" content="noticias de motos, motociclismo México, MotoGP, motos eléctricas, motos doble propósito, lanzamientos de motos" />
 
@@ -24,8 +23,9 @@
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="alternate icon" href="/favicon.ico" />
-    <!-- Si el dominio cambia: aqui, SITE_URL en src/lib/site.ts y SITE_URL en scripts/generate-sitemap.js -->
-    <link rel="canonical" href="https://motolab249.com" />
+    <!-- El canonical y la description los pone react-helmet por pagina (ver
+         src/pages/*). Aqui no van, o cada pagina termina con dos. Los og si
+         se quedan: los scrapers de redes no ejecutan JS y es lo unico que leen. -->
     <meta property="og:title" content="Noticias de motos en México | Moto Lab 249">
   <meta name="twitter:title" content="Noticias de motos en México | Moto Lab 249">
   <meta property="og:description" content="Lo que pasó hoy en el motociclismo: MotoGP, motos eléctricas, doble propósito y lanzamientos. Resumido y al punto, para México.">

@@ -340,10 +340,15 @@ Si SÍ es sobre motos responde SOLO con este JSON (sin texto adicional):
   "es_moto": true,
   "title": "título atractivo en español, máx 80 caracteres",
   "summary": "resumen claro 2-3 oraciones, máx 250 caracteres",
+  "cuerpo": "la nota contada con TUS palabras en 3 párrafos separados por \\n, entre 500 y 900 caracteres en total",
   "category": "MOTOGP|SUPERBIKE|ENDURO|AVENTURA|NAKED|SPORT|ELECTRICA|NOTICIA",
   "ig_title": "TÍTULO IMPACTANTE EN MAYÚSCULAS, máx 55 caracteres",
   "ig_caption": "1-2 frases breves y emocionantes, máx 120 caracteres, para imagen Instagram"
 }}
+
+REGLA DEL CUERPO: no copies frases del texto original. Reescríbelo. Si el
+material es tan corto que no alcanza para 3 párrafos, escribe menos, pero
+nunca pegues el texto de la fuente.
 
 Título: {article['title']}
 Contenido: {article['content'][:1500]}"""
@@ -394,7 +399,10 @@ def insert_article(article: dict, processed: dict, ig_image_url: str | None = No
     """Insert article (with ig_image_url already set) and return its new ID."""
     record = {
         "title":        processed.get("title", article["title"])[:80],
-        "content":      article["content"][:5000],
+        # El cuerpo que publicamos es el que redacto Claude, no el texto de la
+        # fuente. Si por lo que sea no vino, se guarda el material crudo pero
+        # la pagina del articulo no lo muestra: solo el resumen y el enlace.
+        "content":      (processed.get("cuerpo") or article["content"])[:5000],
         "summary":      processed.get("summary", "")[:500],
         "image_url":    article.get("image_url"),
         "category":     processed.get("category", "NOTICIA"),

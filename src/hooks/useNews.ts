@@ -47,5 +47,40 @@ export const useNewsByCategory = (value: string, limit = 3) => {
   });
 };
 
+/**
+ * Notas de una seccion tematica.
+ *
+ * Busca por categoria O por texto en el titulo y el resumen. El "o" existe
+ * porque hasta que corra el reprocesamiento todas las notas estan marcadas
+ * como NOTICIA: sin el match de texto, las secciones saldrian vacias aunque
+ * haya cientos de notas del tema.
+ */
+export const useHubNews = (
+  category: string,
+  match: string[],
+  limit = 6
+) => {
+  return useQuery({
+    queryKey: ["news", "hub", category, match.join("|"), limit],
+    queryFn: async (): Promise<NewsArticle[]> => {
+      const conditions = [
+        `category.eq.${category}`,
+        ...match.map((t) => `title.ilike."*${t}*"`),
+        ...match.map((t) => `summary.ilike."*${t}*"`),
+      ].join(",");
+
+      const { data, error } = await supabase
+        .from("moto_news")
+        .select("*")
+        .or(conditions)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      return data || [];
+    },
+  });
+};
+
 /** @deprecated se conserva por compatibilidad; usar useLatestNews. */
 export const useNews = () => useLatestNews(9);

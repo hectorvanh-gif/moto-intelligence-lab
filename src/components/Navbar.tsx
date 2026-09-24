@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { navCategories } from "@/lib/categories";
+import { HUBS } from "@/lib/hubs";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const close = () => setIsOpen(false);
-  const categories = navCategories();
+  const hubs = HUBS;
 
   // Antes estos eran botones con scrollIntoView, que no hacian nada desde
   // /noticias porque la seccion no existe en esa pagina. Ahora es navegacion
@@ -33,9 +33,9 @@ const Navbar = () => {
 
           {/* Navegacion de escritorio */}
           <div className="hidden lg:flex items-center gap-7">
-            {categories.map((cat) => (
-              <NavLink key={cat.slug} to={`/categoria/${cat.slug}`} className={linkClass}>
-                {cat.label}
+            {hubs.map((hub) => (
+              <NavLink key={hub.slug} to={`/${hub.slug}`} className={linkClass}>
+                {hub.navLabel}
               </NavLink>
             ))}
             <NavLink to="/noticias" className={linkClass}>
@@ -60,14 +60,14 @@ const Navbar = () => {
         {isOpen && (
           <div className="lg:hidden py-4 border-t border-border/50 animate-slide-up">
             <div className="flex flex-col gap-4">
-              {categories.map((cat) => (
+              {hubs.map((hub) => (
                 <NavLink
-                  key={cat.slug}
-                  to={`/categoria/${cat.slug}`}
+                  key={hub.slug}
+                  to={`/${hub.slug}`}
                   onClick={close}
                   className={linkClass}
                 >
-                  {cat.label}
+                  {hub.navLabel}
                 </NavLink>
               ))}
               <NavLink to="/noticias" onClick={close} className={linkClass}>
