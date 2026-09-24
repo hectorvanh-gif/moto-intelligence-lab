@@ -36,4 +36,11 @@ $$;
 
 -- Que no se pueda llamar desde el navegador: solo el endpoint, que si
 -- comprueba que no hayas votado antes.
+--
+-- El revoke a PUBLIC es el que importa y es facil de olvidar: Postgres
+-- concede EXECUTE a PUBLIC en cada funcion nueva, y anon hereda de ahi.
+-- Revocarsela solo a anon deja la funcion abierta, y se comprobo: con la
+-- llave publicable se le sumaron votos a una nota desde fuera, saltandose
+-- la regla de un voto por persona.
+revoke execute on function public.sumar_voto(bigint) from public;
 revoke execute on function public.sumar_voto(bigint) from anon, authenticated;
