@@ -356,7 +356,10 @@ Contenido: {article['content'][:1500]}"""
 
     msg = client.messages.create(
         model="claude-haiku-4-5-20251001",
-        max_tokens=500,
+        # 500 no alcanzaba desde que el JSON incluye "cuerpo": la respuesta
+        # llegaba cortada a media frase y no se podia parsear, asi que la mitad
+        # de las notas caian al fallback.
+        max_tokens=1500,
         messages=[
             {"role": "user", "content": prompt},
             # Prellenar la respuesta con "{" impide que el modelo escriba
@@ -367,6 +370,9 @@ Contenido: {article['content'][:1500]}"""
             {"role": "assistant", "content": "{"},
         ],
     )
+
+    if msg.stop_reason == "max_tokens":
+        print("      ⚠️  La respuesta se corto por max_tokens; hay que subirlo")
 
     raw = "{" + msg.content[0].text
     try:
