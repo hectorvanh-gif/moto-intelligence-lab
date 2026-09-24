@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import type { NewsArticle } from "@/hooks/useNews";
+import { cleanText } from "@/lib/text";
 
 interface NewsCardProps {
   article: NewsArticle;
@@ -13,10 +14,11 @@ const NewsCard = ({ article }: NewsCardProps) => {
     : "";
 
   const getSummary = () => {
-    if (article.summary) return article.summary;
+    if (article.summary) return cleanText(article.summary);
     if (article.content) {
-      const words = article.content.split(" ").slice(0, 20);
-      return words.join(" ") + (article.content.split(" ").length > 20 ? "..." : "");
+      const clean = cleanText(article.content);
+      const words = clean.split(" ").slice(0, 20);
+      return words.join(" ") + (clean.split(" ").length > 20 ? "..." : "");
     }
     return "Sin contenido disponible";
   };
@@ -53,7 +55,7 @@ const NewsCard = ({ article }: NewsCardProps) => {
       {/* Content */}
       <div className="p-4 space-y-3">
         <h3 className="font-display font-bold text-foreground text-lg leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-          {article.title || "Sin título"}
+          {cleanText(article.title) || "Sin título"}
         </h3>
         <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
           {getSummary()}

@@ -14,7 +14,7 @@ async function generateSitemap() {
 
   // Fetch all articles (only id + created_at needed)
   const res = await fetch(
-    `${SUPABASE_URL}/rest/v1/moto_news?select=id,created_at&order=created_at.desc&limit=1000`,
+    `${SUPABASE_URL}/rest/v1/moto_news?select=id,created_at&category=neq.DESCARTADO&order=created_at.desc&limit=1000`,
     {
       headers: {
         apikey: SUPABASE_KEY,
@@ -32,9 +32,19 @@ async function generateSitemap() {
   const today = new Date().toISOString().split("T")[0];
 
   // Static pages
+  // Las secciones tematicas van con prioridad alta: son las que cargan el
+  // contenido propio y las que pelean las busquedas con volumen.
+  const HUB_SLUGS = ["motogp", "motos-electricas", "motos-doble-proposito", "enduro"];
+
   const staticUrls = [
     { loc: SITE_URL,               changefreq: "daily",  priority: "1.0", lastmod: today },
     { loc: `${SITE_URL}/noticias`, changefreq: "daily",  priority: "0.9", lastmod: today },
+    ...HUB_SLUGS.map((slug) => ({
+      loc: `${SITE_URL}/${slug}`,
+      changefreq: "weekly",
+      priority: "0.9",
+      lastmod: today,
+    })),
   ];
 
   // Dynamic article pages
@@ -62,7 +72,7 @@ ${allUrls
 </urlset>`;
 
   writeFileSync("public/sitemap.xml", xml, "utf-8");
-  console.log(`✅ Sitemap generated — ${allUrls.length} URLs (${articles.length} artículos + 2 estáticas)`);
+  console.log(`✅ Sitemap generated — ${allUrls.length} URLs (${articles.length} artículos + ${staticUrls.length} estáticas)`);
 }
 
 generateSitemap().catch((err) => {

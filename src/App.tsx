@@ -8,6 +8,8 @@ import Index from "./pages/Index";
 import NewsArticlePage from "./pages/NewsArticlePage";
 import NewsArchivePage from "./pages/NewsArchivePage";
 import NotFound from "./pages/NotFound";
+import HubPage from "./pages/HubPage";
+import { HUBS } from "@/lib/hubs";
 
 const queryClient = new QueryClient();
 
@@ -20,7 +22,15 @@ const App = () => (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Index />} />
+            {HUBS.map((hub) => (
+              <Route
+                key={hub.slug}
+                path={`/${hub.slug}`}
+                element={<HubPage slug={hub.slug} />}
+              />
+            ))}
             <Route path="/noticias" element={<NewsArchivePage />} />
+            <Route path="/categoria/:slug" element={<NewsArchivePage />} />
             <Route path="/noticias/:id" element={<NewsArticlePage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />

@@ -34,7 +34,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="font-body text-muted-foreground text-sm">
-              Centro de inteligencia motociclista potenciado por IA para la
+              Noticias de motociclismo para la
               comunidad en México.
             </p>
           </div>

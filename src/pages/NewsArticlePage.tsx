@@ -5,20 +5,11 @@ import { es } from "date-fns/locale";
 import { ArrowLeft, ExternalLink, Clock, Tag } from "lucide-react";
 import { useArticle } from "@/hooks/useArticle";
 import { SITE_URL } from "@/lib/site";
+import { cleanText } from "@/lib/text";
+import { byValue, colorFor } from "@/lib/categories";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Skeleton } from "@/components/ui/skeleton";
-
-const CATEGORY_COLORS: Record<string, string> = {
-  MOTOGP: "bg-red-600",
-  SUPERBIKE: "bg-orange-600",
-  ENDURO: "bg-green-700",
-  AVENTURA: "bg-blue-700",
-  NAKED: "bg-purple-700",
-  SPORT: "bg-yellow-600",
-  ELECTRICA: "bg-teal-600",
-  NOTICIA: "bg-gray-600",
-};
 
 const NewsArticlePage = () => {
   const { id } = useParams<{ id: string }>();
@@ -31,17 +22,16 @@ const NewsArticlePage = () => {
     ? format(new Date(article.created_at), "d 'de' MMMM 'de' yyyy", { locale: es })
     : "";
 
-  const categoryColor = article?.category
-    ? CATEGORY_COLORS[article.category] || "bg-gray-600"
-    : "bg-gray-600";
+  const categoryColor = colorFor(article?.category);
+  const category = byValue(article?.category);
 
   // JSON-LD NewsArticle structured data
   const jsonLd = article
     ? {
         "@context": "https://schema.org",
         "@type": "NewsArticle",
-        headline: article.title,
-        description: article.summary,
+        headline: cleanText(article.title),
+        description: cleanText(article.summary),
         image: article.image_url || `${siteUrl}/og-image.jpg`,
         datePublished: article.created_at,
         dateModified: article.created_at,
@@ -71,21 +61,21 @@ const NewsArticlePage = () => {
       <Helmet>
         <title>
           {article?.title
-            ? `${article.title} | Moto Lab 249`
+            ? `${cleanText(article.title)} | Moto Lab 249`
             : "Cargando artículo | Moto Lab 249"}
         </title>
         <meta
           name="description"
-          content={article?.summary || "Noticias de motociclismo curadas por IA para México."}
+          content={cleanText(article?.summary) || "Noticias de motociclismo para México."}
         />
         <link rel="canonical" href={articleUrl} />
 
         {/* Open Graph */}
         <meta property="og:type" content="article" />
-        <meta property="og:title" content={article?.title || "Moto Lab 249"} />
+        <meta property="og:title" content={cleanText(article?.title) || "Moto Lab 249"} />
         <meta
           property="og:description"
-          content={article?.summary || "Noticias de motociclismo curadas por IA para México."}
+          content={cleanText(article?.summary) || "Noticias de motociclismo para México."}
         />
         <meta
           property="og:image"
@@ -97,10 +87,10 @@ const NewsArticlePage = () => {
 
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={article?.title || "Moto Lab 249"} />
+        <meta name="twitter:title" content={cleanText(article?.title) || "Moto Lab 249"} />
         <meta
           name="twitter:description"
-          content={article?.summary || "Noticias de motociclismo curadas por IA para México."}
+          content={cleanText(article?.summary) || "Noticias de motociclismo para México."}
         />
         <meta
           name="twitter:image"
@@ -157,7 +147,7 @@ const NewsArticlePage = () => {
                     className={`inline-flex items-center gap-1.5 px-3 py-1 rounded text-xs font-display font-bold tracking-widest text-white ${categoryColor}`}
                   >
                     <Tag className="w-3 h-3" />
-                    {article.category}
+                    {category?.label ?? article.category}
                   </span>
                 )}
                 <time className="flex items-center gap-1.5 text-muted-foreground text-sm font-mono">
@@ -168,13 +158,13 @@ const NewsArticlePage = () => {
 
               {/* Title */}
               <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight mb-6">
-                {article.title}
+                {cleanText(article.title)}
               </h1>
 
               {/* Summary */}
               {article.summary && (
                 <p className="text-xl text-muted-foreground leading-relaxed mb-8 border-l-4 border-primary pl-5 italic">
-                  {article.summary}
+                  {cleanText(article.summary)}
                 </p>
               )}
 
@@ -192,11 +182,15 @@ const NewsArticlePage = () => {
               {/* Content */}
               {article.content && (
                 <div className="prose prose-invert prose-lg max-w-none mb-12 font-body leading-relaxed text-muted-foreground">
-                  {article.content.split("\n").filter(Boolean).map((paragraph, i) => (
-                    <p key={i} className="mb-4">
-                      {paragraph}
-                    </p>
-                  ))}
+                  {article.content
+                    .split("\n")
+                    .map((paragraph) => cleanText(paragraph))
+                    .filter(Boolean)
+                    .map((paragraph, i) => (
+                      <p key={i} className="mb-4">
+                        {paragraph}
+                      </p>
+                    ))}
                 </div>
               )}
 

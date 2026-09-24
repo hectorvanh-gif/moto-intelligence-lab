@@ -1,130 +1,65 @@
-import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { NeonInput } from "@/components/ui/input";
-import { toast } from "@/hooks/use-toast";
-import { supabase } from "@/integrations/supabase/client";
-import { ChevronDown } from "lucide-react";
 
+/**
+ * Antes el hero ocupaba una pantalla completa y traia el formulario de
+ * suscripcion, asi que lo primero que veia la gente no era una noticia.
+ * Ahora es una franja mas corta y el formulario vive en NewsletterBand.
+ */
 const Hero = () => {
-  const [email, setEmail] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) {
-      toast({
-        title: "Error",
-        description: "Por favor ingresa tu email",
-        variant: "destructive"
-      });
-      return;
-    }
-    setIsLoading(true);
-    const { error } = await supabase
-      .from("subscribers")
-      .insert({ email: email.trim().toLowerCase() });
-
-    if (error) {
-      if (error.code === "23505") {
-        toast({
-          title: "Ya estás registrado",
-          description: "Este email ya forma parte del Lab 249.",
-        });
-      } else {
-        toast({
-          title: "Error al registrarse",
-          description: "Intenta de nuevo en un momento.",
-          variant: "destructive",
-        });
-      }
-    } else {
-      toast({
-        title: "¡Bienvenido al Lab!",
-        description: "Pronto recibirás inteligencia de alto octanaje."
-      });
-      setEmail("");
-    }
-    setIsLoading(false);
-  };
-
   return (
-    <section id="hero" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 lg:pt-20">
-      {/* Video background */}
+    <section
+      id="hero"
+      className="relative min-h-[62vh] lg:min-h-[70vh] flex items-center justify-center overflow-hidden pt-16 lg:pt-20"
+    >
+      {/* Video de fondo */}
       <video
         autoPlay
         muted
         loop
         playsInline
+        preload="metadata"
         className="absolute inset-0 w-full h-full object-cover"
       >
         <source src="/Ducati.mp4" type="video/mp4" />
       </video>
 
-      {/* Dark overlay for text readability */}
-      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0 bg-black/65" />
       <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-transparent to-background" />
       <div className="absolute inset-0 circuit-lines opacity-20 pointer-events-none" />
 
-      {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 lg:px-8 py-12 lg:py-20">
+      {/* Contenido */}
+      <div className="relative z-10 container mx-auto px-4 lg:px-8 py-14">
         <div className="max-w-4xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-8 animate-slide-up">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-7 animate-slide-up">
             <div className="w-2 h-2 bg-primary rounded-full animate-pulse-glow" />
             <span className="font-display text-xs tracking-widest text-primary">
-              SISTEMA ACTIVO
+              MÉXICO · ACTUALIZADO TODOS LOS DÍAS
             </span>
           </div>
 
-          {/* Headline */}
-          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-tight mb-6 animate-slide-up animation-delay-100">
-            LA INTELIGENCIA ARTIFICIAL{" "}
-            <span className="text-gradient-red">AL SERVICIO</span>{" "}
-            DE TU PASIÓN.
+          <h1 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-5 animate-slide-up animation-delay-100">
+            NOTICIAS DE MOTOS,{" "}
+            <span className="text-gradient-red">DIRECTO A LA VENA</span>
           </h1>
 
-          {/* Subheadline */}
-          <p className="font-body text-lg sm:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto mb-10 animate-slide-up animation-delay-200 leading-relaxed">
-            Noticias globales de motociclismo, curadas por agentes de IA para la comunidad en México.{" "}
-            <span className="text-foreground font-semibold">Sin relleno, directo a la vena.</span>
+          <p className="font-body text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-9 animate-slide-up animation-delay-200 leading-relaxed">
+            MotoGP, motos eléctricas, doble propósito y lanzamientos.{" "}
+            <span className="text-foreground font-semibold">Lo que importa del día, sin relleno.</span>
           </p>
 
-          {/* CTA Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto animate-slide-up animation-delay-300">
-            <NeonInput
-              type="email"
-              placeholder="tu@email.com"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              className="flex-1"
-            />
-            <Button type="submit" variant="hero" size="xl" disabled={isLoading} className="whitespace-nowrap">
-              {isLoading ? "PROCESANDO..." : "UNIRME AL LAB 249"}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up animation-delay-300">
+            <Button variant="hero" size="lg" asChild>
+              <a href="#portada">VER LO ÚLTIMO</a>
             </Button>
-          </form>
-
-          {/* Trust indicator */}
-          <p className="font-body text-sm text-muted-foreground mt-6 animate-slide-up animation-delay-400">
-            +500 pilotos ya reciben noticias cada semana
-          </p>
+            <Button variant="outline" size="lg" asChild>
+              <Link to="/noticias">EXPLORAR EL ARCHIVO</Link>
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* Scroll down indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2">
-        <span className="font-display text-xs tracking-[0.3em] text-primary/70">SCROLL</span>
-        <button
-          onClick={() => document.getElementById("noticias")?.scrollIntoView({ behavior: "smooth" })}
-          className="flex flex-col items-center gap-1 cursor-pointer group"
-          aria-label="Scroll hacia abajo"
-        >
-          <ChevronDown className="w-6 h-6 text-primary animate-bounce" />
-          <ChevronDown className="w-6 h-6 text-primary/50 animate-bounce [animation-delay:150ms] -mt-4" />
-        </button>
-      </div>
-
-      {/* Bottom fade */}
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-background to-transparent pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent pointer-events-none" />
     </section>
   );
 };

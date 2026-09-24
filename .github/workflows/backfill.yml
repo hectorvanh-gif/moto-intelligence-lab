@@ -1,0 +1,48 @@
+name: Reprocesar notas viejas
+
+# Solo manual. No tiene cron a proposito: es una operacion de una vez
+# (o de las pocas veces que haga falta), no algo que deba correr solo.
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Cuantas notas procesar (vacio = todas las pendientes)"
+        required: false
+        default: "10"
+      dry_run:
+        description: "Simulacro: no escribe en la base"
+        type: boolean
+        required: false
+        default: true
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: scripts/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Reprocesar
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        working-directory: scripts
+        run: |
+          ARGS=""
+          if [ -n "${{ inputs.limit }}" ]; then ARGS="$ARGS --limit ${{ inputs.limit }}"; fi
+          if [ "${{ inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
+          echo "python backfill.py $ARGS"
+          python backfill.py $ARGS
