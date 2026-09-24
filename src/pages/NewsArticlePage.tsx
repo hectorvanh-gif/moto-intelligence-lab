@@ -9,6 +9,7 @@ import { cleanText } from "@/lib/text";
 import { byValue, colorFor } from "@/lib/categories";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import VoteButton from "@/components/VoteButton";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const NewsArticlePage = () => {
@@ -154,6 +155,13 @@ const NewsArticlePage = () => {
                   <Clock className="w-3.5 h-3.5" />
                   {formattedDate}
                 </time>
+                <div className="ml-auto">
+                  <VoteButton
+                    articleId={article.id}
+                    votes={article.votes}
+                    size="lg"
+                  />
+                </div>
               </div>
 
               {/* Title */}

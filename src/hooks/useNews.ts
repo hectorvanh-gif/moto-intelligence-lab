@@ -10,6 +10,8 @@ export interface NewsArticle {
   image_url: string | null;
   category: string | null;
   source_url: string | null;
+  /** Contador de votos. Se suma desde api/votar.js, nunca desde el navegador. */
+  votes: number | null;
 }
 
 /** Las mas recientes, sin filtrar por categoria. */
@@ -22,6 +24,33 @@ export const useLatestNews = (limit = 9) => {
         .select("*")
         .neq("category", "DESCARTADO")
         .order("created_at", { ascending: false })
+        .limit(limit);
+
+      if (error) throw error;
+      return data || [];
+    },
+  });
+};
+
+/**
+ * Las mas votadas de los ultimos dias.
+ *
+ * Solo trae notas con al menos un voto. Una seccion de "lo mas votado"
+ * llena de ceros se ve peor que no tenerla: le dice al visitante que aqui
+ * nadie participa.
+ */
+export const useMostVoted = (limit = 4, dias = 30) => {
+  return useQuery({
+    queryKey: ["news", "votadas", limit, dias],
+    queryFn: async (): Promise<NewsArticle[]> => {
+      const desde = new Date(Date.now() - dias * 86400000).toISOString();
+      const { data, error } = await supabase
+        .from("moto_news")
+        .select("*")
+        .neq("category", "DESCARTADO")
+        .gt("votes", 0)
+        .gte("created_at", desde)
+        .order("votes", { ascending: false })
         .limit(limit);
 
       if (error) throw error;

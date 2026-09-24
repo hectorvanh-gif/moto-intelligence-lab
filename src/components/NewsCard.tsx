@@ -3,6 +3,7 @@ import { format } from "date-fns";
 import { es } from "date-fns/locale";
 import type { NewsArticle } from "@/hooks/useNews";
 import { cleanText } from "@/lib/text";
+import VoteButton from "./VoteButton";
 
 interface NewsCardProps {
   article: NewsArticle;
@@ -60,9 +61,12 @@ const NewsCard = ({ article }: NewsCardProps) => {
         <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
           {getSummary()}
         </p>
-        <time className="block text-xs text-muted-foreground/70 font-mono tracking-wider">
-          {formattedDate}
-        </time>
+        <div className="flex items-center justify-between gap-3 pt-1">
+          <time className="text-xs text-muted-foreground/70 font-mono tracking-wider">
+            {formattedDate}
+          </time>
+          <VoteButton articleId={article.id} votes={article.votes} />
+        </div>
       </div>
 
       {/* Hover glow effect */}

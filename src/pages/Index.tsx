@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet-async";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import FrontPage from "@/components/FrontPage";
+import MostVoted from "@/components/MostVoted";
 import CategoryRow from "@/components/CategoryRow";
 import NewsletterBand from "@/components/NewsletterBand";
 import AboutMission from "@/components/AboutMission";
@@ -38,6 +39,9 @@ const Index = () => {
       <Navbar />
       <Hero />
       <FrontPage />
+
+      {/* Se pinta sola cuando hay votos; con cero no aparece. */}
+      <MostVoted />
 
       {categories[0] && <CategoryRow category={categories[0]} />}
 
