@@ -1,23 +1,26 @@
 import { Cpu, Users, Zap } from "lucide-react";
 
+// Las cifras de aqui son medibles en la base y por eso van redondeadas
+// hacia abajo: hay 50 dominios distintos publicando. No poner "cientos"
+// de fuentes ni prometer una comunidad que todavia no existe.
 const features = [
   {
     icon: Cpu,
     title: "MOTOR",
     description:
-      "Curación automatizada de las mejores noticias del mundo motociclista, filtradas por relevancia para México.",
+      "Curación automatizada de más de 40 fuentes de prensa especializada. Lo que no aporta, no se publica.",
   },
   {
     icon: Zap,
     title: "TECNOLOGÍA",
     description:
-      "Agentes de IA procesan cientos de fuentes globales para entregarte solo lo que importa.",
+      "Claude lee las fuentes cada mañana, reescribe lo que importa y descarta el resto.",
   },
   {
     icon: Users,
     title: "COMUNIDAD",
     description:
-      "Construimos un ecosistema de pilotos informados, conectados y apasionados.",
+      "Estamos construyendo el lugar donde los pilotos mexicanos siguen lo que pasa en el mundo de la moto.",
   },
 ];
 
@@ -65,8 +68,8 @@ const AboutMission = () => {
             </p>
             <p className="font-body text-lg text-foreground">
               Mientras otros medios te saturan con ruido, nosotros filtramos.
-              Procesamos cientos de fuentes en segundos para darte solo lo
-              esencial:{" "}
+              Cada mañana se revisan más de 40 fuentes y se descarta lo que no
+              aporta, para dejarte solo lo esencial:{" "}
               <span className="text-primary font-semibold">
                 información de alto octanaje, sin relleno.
               </span>
