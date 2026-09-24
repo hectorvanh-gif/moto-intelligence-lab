@@ -41,15 +41,15 @@ const Index = () => {
       {/* Se pinta sola cuando hay votos; con cero no aparece. */}
       <MostVoted />
 
-      {categories[0] && <CategoryRow category={categories[0]} />}
-
-      <NewsletterBand />
-
-      {categories.slice(1).map((cat) => (
+      {/* Las filas de categoria van seguidas: antes el formulario de
+          suscripcion se metia entre la primera y las demas, y cortaba el
+          impulso de bajar justo cuando estaba funcionando. */}
+      {categories.map((cat) => (
         <CategoryRow key={cat.slug} category={cat} />
       ))}
 
       <AboutMission />
+      <NewsletterBand />
       <Footer />
     </div>
     </>

@@ -8,6 +8,7 @@ import { cleanText } from "@/lib/text";
 import { byValue, colorFor } from "@/lib/categories";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import NewsletterBand from "@/components/NewsletterBand";
 import VoteButton from "@/components/VoteButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMeta } from "@/hooks/useMeta";
@@ -191,6 +192,7 @@ const NewsArticlePage = () => {
           )}
         </main>
 
+        <NewsletterBand />
         <Footer />
       </div>
     </>

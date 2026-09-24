@@ -1,110 +1,60 @@
-import { ArrowRight, Cpu, Users, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowRight, Users } from "lucide-react";
 
-// Las cifras de aqui son medibles en la base y por eso van redondeadas
-// hacia abajo: hay 50 dominios distintos publicando. No poner "cientos"
-// de fuentes.
-//
-// La tarjeta de comunidad decia "estamos construyendo" mientras no habia
-// nada; ahora lleva a la comunidad en amiiigo.com, asi que ya puede
-// afirmarlo. Si ese enlace muere, el texto vuelve a futuro.
-const features = [
-  {
-    icon: Cpu,
-    title: "MOTOR",
-    description:
-      "Curación automatizada de más de 40 fuentes de prensa especializada. Lo que no aporta, no se publica.",
-  },
-  {
-    icon: Zap,
-    title: "TECNOLOGÍA",
-    description:
-      "Claude lee las fuentes cada mañana, reescribe lo que importa y descarta el resto.",
-  },
-  {
-    icon: Users,
-    title: "COMUNIDAD",
-    description:
-      "El lugar donde los pilotos mexicanos siguen lo que pasa en el mundo de la moto.",
-    href: "https://amiiigo.com/motolab-249",
-    cta: "ENTRAR A LA COMUNIDAD",
-  },
-];
-
+/**
+ * La franja de cierre de la portada.
+ *
+ * Tenia tres tarjetas —MOTOR, TECNOLOGIA, COMUNIDAD— y debajo un bloque
+ * de "por que IA". Las dos primeras tarjetas y el bloque decian
+ * exactamente lo mismo con otras palabras: "revisamos muchas fuentes y
+ * descartamos lo que no aporta", tres veces en la misma pantalla. La
+ * explicacion larga ahora vive en /nosotros.
+ *
+ * Queda un solo mensaje y dos acciones: entrar a la comunidad y leer como
+ * se trabaja. La tarjeta de COMUNIDAD era la unica de las tres que
+ * llevaba a algun lado.
+ */
 const AboutMission = () => {
   return (
-    <section id="mission" className="relative py-20 lg:py-32 bg-card">
+    <section id="mission" className="relative py-16 lg:py-24 bg-card">
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Section Header */}
-          <div className="text-center mb-12 lg:mb-16">
-            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-4">
-              MOTOR + TECNOLOGÍA + COMUNIDAD
-            </h2>
-            <p className="font-body text-lg text-muted-foreground max-w-2xl mx-auto">
-              Moto Lab 249 no es un blog tradicional. Es un centro de
-              inteligencia que utiliza IA para curar las noticias más
-              relevantes del mundo motociclista para ti.
-            </p>
-          </div>
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="font-display text-xs tracking-widest text-primary mb-4">
+            ¿POR QUÉ IA?
+          </p>
 
-          {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => {
-              // La tarjeta con enlace se pinta como <a>; las otras siguen
-              // siendo texto. Asi solo lo que lleva a algun lado invita a
-              // hacerle clic.
-              const Contenedor = feature.href ? "a" : "div";
-              const props = feature.href
-                ? {
-                    href: feature.href,
-                    target: "_blank",
-                    rel: "noopener noreferrer",
-                  }
-                : {};
+          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground leading-tight mb-5">
+            Mientras otros te saturan con ruido,{" "}
+            <span className="text-primary">nosotros filtramos</span>
+          </h2>
 
-              return (
-                <Contenedor
-                  key={index}
-                  {...props}
-                  className={`block text-center p-6 lg:p-8 rounded-sm border bg-background/50 transition-all duration-300 group ${
-                    feature.href
-                      ? "border-primary/40 hover:border-primary cursor-pointer"
-                      : "border-border/50 hover:border-primary/30"
-                  }`}
-                >
-                  <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-6 group-hover:bg-primary/20 transition-colors duration-300">
-                    <feature.icon className="w-7 h-7 text-primary" />
-                  </div>
-                  <h3 className="font-display text-xl text-foreground mb-3">
-                    {feature.title}
-                  </h3>
-                  <p className="font-body text-muted-foreground text-sm leading-relaxed">
-                    {feature.description}
-                  </p>
-                  {feature.cta && (
-                    <span className="inline-flex items-center gap-2 mt-5 font-display text-xs tracking-widest text-primary">
-                      {feature.cta}
-                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
-                    </span>
-                  )}
-                </Contenedor>
-              );
-            })}
-          </div>
+          <p className="font-body text-lg text-muted-foreground leading-relaxed mb-9">
+            Cada mañana se revisan más de 40 fuentes de prensa especializada y
+            se descarta lo que no aporta, para dejarte solo lo esencial:{" "}
+            <span className="text-foreground font-semibold">
+              información de alto octanaje, sin relleno.
+            </span>
+          </p>
 
-          {/* Differentiator */}
-          <div className="mt-12 lg:mt-16 p-6 lg:p-8 rounded-sm border border-primary/20 bg-primary/5 text-center">
-            <p className="font-display text-sm tracking-widest text-primary mb-2">
-              ¿POR QUÉ IA?
-            </p>
-            <p className="font-body text-lg text-foreground">
-              Mientras otros medios te saturan con ruido, nosotros filtramos.
-              Cada mañana se revisan más de 40 fuentes y se descarta lo que no
-              aporta, para dejarte solo lo esencial:{" "}
-              <span className="text-primary font-semibold">
-                información de alto octanaje, sin relleno.
-              </span>
-            </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="https://amiiigo.com/motolab-249"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-sm bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors"
+            >
+              <Users className="w-4 h-4" />
+              ENTRAR A LA COMUNIDAD
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </a>
+
+            <Link
+              to="/nosotros"
+              className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-sm border border-border/60 font-display text-sm tracking-widest text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors"
+            >
+              CÓMO TRABAJAMOS
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </Link>
           </div>
         </div>
       </div>
