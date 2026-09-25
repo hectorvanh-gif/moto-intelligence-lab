@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import CommunityBand from "@/components/CommunityBand";
 import NewsletterBand from "@/components/NewsletterBand";
 import NewsCard from "@/components/NewsCard";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -173,7 +172,6 @@ const HubPage = ({ slug }: Props) => {
           </div>
         </section>
 
-        <CommunityBand />
         <NewsletterBand />
         <Footer />
       </div>
