@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
-import { Instagram } from "lucide-react";
+import { Facebook, Instagram } from "lucide-react";
 import { COMUNIDAD_URL } from "@/lib/comunidad";
+import { FACEBOOK_URL, INSTAGRAM_URL } from "@/lib/redes";
 
 /**
  * El pie. Tenia un segundo formulario de newsletter que mostraba
@@ -94,15 +95,31 @@ const Footer = () => {
               <h4 className="font-display text-xs tracking-widest text-foreground mb-4">
                 SÍGUENOS
               </h4>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-              >
-                <Instagram size={20} />
-                <span className="font-body text-sm">Instagram</span>
-              </a>
+              <div className="flex flex-col gap-3">
+                <a
+                  href={FACEBOOK_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+                >
+                  <Facebook size={20} />
+                  <span className="font-body text-sm">Facebook</span>
+                </a>
+
+                {/* Solo se pinta cuando haya cuenta de verdad: antes
+                    apuntaba a instagram.com, la portada de Instagram. */}
+                {INSTAGRAM_URL && (
+                  <a
+                    href={INSTAGRAM_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    <Instagram size={20} />
+                    <span className="font-body text-sm">Instagram</span>
+                  </a>
+                )}
+              </div>
             </div>
           </div>
 
