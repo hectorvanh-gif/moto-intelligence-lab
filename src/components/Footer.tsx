@@ -50,6 +50,14 @@ const Footer = () => {
                 </li>
                 <li>
                   <Link
+                    to="/calendario-motogp"
+                    className="font-body text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Calendario MotoGP
+                  </Link>
+                </li>
+                <li>
+                  <Link
                     to="/noticias"
                     className="font-body text-sm text-muted-foreground hover:text-primary transition-colors"
                   >

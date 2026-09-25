@@ -39,6 +39,7 @@ const CUBIERTAS_POR_SECCION = ["MOTOGP", "ELECTRICA", "ENDURO", "AVENTURA"];
  * de calle, y al final las electricas, que son su propio mundo.
  */
 const ORDEN = [
+  "/calendario-motogp",
   "/motogp",
   "/categoria/superbike",
   "/motos-doble-proposito",
@@ -50,6 +51,10 @@ const ORDEN = [
 
 const CategoryBar = () => {
   const todos = [
+    // No es una categoria, es un destino: el calendario con los horarios
+    // en hora de Mexico. Va primero porque es lo unico del sitio que no
+    // existe en ningun otro lado.
+    { to: "/calendario-motogp", label: "CALENDARIO" },
     ...HUBS.map((h) => ({ to: `/${h.slug}`, label: h.navLabel })),
     ...CATEGORIES.filter(
       (c) => c.value !== "NOTICIA" && !CUBIERTAS_POR_SECCION.includes(c.value)
