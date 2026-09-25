@@ -41,7 +41,14 @@
          paginas. Con un nombre nuevo es un recurso que nunca ha visto y lo
          tiene que bajar. /favicon.ico se queda en su sitio, ya correcto,
          para quien lo pida por convencion. -->
-    <link rel="icon" type="image/svg+xml" href="/icono-ml249.svg">
+    <!-- El PNG va primero a proposito. El SVG se quito de aqui porque
+         dibuja el "ML 249" con font-family="Arial Black": esa fuente
+         existe en Windows y macOS, pero no en Linux ni en muchos Android,
+         y ahi el logotipo salia con otra tipografia. Un icono que cambia
+         segun el aparato no es un icono de marca. El PNG y el .ico son
+         pixeles y se ven igual en todos lados, y 192 es multiplo de 48,
+         que es lo que Google pide. El SVG se queda en public/ como
+         original del diseno. -->
     <link rel="icon" type="image/png" sizes="192x192" href="/icono-ml249-192.png">
     <link rel="icon" href="/icono-ml249.ico" sizes="48x48">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">

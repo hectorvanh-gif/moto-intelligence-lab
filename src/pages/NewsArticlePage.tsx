@@ -48,7 +48,10 @@ const NewsArticlePage = () => {
           url: siteUrl,
           logo: {
             "@type": "ImageObject",
-            url: `${siteUrl}/favicon.svg`,
+            // Raster y no el SVG: el SVG dibuja el logotipo con una fuente
+            // del sistema, y quien lo rasterice sin esa fuente obtiene
+            // otra cosa. Google pide ademas un logo que pueda mostrar.
+            url: `${siteUrl}/icono-ml249-192.png`,
           },
         },
         mainEntityOfPage: {
