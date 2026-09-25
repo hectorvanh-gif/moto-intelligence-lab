@@ -1,0 +1,2259 @@
+{
+  "temporada": 2026,
+  "actualizado": "2026-09-25T10:37:39.377723-06:00",
+  "zona": "America/Mexico_City",
+  "fuente": "https://www.motogp.com/es/calendar",
+  "total": 22,
+  "proxima_ronda": 16,
+  "carreras": [
+    {
+      "ronda": 1,
+      "nombre": "Pt Grand Prix Of Thailand ",
+      "pais": "Tailandia",
+      "bandera": "th",
+      "circuito": "Chang International Circuit",
+      "inicio": "2026-02-27",
+      "fin": "2026-03-01",
+      "zona_circuito": "ASIA/BANGKOK",
+      "corrida": true,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-03-01T02:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 1,
+        "mes": "marzo",
+        "hora": "02:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-02-28T02:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 28,
+        "mes": "febrero",
+        "hora": "02:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-02-26T21:45:00-06:00",
+          "dia_semana": "jueves",
+          "dia": 26,
+          "mes": "febrero",
+          "hora": "21:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-02-27T02:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 27,
+          "mes": "febrero",
+          "hora": "02:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-02-27T21:10:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 27,
+          "mes": "febrero",
+          "hora": "21:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-02-27T21:50:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 27,
+          "mes": "febrero",
+          "hora": "21:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-02-27T22:15:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 27,
+          "mes": "febrero",
+          "hora": "22:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-02-28T02:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 28,
+          "mes": "febrero",
+          "hora": "02:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-02-28T21:40:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 28,
+          "mes": "febrero",
+          "hora": "21:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-03-01T02:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 1,
+          "mes": "marzo",
+          "hora": "02:00"
+        }
+      ]
+    },
+    {
+      "ronda": 2,
+      "nombre": "Estrella Galicia 0,0 Grand Prix Of Brazil ",
+      "pais": "Brasil",
+      "bandera": "br",
+      "circuito": "Autódromo Internacional de Goiânia – Ayrton Senna",
+      "inicio": "2026-03-20",
+      "fin": "2026-03-22",
+      "zona_circuito": "AMERICA/SAO_PAULO",
+      "corrida": true,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-03-22T12:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 22,
+        "mes": "marzo",
+        "hora": "12:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-03-21T13:20:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 21,
+        "mes": "marzo",
+        "hora": "13:20"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-03-20T09:05:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 20,
+          "mes": "marzo",
+          "hora": "09:05"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-03-20T13:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 20,
+          "mes": "marzo",
+          "hora": "13:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-03-21T07:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 21,
+          "mes": "marzo",
+          "hora": "07:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-03-21T07:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 21,
+          "mes": "marzo",
+          "hora": "07:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-03-21T08:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 21,
+          "mes": "marzo",
+          "hora": "08:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-03-21T13:20:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 21,
+          "mes": "marzo",
+          "hora": "13:20"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-03-22T07:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 22,
+          "mes": "marzo",
+          "hora": "07:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-03-22T12:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 22,
+          "mes": "marzo",
+          "hora": "12:00"
+        }
+      ]
+    },
+    {
+      "ronda": 3,
+      "nombre": "Red Bull Grand Prix Of The United States ",
+      "pais": "Estados Unidos",
+      "bandera": "us",
+      "circuito": "Circuit Of The Americas",
+      "inicio": "2026-03-27",
+      "fin": "2026-03-29",
+      "zona_circuito": "AMERICA/CHICAGO",
+      "corrida": true,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-03-29T14:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 29,
+        "mes": "marzo",
+        "hora": "14:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-03-28T14:10:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 28,
+        "mes": "marzo",
+        "hora": "14:10"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-03-27T09:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 27,
+          "mes": "marzo",
+          "hora": "09:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-03-27T14:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 27,
+          "mes": "marzo",
+          "hora": "14:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-03-28T09:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 28,
+          "mes": "marzo",
+          "hora": "09:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-03-28T09:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 28,
+          "mes": "marzo",
+          "hora": "09:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-03-28T10:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 28,
+          "mes": "marzo",
+          "hora": "10:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-03-28T14:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 28,
+          "mes": "marzo",
+          "hora": "14:10"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-03-29T09:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 29,
+          "mes": "marzo",
+          "hora": "09:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-03-29T14:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 29,
+          "mes": "marzo",
+          "hora": "14:00"
+        }
+      ]
+    },
+    {
+      "ronda": 4,
+      "nombre": "Estrella Galicia 0,0 Grand Prix Of Spain ",
+      "pais": "España (Jerez)",
+      "bandera": "es",
+      "circuito": "Circuito de Jerez - Ángel Nieto",
+      "inicio": "2026-04-24",
+      "fin": "2026-04-26",
+      "zona_circuito": "EUROPE/MADRID",
+      "corrida": true,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-04-26T06:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 26,
+        "mes": "abril",
+        "hora": "06:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-04-25T07:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 25,
+        "mes": "abril",
+        "hora": "07:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-04-24T02:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 24,
+          "mes": "abril",
+          "hora": "02:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-04-24T07:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 24,
+          "mes": "abril",
+          "hora": "07:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-04-25T02:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 25,
+          "mes": "abril",
+          "hora": "02:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-04-25T02:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 25,
+          "mes": "abril",
+          "hora": "02:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-04-25T03:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 25,
+          "mes": "abril",
+          "hora": "03:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-04-25T07:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 25,
+          "mes": "abril",
+          "hora": "07:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-04-26T01:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 26,
+          "mes": "abril",
+          "hora": "01:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-04-26T06:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 26,
+          "mes": "abril",
+          "hora": "06:00"
+        }
+      ]
+    },
+    {
+      "ronda": 5,
+      "nombre": "Michelin® Grand Prix Of France ",
+      "pais": "Francia",
+      "bandera": "fr",
+      "circuito": "Le Mans",
+      "inicio": "2026-05-08",
+      "fin": "2026-05-10",
+      "zona_circuito": "EUROPE/PARIS",
+      "corrida": true,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-05-10T06:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 10,
+        "mes": "mayo",
+        "hora": "06:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-05-09T07:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 9,
+        "mes": "mayo",
+        "hora": "07:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-05-08T02:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 8,
+          "mes": "mayo",
+          "hora": "02:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-05-08T07:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 8,
+          "mes": "mayo",
+          "hora": "07:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-05-09T02:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 9,
+          "mes": "mayo",
+          "hora": "02:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-05-09T02:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 9,
+          "mes": "mayo",
+          "hora": "02:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-05-09T03:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 9,
+          "mes": "mayo",
+          "hora": "03:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-05-09T07:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 9,
+          "mes": "mayo",
+          "hora": "07:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-05-10T01:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 10,
+          "mes": "mayo",
+          "hora": "01:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-05-10T06:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 10,
+          "mes": "mayo",
+          "hora": "06:00"
+        }
+      ]
+    },
+    {
+      "ronda": 6,
+      "nombre": "Monster Energy Grand Prix Of Catalunya ",
+      "pais": "Cataluña",
+      "bandera": "es",
+      "circuito": "Circuit de Barcelona-Catalunya",
+      "inicio": "2026-05-15",
+      "fin": "2026-05-17",
+      "zona_circuito": "EUROPE/MADRID",
+      "corrida": true,
+      "carrera": null,
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-05-16T07:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 16,
+        "mes": "mayo",
+        "hora": "07:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-05-15T02:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 15,
+          "mes": "mayo",
+          "hora": "02:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-05-15T07:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 15,
+          "mes": "mayo",
+          "hora": "07:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-05-16T02:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 16,
+          "mes": "mayo",
+          "hora": "02:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-05-16T02:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 16,
+          "mes": "mayo",
+          "hora": "02:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-05-16T03:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 16,
+          "mes": "mayo",
+          "hora": "03:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-05-16T07:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 16,
+          "mes": "mayo",
+          "hora": "07:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-05-17T01:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 17,
+          "mes": "mayo",
+          "hora": "01:40"
+        }
+      ]
+    },
+    {
+      "ronda": 7,
+      "nombre": "Brembo Grand Prix Of Italy ",
+      "pais": "Italia",
+      "bandera": "it",
+      "circuito": "Autodromo Internazionale del Mugello",
+      "inicio": "2026-05-29",
+      "fin": "2026-05-31",
+      "zona_circuito": "EUROPE/ROME",
+      "corrida": true,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-05-31T06:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 31,
+        "mes": "mayo",
+        "hora": "06:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-05-30T07:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 30,
+        "mes": "mayo",
+        "hora": "07:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-05-29T02:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 29,
+          "mes": "mayo",
+          "hora": "02:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-05-29T07:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 29,
+          "mes": "mayo",
+          "hora": "07:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-05-30T02:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 30,
+          "mes": "mayo",
+          "hora": "02:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-05-30T02:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 30,
+          "mes": "mayo",
+          "hora": "02:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-05-30T03:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 30,
+          "mes": "mayo",
+          "hora": "03:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-05-30T07:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 30,
+          "mes": "mayo",
+          "hora": "07:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-05-31T01:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 31,
+          "mes": "mayo",
+          "hora": "01:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-05-31T06:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 31,
+          "mes": "mayo",
+          "hora": "06:00"
+        }
+      ]
+    },
+    {
+      "ronda": 8,
+      "nombre": "Grand Prix Of Hungary ",
+      "pais": "Hungría",
+      "bandera": "hu",
+      "circuito": "Balaton Park",
+      "inicio": "2026-06-05",
+      "fin": "2026-06-07",
+      "zona_circuito": "EUROPE/BUDAPEST",
+      "corrida": true,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-06-07T06:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 7,
+        "mes": "junio",
+        "hora": "06:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-06-06T07:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 6,
+        "mes": "junio",
+        "hora": "07:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-06-05T02:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 5,
+          "mes": "junio",
+          "hora": "02:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-06-05T07:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 5,
+          "mes": "junio",
+          "hora": "07:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-06-06T02:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 6,
+          "mes": "junio",
+          "hora": "02:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-06-06T02:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 6,
+          "mes": "junio",
+          "hora": "02:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-06-06T03:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 6,
+          "mes": "junio",
+          "hora": "03:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-06-06T07:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 6,
+          "mes": "junio",
+          "hora": "07:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-06-07T01:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 7,
+          "mes": "junio",
+          "hora": "01:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-06-07T06:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 7,
+          "mes": "junio",
+          "hora": "06:00"
+        }
+      ]
+    },
+    {
+      "ronda": 9,
+      "nombre": "Monster Energy Grand Prix Of Czechia ",
+      "pais": "Chequia",
+      "bandera": "cz",
+      "circuito": "CREDITAS Autodrom Brno",
+      "inicio": "2026-06-19",
+      "fin": "2026-06-21",
+      "zona_circuito": "EUROPE/PRAGUE",
+      "corrida": true,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-06-21T06:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 21,
+        "mes": "junio",
+        "hora": "06:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-06-20T07:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 20,
+        "mes": "junio",
+        "hora": "07:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-06-19T02:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 19,
+          "mes": "junio",
+          "hora": "02:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-06-19T07:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 19,
+          "mes": "junio",
+          "hora": "07:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-06-20T02:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 20,
+          "mes": "junio",
+          "hora": "02:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-06-20T02:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 20,
+          "mes": "junio",
+          "hora": "02:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-06-20T03:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 20,
+          "mes": "junio",
+          "hora": "03:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-06-20T07:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 20,
+          "mes": "junio",
+          "hora": "07:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-06-21T01:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 21,
+          "mes": "junio",
+          "hora": "01:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-06-21T06:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 21,
+          "mes": "junio",
+          "hora": "06:00"
+        }
+      ]
+    },
+    {
+      "ronda": 10,
+      "nombre": "Tissot Grand Prix Of The Netherlands ",
+      "pais": "Países Bajos",
+      "bandera": "nl",
+      "circuito": "TT Circuit Assen",
+      "inicio": "2026-06-26",
+      "fin": "2026-06-28",
+      "zona_circuito": "EUROPE/AMSTERDAM",
+      "corrida": true,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-06-28T06:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 28,
+        "mes": "junio",
+        "hora": "06:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-06-27T07:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 27,
+        "mes": "junio",
+        "hora": "07:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-06-26T02:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 26,
+          "mes": "junio",
+          "hora": "02:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-06-26T07:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 26,
+          "mes": "junio",
+          "hora": "07:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-06-27T02:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 27,
+          "mes": "junio",
+          "hora": "02:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-06-27T02:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 27,
+          "mes": "junio",
+          "hora": "02:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-06-27T03:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 27,
+          "mes": "junio",
+          "hora": "03:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-06-27T07:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 27,
+          "mes": "junio",
+          "hora": "07:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-06-28T01:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 28,
+          "mes": "junio",
+          "hora": "01:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-06-28T06:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 28,
+          "mes": "junio",
+          "hora": "06:00"
+        }
+      ]
+    },
+    {
+      "ronda": 11,
+      "nombre": "Liqui Moly Grand Prix Of Germany ",
+      "pais": "Alemania",
+      "bandera": "de",
+      "circuito": "Sachsenring",
+      "inicio": "2026-07-10",
+      "fin": "2026-07-12",
+      "zona_circuito": "EUROPE/BERLIN",
+      "corrida": true,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-07-12T06:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 12,
+        "mes": "julio",
+        "hora": "06:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-07-11T07:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 11,
+        "mes": "julio",
+        "hora": "07:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-07-10T02:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 10,
+          "mes": "julio",
+          "hora": "02:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-07-10T07:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 10,
+          "mes": "julio",
+          "hora": "07:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-07-11T02:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 11,
+          "mes": "julio",
+          "hora": "02:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-07-11T02:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 11,
+          "mes": "julio",
+          "hora": "02:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-07-11T03:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 11,
+          "mes": "julio",
+          "hora": "03:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-07-11T07:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 11,
+          "mes": "julio",
+          "hora": "07:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-07-12T01:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 12,
+          "mes": "julio",
+          "hora": "01:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-07-12T06:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 12,
+          "mes": "julio",
+          "hora": "06:00"
+        }
+      ]
+    },
+    {
+      "ronda": 12,
+      "nombre": "Qatar Airways Grand Prix Of Great Britain ",
+      "pais": "Gran Bretaña",
+      "bandera": "gb",
+      "circuito": "Silverstone Circuit",
+      "inicio": "2026-08-07",
+      "fin": "2026-08-09",
+      "zona_circuito": "EUROPE/LONDON",
+      "corrida": true,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-08-09T06:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 9,
+        "mes": "agosto",
+        "hora": "06:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-08-08T09:05:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 8,
+        "mes": "agosto",
+        "hora": "09:05"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-08-07T04:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 7,
+          "mes": "agosto",
+          "hora": "04:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-08-07T09:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 7,
+          "mes": "agosto",
+          "hora": "09:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-08-08T04:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 8,
+          "mes": "agosto",
+          "hora": "04:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-08-08T04:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 8,
+          "mes": "agosto",
+          "hora": "04:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-08-08T05:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 8,
+          "mes": "agosto",
+          "hora": "05:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-08-08T09:05:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 8,
+          "mes": "agosto",
+          "hora": "09:05"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-08-09T02:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 9,
+          "mes": "agosto",
+          "hora": "02:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-08-09T06:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 9,
+          "mes": "agosto",
+          "hora": "06:00"
+        }
+      ]
+    },
+    {
+      "ronda": 13,
+      "nombre": "Michelin® Grand Prix Of Aragon ",
+      "pais": "Aragón",
+      "bandera": "es",
+      "circuito": "MotorLand Aragón",
+      "inicio": "2026-08-28",
+      "fin": "2026-08-30",
+      "zona_circuito": "EUROPE/MADRID",
+      "corrida": true,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-08-30T06:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 30,
+        "mes": "agosto",
+        "hora": "06:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-08-29T07:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 29,
+        "mes": "agosto",
+        "hora": "07:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-08-28T02:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 28,
+          "mes": "agosto",
+          "hora": "02:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-08-28T07:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 28,
+          "mes": "agosto",
+          "hora": "07:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-08-29T02:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 29,
+          "mes": "agosto",
+          "hora": "02:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-08-29T02:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 29,
+          "mes": "agosto",
+          "hora": "02:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-08-29T03:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 29,
+          "mes": "agosto",
+          "hora": "03:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-08-29T07:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 29,
+          "mes": "agosto",
+          "hora": "07:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-08-30T01:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 30,
+          "mes": "agosto",
+          "hora": "01:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-08-30T06:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 30,
+          "mes": "agosto",
+          "hora": "06:00"
+        }
+      ]
+    },
+    {
+      "ronda": 14,
+      "nombre": "Red Bull Grand Prix Of San Marino And The Rimini Riviera ",
+      "pais": "San Marino",
+      "bandera": "sm",
+      "circuito": "Misano World Circuit Marco Simoncelli",
+      "inicio": "2026-09-11",
+      "fin": "2026-09-13",
+      "zona_circuito": "EUROPE/ROME",
+      "corrida": true,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-09-13T06:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 13,
+        "mes": "septiembre",
+        "hora": "06:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-09-12T07:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 12,
+        "mes": "septiembre",
+        "hora": "07:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-09-11T02:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 11,
+          "mes": "septiembre",
+          "hora": "02:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-09-11T07:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 11,
+          "mes": "septiembre",
+          "hora": "07:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-09-12T02:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 12,
+          "mes": "septiembre",
+          "hora": "02:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-09-12T02:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 12,
+          "mes": "septiembre",
+          "hora": "02:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-09-12T03:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 12,
+          "mes": "septiembre",
+          "hora": "03:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-09-12T07:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 12,
+          "mes": "septiembre",
+          "hora": "07:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-09-13T01:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 13,
+          "mes": "septiembre",
+          "hora": "01:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-09-13T06:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 13,
+          "mes": "septiembre",
+          "hora": "06:00"
+        }
+      ]
+    },
+    {
+      "ronda": 15,
+      "nombre": "Qatar Airways Grand Prix Of Austria ",
+      "pais": "Austria",
+      "bandera": "at",
+      "circuito": "Red Bull Ring - Spielberg",
+      "inicio": "2026-09-18",
+      "fin": "2026-09-20",
+      "zona_circuito": "EUROPE/VIENNA",
+      "corrida": true,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-09-20T06:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 20,
+        "mes": "septiembre",
+        "hora": "06:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-09-19T07:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 19,
+        "mes": "septiembre",
+        "hora": "07:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-09-18T02:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 18,
+          "mes": "septiembre",
+          "hora": "02:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-09-18T07:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 18,
+          "mes": "septiembre",
+          "hora": "07:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-09-19T02:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 19,
+          "mes": "septiembre",
+          "hora": "02:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-09-19T02:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 19,
+          "mes": "septiembre",
+          "hora": "02:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-09-19T03:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 19,
+          "mes": "septiembre",
+          "hora": "03:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-09-19T07:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 19,
+          "mes": "septiembre",
+          "hora": "07:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-09-20T01:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 20,
+          "mes": "septiembre",
+          "hora": "01:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-09-20T06:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 20,
+          "mes": "septiembre",
+          "hora": "06:00"
+        }
+      ]
+    },
+    {
+      "ronda": 16,
+      "nombre": "Motul Grand Prix Of Japan ",
+      "pais": "Japón",
+      "bandera": "jp",
+      "circuito": "Mobility Resort Motegi",
+      "inicio": "2026-10-02",
+      "fin": "2026-10-04",
+      "zona_circuito": "ASIA/TOKYO",
+      "corrida": false,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-10-03T23:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 3,
+        "mes": "octubre",
+        "hora": "23:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-10-03T00:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 3,
+        "mes": "octubre",
+        "hora": "00:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-10-01T19:45:00-06:00",
+          "dia_semana": "jueves",
+          "dia": 1,
+          "mes": "octubre",
+          "hora": "19:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-10-02T00:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 2,
+          "mes": "octubre",
+          "hora": "00:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-10-02T19:10:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 2,
+          "mes": "octubre",
+          "hora": "19:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-10-02T19:50:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 2,
+          "mes": "octubre",
+          "hora": "19:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-10-02T20:15:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 2,
+          "mes": "octubre",
+          "hora": "20:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-10-03T00:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 3,
+          "mes": "octubre",
+          "hora": "00:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-10-03T18:40:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 3,
+          "mes": "octubre",
+          "hora": "18:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-10-03T23:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 3,
+          "mes": "octubre",
+          "hora": "23:00"
+        }
+      ]
+    },
+    {
+      "ronda": 17,
+      "nombre": "Pertamina Grand Prix Of Indonesia ",
+      "pais": "Indonesia",
+      "bandera": "id",
+      "circuito": "Pertamina Mandalika International Circuit",
+      "inicio": "2026-10-09",
+      "fin": "2026-10-11",
+      "zona_circuito": "ASIA/MAKASSAR",
+      "corrida": false,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-10-11T01:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 11,
+        "mes": "octubre",
+        "hora": "01:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-10-10T01:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 10,
+        "mes": "octubre",
+        "hora": "01:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-10-08T20:45:00-06:00",
+          "dia_semana": "jueves",
+          "dia": 8,
+          "mes": "octubre",
+          "hora": "20:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-10-09T01:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 9,
+          "mes": "octubre",
+          "hora": "01:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-10-09T20:10:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 9,
+          "mes": "octubre",
+          "hora": "20:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-10-09T20:50:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 9,
+          "mes": "octubre",
+          "hora": "20:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-10-09T21:15:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 9,
+          "mes": "octubre",
+          "hora": "21:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-10-10T01:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 10,
+          "mes": "octubre",
+          "hora": "01:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-10-10T20:40:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 10,
+          "mes": "octubre",
+          "hora": "20:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-10-11T01:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 11,
+          "mes": "octubre",
+          "hora": "01:00"
+        }
+      ]
+    },
+    {
+      "ronda": 18,
+      "nombre": "Grand Prix Of Australia ",
+      "pais": "Australia",
+      "bandera": "au",
+      "circuito": "Phillip Island",
+      "inicio": "2026-10-23",
+      "fin": "2026-10-25",
+      "zona_circuito": "AUSTRALIA/MELBOURNE",
+      "corrida": false,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-10-24T21:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 24,
+        "mes": "octubre",
+        "hora": "21:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-10-23T22:00:00-06:00",
+        "dia_semana": "viernes",
+        "dia": 23,
+        "mes": "octubre",
+        "hora": "22:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-10-22T17:45:00-06:00",
+          "dia_semana": "jueves",
+          "dia": 22,
+          "mes": "octubre",
+          "hora": "17:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-10-22T22:00:00-06:00",
+          "dia_semana": "jueves",
+          "dia": 22,
+          "mes": "octubre",
+          "hora": "22:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-10-23T17:10:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 23,
+          "mes": "octubre",
+          "hora": "17:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-10-23T17:50:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 23,
+          "mes": "octubre",
+          "hora": "17:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-10-23T18:15:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 23,
+          "mes": "octubre",
+          "hora": "18:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-10-23T22:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 23,
+          "mes": "octubre",
+          "hora": "22:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-10-24T16:40:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 24,
+          "mes": "octubre",
+          "hora": "16:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-10-24T21:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 24,
+          "mes": "octubre",
+          "hora": "21:00"
+        }
+      ]
+    },
+    {
+      "ronda": 19,
+      "nombre": "Petronas Grand Prix Of Malaysia ",
+      "pais": "Malasia",
+      "bandera": "my",
+      "circuito": "Petronas Sepang International Circuit",
+      "inicio": "2026-10-30",
+      "fin": "2026-11-01",
+      "zona_circuito": "ASIA/KUALA_LUMPUR",
+      "corrida": false,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-11-01T01:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 1,
+        "mes": "noviembre",
+        "hora": "01:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-10-31T01:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 31,
+        "mes": "octubre",
+        "hora": "01:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-10-29T20:45:00-06:00",
+          "dia_semana": "jueves",
+          "dia": 29,
+          "mes": "octubre",
+          "hora": "20:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-10-30T01:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 30,
+          "mes": "octubre",
+          "hora": "01:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-10-30T20:10:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 30,
+          "mes": "octubre",
+          "hora": "20:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-10-30T20:50:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 30,
+          "mes": "octubre",
+          "hora": "20:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-10-30T21:15:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 30,
+          "mes": "octubre",
+          "hora": "21:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-10-31T01:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 31,
+          "mes": "octubre",
+          "hora": "01:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-10-31T20:40:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 31,
+          "mes": "octubre",
+          "hora": "20:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-11-01T01:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 1,
+          "mes": "noviembre",
+          "hora": "01:00"
+        }
+      ]
+    },
+    {
+      "ronda": 20,
+      "nombre": "Qatar Airways Grand Prix Of Qatar ",
+      "pais": "Catar",
+      "bandera": "qa",
+      "circuito": "Lusail International Circuit",
+      "inicio": "2026-11-06",
+      "fin": "2026-11-08",
+      "zona_circuito": "ASIA/QATAR",
+      "corrida": false,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-11-08T11:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 8,
+        "mes": "noviembre",
+        "hora": "11:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-11-07T11:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 7,
+        "mes": "noviembre",
+        "hora": "11:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-11-06T06:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 6,
+          "mes": "noviembre",
+          "hora": "06:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-11-06T11:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 6,
+          "mes": "noviembre",
+          "hora": "11:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-11-07T06:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 7,
+          "mes": "noviembre",
+          "hora": "06:00"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-11-07T06:40:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 7,
+          "mes": "noviembre",
+          "hora": "06:40"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-11-07T07:05:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 7,
+          "mes": "noviembre",
+          "hora": "07:05"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-11-07T11:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 7,
+          "mes": "noviembre",
+          "hora": "11:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-11-08T06:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 8,
+          "mes": "noviembre",
+          "hora": "06:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-11-08T11:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 8,
+          "mes": "noviembre",
+          "hora": "11:00"
+        }
+      ]
+    },
+    {
+      "ronda": 21,
+      "nombre": "Repsol Grand Prix Of Portugal ",
+      "pais": "Portugal",
+      "bandera": "pt",
+      "circuito": "Autódromo Internacional do Algarve",
+      "inicio": "2026-11-20",
+      "fin": "2026-11-22",
+      "zona_circuito": "EUROPE/LISBON",
+      "corrida": false,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-11-22T07:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 22,
+        "mes": "noviembre",
+        "hora": "07:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-11-21T09:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 21,
+        "mes": "noviembre",
+        "hora": "09:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-11-20T04:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 20,
+          "mes": "noviembre",
+          "hora": "04:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-11-20T09:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 20,
+          "mes": "noviembre",
+          "hora": "09:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-11-21T04:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 21,
+          "mes": "noviembre",
+          "hora": "04:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-11-21T04:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 21,
+          "mes": "noviembre",
+          "hora": "04:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-11-21T05:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 21,
+          "mes": "noviembre",
+          "hora": "05:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-11-21T09:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 21,
+          "mes": "noviembre",
+          "hora": "09:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-11-22T03:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 22,
+          "mes": "noviembre",
+          "hora": "03:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-11-22T07:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 22,
+          "mes": "noviembre",
+          "hora": "07:00"
+        }
+      ]
+    },
+    {
+      "ronda": 22,
+      "nombre": "Motul Grand Prix Of Valencia",
+      "pais": "Valencia",
+      "bandera": "es",
+      "circuito": "Circuit Ricardo Tormo",
+      "inicio": "2026-11-27",
+      "fin": "2026-11-29",
+      "zona_circuito": "EUROPE/MADRID",
+      "corrida": false,
+      "carrera": {
+        "clave": "RAC",
+        "nombre": "Carrera",
+        "iso": "2026-11-29T07:00:00-06:00",
+        "dia_semana": "domingo",
+        "dia": 29,
+        "mes": "noviembre",
+        "hora": "07:00"
+      },
+      "sprint": {
+        "clave": "SPR",
+        "nombre": "Sprint",
+        "iso": "2026-11-28T08:00:00-06:00",
+        "dia_semana": "sábado",
+        "dia": 28,
+        "mes": "noviembre",
+        "hora": "08:00"
+      },
+      "sesiones": [
+        {
+          "clave": "FP1",
+          "nombre": "Práctica libre 1",
+          "iso": "2026-11-27T03:45:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 27,
+          "mes": "noviembre",
+          "hora": "03:45"
+        },
+        {
+          "clave": "PR",
+          "nombre": "Práctica",
+          "iso": "2026-11-27T08:00:00-06:00",
+          "dia_semana": "viernes",
+          "dia": 27,
+          "mes": "noviembre",
+          "hora": "08:00"
+        },
+        {
+          "clave": "FP2",
+          "nombre": "Práctica libre 2",
+          "iso": "2026-11-28T03:10:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 28,
+          "mes": "noviembre",
+          "hora": "03:10"
+        },
+        {
+          "clave": "Q1",
+          "nombre": "Clasificación 1",
+          "iso": "2026-11-28T03:50:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 28,
+          "mes": "noviembre",
+          "hora": "03:50"
+        },
+        {
+          "clave": "Q2",
+          "nombre": "Clasificación 2",
+          "iso": "2026-11-28T04:15:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 28,
+          "mes": "noviembre",
+          "hora": "04:15"
+        },
+        {
+          "clave": "SPR",
+          "nombre": "Sprint",
+          "iso": "2026-11-28T08:00:00-06:00",
+          "dia_semana": "sábado",
+          "dia": 28,
+          "mes": "noviembre",
+          "hora": "08:00"
+        },
+        {
+          "clave": "WUP",
+          "nombre": "Warm Up",
+          "iso": "2026-11-29T02:40:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 29,
+          "mes": "noviembre",
+          "hora": "02:40"
+        },
+        {
+          "clave": "RAC",
+          "nombre": "Carrera",
+          "iso": "2026-11-29T07:00:00-06:00",
+          "dia_semana": "domingo",
+          "dia": 29,
+          "mes": "noviembre",
+          "hora": "07:00"
+        }
+      ]
+    }
+  ]
+}

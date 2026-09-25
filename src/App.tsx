@@ -9,6 +9,7 @@ import NewsArchivePage from "./pages/NewsArchivePage";
 import NotFound from "./pages/NotFound";
 import HubPage from "./pages/HubPage";
 import Nosotros from "./pages/Nosotros";
+import CalendarioMotoGP from "./pages/CalendarioMotoGP";
 import Analytics from "./components/Analytics";
 import ScrollToTop from "./components/ScrollToTop";
 import { HUBS } from "@/lib/hubs";
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/categoria/:slug" element={<NewsArchivePage />} />
             <Route path="/noticias/:id" element={<NewsArticlePage />} />
             <Route path="/nosotros" element={<Nosotros />} />
+            <Route path="/calendario-motogp" element={<CalendarioMotoGP />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

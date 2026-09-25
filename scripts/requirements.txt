@@ -2,3 +2,7 @@ feedparser==6.0.11
 httpx==0.27.0
 anthropic==0.40.0
 Pillow==10.4.0
+
+# La base de husos horarios. En Linux viene con el sistema, pero se fija
+# aqui para que el calendario convierta igual en cualquier maquina.
+tzdata
