@@ -34,9 +34,16 @@
     <!-- Google solo reconoce rel="icon", "shortcut icon" y "apple-touch-icon";
          "alternate icon" lo ignora, y el PNG de 192 va porque pide un cuadrado
          multiplo de 48 px. El SVG queda primero: es el que usan las pestanas. -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png">
-    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <!-- Los iconos cambiaron de nombre a proposito. El archivo anterior
+         llevaba el logotipo de Lovable y, aunque se reemplazo por el de la
+         marca, Google siguio mostrando el viejo: cachea el icono por URL y
+         su indice de favicons se refresca por su cuenta, aparte del de
+         paginas. Con un nombre nuevo es un recurso que nunca ha visto y lo
+         tiene que bajar. /favicon.ico se queda en su sitio, ya correcto,
+         para quien lo pida por convencion. -->
+    <link rel="icon" type="image/svg+xml" href="/icono-ml249.svg">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icono-ml249-192.png">
+    <link rel="icon" href="/icono-ml249.ico" sizes="48x48">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <!-- El canonical y la description los pone react-helmet por pagina (ver
          src/pages/*). Aqui no van, o cada pagina termina con dos. Los og si
