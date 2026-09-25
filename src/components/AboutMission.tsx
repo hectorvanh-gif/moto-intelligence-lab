@@ -1,67 +1,34 @@
-import { Link } from "react-router-dom";
 import { ArrowRight, Users } from "lucide-react";
 import { COMUNIDAD_URL } from "@/lib/comunidad";
 
 /**
- * La franja de cierre de la portada.
+ * El cierre de la portada: un boton y nada mas.
  *
- * Tenia tres tarjetas —MOTOR, TECNOLOGIA, COMUNIDAD— y debajo un bloque
- * de "por que IA". Las dos primeras tarjetas y el bloque decian
- * exactamente lo mismo con otras palabras: "revisamos muchas fuentes y
- * descartamos lo que no aporta", tres veces en la misma pantalla. La
- * explicacion larga ahora vive en /nosotros.
+ * Aqui hubo tres tarjetas y un bloque de "por que IA" que repetian el
+ * mismo mensaje, y despues un titular con dos botones. Todo eso se fue: lo
+ * que se quiere de quien llego hasta abajo es una sola cosa, y una pantalla
+ * que pide una sola cosa la pide mejor.
  *
- * Queda un solo mensaje y dos acciones: entrar a la comunidad y leer como
- * se trabaja. La tarjeta de COMUNIDAD era la unica de las tres que
- * llevaba a algun lado.
+ * "Como trabajamos" ya no esta aqui; sigue en el pie, en la columna SITIO.
  */
 const AboutMission = () => {
   return (
     <section id="mission" className="relative py-16 lg:py-24 bg-card">
       <div className="container mx-auto px-4 lg:px-8">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="font-display text-xs tracking-widest text-primary mb-4">
-            CÓMO FUNCIONA
-          </p>
-
-          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground leading-tight mb-5">
-            Lo del día en moto,{" "}
-            <span className="text-primary">sin seguir doce sitios</span>
-          </h2>
-
-          <p className="font-body text-lg text-muted-foreground leading-relaxed mb-9">
-            Cada mañana se revisan más de 40 fuentes de prensa especializada, se
-            resume lo que importa y se enlaza la nota original para que la leas
-            completa donde quieras:{" "}
-            <span className="text-foreground font-semibold">
-              información de alto octanaje, sin relleno.
-            </span>
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href={COMUNIDAD_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-sm bg-primary text-primary-foreground font-display text-sm tracking-widest hover:bg-primary/90 transition-colors"
-            >
-              <Users className="w-4 h-4" />
-              ENTRAR A LA COMUNIDAD
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </a>
-
-            <Link
-              to="/nosotros"
-              className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-sm border border-border/60 font-display text-sm tracking-widest text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors"
-            >
-              CÓMO TRABAJAMOS
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </div>
-        </div>
+        <a
+          href={COMUNIDAD_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group mx-auto flex max-w-3xl items-center justify-center gap-4 rounded-sm bg-primary px-8 py-8 lg:py-10 text-primary-foreground transition-colors hover:bg-primary/90"
+        >
+          <Users className="w-7 h-7 lg:w-8 lg:h-8 shrink-0" />
+          <span className="font-display text-xl sm:text-2xl lg:text-3xl font-bold tracking-widest text-center">
+            SÚMATE A LA COMUNIDAD
+          </span>
+          <ArrowRight className="w-7 h-7 lg:w-8 lg:h-8 shrink-0 transition-transform group-hover:translate-x-1" />
+        </a>
       </div>
 
-      {/* Background decoration */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
     </section>
