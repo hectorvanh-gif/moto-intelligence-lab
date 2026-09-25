@@ -65,6 +65,13 @@ const FIJAS = {
     title: "Archivo de Noticias | Moto Lab 249",
     description: "Todas las notas publicadas, por fecha y por categoría.",
   },
+  // Es la pagina pensada para compartirse en grupos de moteros, asi que
+  // su tarjeta importa mas que la de ninguna otra.
+  "/calendario-motogp": {
+    title: "Calendario MotoGP 2026 en hora de México | Moto Lab 249",
+    description:
+      "A qué hora se ve cada carrera desde México. Varias no se corren en domingo aquí.",
+  },
   "/motogp": {
     title: "MotoGP: cómo funciona el campeonato y últimas noticias | Moto Lab 249",
     description:
