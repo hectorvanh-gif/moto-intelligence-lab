@@ -22,16 +22,47 @@ import { HUBS } from "@/lib/hubs";
  * antes de que aparezca una sola noticia.
  */
 
-/** Categorias del agente que ya cubre una seccion tematica. */
-const CUBIERTAS_POR_SECCION = ["MOTOGP", "ELECTRICA", "ENDURO"];
+/**
+ * Categorias del agente que ya cubre una seccion tematica.
+ *
+ * AVENTURA entra aqui aunque no tenga seccion propia: en Mexico se le dice
+ * doble proposito a lo que en otros lados es adventure, y son la misma
+ * moto. Tener las dos repartia el tema y los enlaces entre dos paginas.
+ */
+const CUBIERTAS_POR_SECCION = ["MOTOGP", "ELECTRICA", "ENDURO", "AVENTURA"];
+
+/**
+ * El orden de la fila, por familia y no por como venga la lista.
+ *
+ * Competencia primero, que es de lo que mas se publica; luego las de
+ * campo, que van juntas porque quien busca una mira la otra; despues las
+ * de calle, y al final las electricas, que son su propio mundo.
+ */
+const ORDEN = [
+  "/motogp",
+  "/categoria/superbike",
+  "/motos-doble-proposito",
+  "/enduro",
+  "/categoria/sport",
+  "/categoria/naked",
+  "/motos-electricas",
+];
 
 const CategoryBar = () => {
-  const destinos = [
+  const todos = [
     ...HUBS.map((h) => ({ to: `/${h.slug}`, label: h.navLabel })),
     ...CATEGORIES.filter(
       (c) => c.value !== "NOTICIA" && !CUBIERTAS_POR_SECCION.includes(c.value)
     ).map((c) => ({ to: `/categoria/${c.slug}`, label: c.label })),
   ];
+
+  // Lo que no este en ORDEN —una categoria nueva del agente— se va al
+  // final en vez de desaparecer.
+  const destinos = [...todos].sort((a, b) => {
+    const ia = ORDEN.indexOf(a.to);
+    const ib = ORDEN.indexOf(b.to);
+    return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+  });
 
   const clase = ({ isActive }: { isActive: boolean }) =>
     `shrink-0 px-3 py-1.5 rounded-sm border font-display text-xs tracking-widest transition-colors ${
