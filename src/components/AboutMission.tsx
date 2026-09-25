@@ -21,17 +21,18 @@ const AboutMission = () => {
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-3xl mx-auto text-center">
           <p className="font-display text-xs tracking-widest text-primary mb-4">
-            ¿POR QUÉ IA?
+            CÓMO FUNCIONA
           </p>
 
           <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground leading-tight mb-5">
-            Mientras otros te saturan con ruido,{" "}
-            <span className="text-primary">nosotros filtramos</span>
+            Lo del día en moto,{" "}
+            <span className="text-primary">sin seguir doce sitios</span>
           </h2>
 
           <p className="font-body text-lg text-muted-foreground leading-relaxed mb-9">
-            Cada mañana se revisan más de 40 fuentes de prensa especializada y
-            se descarta lo que no aporta, para dejarte solo lo esencial:{" "}
+            Cada mañana se revisan más de 40 fuentes de prensa especializada, se
+            resume lo que importa y se enlaza la nota original para que la leas
+            completa donde quieras:{" "}
             <span className="text-foreground font-semibold">
               información de alto octanaje, sin relleno.
             </span>
