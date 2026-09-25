@@ -136,6 +136,9 @@ const CalendarioMotoGP = () => {
                   <p className="font-display text-xl lg:text-2xl font-bold text-primary">
                     {cuando(proxima.carrera)}
                   </p>
+                  <p className="font-body text-xs text-muted-foreground mt-1">
+                    hora del centro de México (CDMX)
+                  </p>
                 </div>
               )}
 
@@ -202,7 +205,7 @@ const CalendarioMotoGP = () => {
                       )}
                       {c.carrera ? (
                         <span className="font-mono text-sm text-primary">
-                          Carrera · {cuando(c.carrera)}
+                          Carrera · {cuando(c.carrera)} h CDMX
                         </span>
                       ) : (
                         <span className="font-mono text-xs text-muted-foreground">
@@ -238,8 +241,10 @@ const CalendarioMotoGP = () => {
           {datos && (
             <p className="font-body text-xs text-muted-foreground flex items-center gap-2 mb-10">
               <Clock className="w-3.5 h-3.5 shrink-0" />
-              Horarios en hora del centro de México. Datos del calendario
-              oficial de MotoGP, actualizados el{" "}
+              Horarios en hora del centro de México (CDMX). Si andas en
+              Sonora resta 1 hora, en Baja California resta 2, y en Quintana
+              Roo suma 1. Datos del calendario oficial de MotoGP, actualizados
+              el{" "}
               {new Date(datos.actualizado).toLocaleDateString("es-MX", {
                 day: "numeric",
                 month: "long",
