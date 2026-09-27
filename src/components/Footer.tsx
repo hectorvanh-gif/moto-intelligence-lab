@@ -31,6 +31,14 @@ const Footer = () => {
               Noticias de motociclismo para la
               comunidad en México.
             </p>
+            {/* El dominio escrito como palabra, a proposito. La marca se
+                escribe separada ("Moto Lab 249") en todo el sitio, asi que
+                "motolab249" solo existia dentro de las URLs y Google lo
+                marcaba como termino ausente al buscar la marca tal como se
+                teclea. Va aqui, una vez por pagina, y no repartido. */}
+            <p className="font-mono text-xs text-muted-foreground/70 mt-3 tracking-wider">
+              motolab249.com
+            </p>
           </div>
 
           {/* Links */}
