@@ -69,11 +69,25 @@ const CategoryBar = () => {
     return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
   });
 
+  const base =
+    "shrink-0 px-3 py-1.5 rounded-sm border font-display text-xs tracking-widest transition-colors";
+
   const clase = ({ isActive }: { isActive: boolean }) =>
-    `shrink-0 px-3 py-1.5 rounded-sm border font-display text-xs tracking-widest transition-colors ${
+    `${base} ${
       isActive
         ? "border-primary text-primary bg-primary/10"
         : "border-border/60 text-muted-foreground hover:border-primary/50 hover:text-primary"
+    }`;
+
+  // El calendario va remarcado siempre: no es una categoria mas, es la
+  // unica pagina del sitio con informacion que no esta en otro lado.
+  // Cuando ademas es la pagina abierta se rellena, para que siga
+  // distinguiendose de su propio estado normal.
+  const claseCalendario = ({ isActive }: { isActive: boolean }) =>
+    `${base} ${
+      isActive
+        ? "border-primary bg-primary text-primary-foreground"
+        : "border-primary text-primary bg-primary/10 hover:bg-primary/20"
     }`;
 
   return (
@@ -81,7 +95,11 @@ const CategoryBar = () => {
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center gap-2 py-2.5 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
           {destinos.map((d) => (
-            <NavLink key={d.to} to={d.to} className={clase}>
+            <NavLink
+              key={d.to}
+              to={d.to}
+              className={d.to === "/calendario-motogp" ? claseCalendario : clase}
+            >
               {d.label}
             </NavLink>
           ))}
