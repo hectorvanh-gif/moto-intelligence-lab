@@ -166,10 +166,22 @@ export default async function handler(req, res) {
   const t = escapar(meta.title);
   const d = escapar(meta.description);
 
-  // Se pide que no se cachee mucho: si una nota cambia de titulo, la
-  // tarjeta tiene que reflejarlo sin esperar un despliegue.
+  // Caché de un día en el borde, y una semana sirviendo la copia vieja
+  // mientras se revalida por detrás.
+  //
+  // Estaba en 5 minutos y costó caro: los rastreadores recorren las 677
+  // URLs del sitemap una y otra vez, y con esa ventana casi cada visita
+  // ejecutaba la función y consultaba Supabase. El consumo de CPU de
+  // funciones llegó a 6h32m contra un tope de 4h en dos días.
+  //
+  // Cinco minutos no compraban nada: el titular de una nota publicada no
+  // vuelve a cambiar. Ahora la primera petición de cada nota ejecuta la
+  // función y las demás las sirve el borde sin tocarla.
   res.setHeader("Content-Type", "text/html; charset=utf-8");
-  res.setHeader("Cache-Control", "public, max-age=0, s-maxage=300");
+  res.setHeader(
+    "Cache-Control",
+    "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800"
+  );
 
   return res.status(200).send(`<!DOCTYPE html>
 <html lang="es"><head>
