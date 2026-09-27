@@ -73,6 +73,14 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li>
+                  <Link
+                    to="/contacto"
+                    className="font-body text-sm text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Escríbenos
+                  </Link>
+                </li>
+                <li>
                   <a
                     href={COMUNIDAD_URL}
                     target="_blank"

@@ -56,6 +56,7 @@ async function generateSitemap() {
     // Quienes somos: casi nunca cambia, pero Google le da peso a saber
     // quien esta detras de un sitio de noticias.
     { loc: `${SITE_URL}/nosotros`, changefreq: "yearly", priority: "0.5", lastmod: today },
+    { loc: `${SITE_URL}/contacto`, changefreq: "yearly", priority: "0.4", lastmod: today },
     // El calendario cambia de "proxima carrera" cada semana y es la pagina
     // con informacion que no esta en ningun otro sitio en hora de Mexico.
     { loc: `${SITE_URL}/calendario-motogp`, changefreq: "weekly", priority: "0.9", lastmod: today },

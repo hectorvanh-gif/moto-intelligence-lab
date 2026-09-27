@@ -67,6 +67,11 @@ const FIJAS = {
   },
   // Es la pagina pensada para compartirse en grupos de moteros, asi que
   // su tarjeta importa mas que la de ninguna otra.
+  "/contacto": {
+    title: "Escríbenos | Moto Lab 249",
+    description:
+      "¿Viste un dato mal o quieres que cubramos algo? Esto llega directo al correo del sitio.",
+  },
   "/calendario-motogp": {
     title: "Calendario MotoGP 2026 en hora de México | Moto Lab 249",
     description:
