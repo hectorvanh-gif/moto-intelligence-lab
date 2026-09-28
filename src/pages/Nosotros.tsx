@@ -20,7 +20,7 @@ import { useMeta } from "@/hooks/useMeta";
  */
 const Nosotros = () => {
   useMeta({
-    title: "Qué es Moto Lab 249 | Noticias de moto en México",
+    title: "Qué es Moto Lab 249 | Noticias de moto",
     description:
       "Un filtro para la prensa de moto: más de 40 fuentes revisadas cada mañana, sin relleno. Quién está detrás de Moto Lab 249 y cómo trabajamos.",
     canonical: `${SITE_URL}/nosotros`,
@@ -103,7 +103,7 @@ const Nosotros = () => {
                   Los medios que cubren el campeonato a diario están casi todos
                   en España, así que de ahí viene la mayor parte. El trabajo es
                   traerlo ordenado y en corto, con las secciones que le
-                  importan a quien anda en moto en México: el mundial, las
+                  importan a quien anda en moto: el mundial, las
                   eléctricas que están llegando al mercado, las doble propósito
                   y lo que se lanza.
                 </p>

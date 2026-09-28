@@ -14,9 +14,9 @@ const Index = () => {
   const categories = homeCategories();
 
   useMeta({
-    title: "Noticias de motos en México | Moto Lab 249",
+    title: "Noticias de motos y MotoGP | Moto Lab 249",
     description:
-      "Lo que pasó hoy en el motociclismo: MotoGP, motos eléctricas, doble propósito y lanzamientos. Resumido y al punto, para México.",
+      "Lo que pasó hoy en el motociclismo: MotoGP, motos eléctricas, doble propósito y lanzamientos. Resumido y al punto, sin relleno.",
     canonical: SITE_URL,
   });
 

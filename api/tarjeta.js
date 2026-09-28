@@ -43,9 +43,9 @@ const IMAGEN = `${SITIO}/og-image.jpg?v=2`;
 const DESDE_EL_CAMBIO_DE_MARCA = "2026-09-22";
 
 const POR_OMISION = {
-  title: "Noticias de motos en México | Moto Lab 249",
+  title: "Noticias de motos y MotoGP | Moto Lab 249",
   description:
-    "Lo que pasó hoy en el motociclismo: MotoGP, motos eléctricas, doble propósito y lanzamientos. Resumido y al punto, para México.",
+    "Lo que pasó hoy en el motociclismo: MotoGP, motos eléctricas, doble propósito y lanzamientos. Resumido y al punto, sin relleno.",
 };
 
 /**
@@ -57,7 +57,7 @@ const POR_OMISION = {
 const FIJAS = {
   "/": POR_OMISION,
   "/nosotros": {
-    title: "Qué es Moto Lab 249 | Noticias de moto en México",
+    title: "Qué es Moto Lab 249 | Noticias de moto",
     description:
       "Un filtro para la prensa de moto: más de 40 fuentes revisadas cada mañana, sin relleno.",
   },

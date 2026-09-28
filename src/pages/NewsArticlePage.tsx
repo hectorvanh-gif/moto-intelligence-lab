@@ -65,7 +65,7 @@ const NewsArticlePage = () => {
     ? `${cleanText(article.title)} | Moto Lab 249`
     : "Cargando artículo | Moto Lab 249";
   const descripcion =
-    cleanText(article?.summary) || "Noticias de motociclismo para México.";
+    cleanText(article?.summary) || "Noticias de motociclismo, todos los días.";
 
   useMeta({
     title: titulo,

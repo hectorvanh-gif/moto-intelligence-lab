@@ -42,7 +42,7 @@ const NewsArchivePage = () => {
     ? `${category.label} | Moto Lab 249`
     : "Archivo de Noticias | Moto Lab 249";
   const description = category
-    ? `Noticias de ${category.label.toLowerCase()}: resultados, lanzamientos y lo ultimo del motociclismo en México.`
+    ? `Noticias de ${category.label.toLowerCase()}: resultados, lanzamientos y lo último del motociclismo.`
     : "Archivo completo de noticias de motos: MotoGP, eléctricas, doble propósito, enduro y lanzamientos. El medio de motociclismo de México.";
 
   // Un slug que no existe no debe fingir una categoria vacia.

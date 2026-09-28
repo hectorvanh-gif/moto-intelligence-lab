@@ -28,8 +28,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="font-body text-muted-foreground text-sm">
-              Noticias de motociclismo para la
-              comunidad en México.
+              Noticias de motociclismo, todos los días.
             </p>
             {/* El dominio escrito como palabra, a proposito. La marca se
                 escribe separada ("Moto Lab 249") en todo el sitio, asi que

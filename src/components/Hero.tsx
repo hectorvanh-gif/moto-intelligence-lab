@@ -58,7 +58,7 @@ const Hero = () => {
           <h1 className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-6 animate-slide-up">
             <span className="w-2 h-2 bg-primary rounded-full animate-pulse-glow" />
             <span className="font-display text-xs tracking-widest text-primary">
-              NOTICIAS DE MOTOS EN MÉXICO
+              NOTICIAS DE MOTOS Y MOTOGP
             </span>
           </h1>
 
