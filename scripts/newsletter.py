@@ -31,6 +31,8 @@ from datetime import datetime, timedelta, timezone
 
 import httpx
 
+from historias import misma_historia
+
 SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
 SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
 RESEND_KEY = os.environ.get("RESEND_API_KEY", "")
@@ -96,58 +98,6 @@ def traer_notas(dias: int, cuantas: int) -> list[dict]:
     )
     r.raise_for_status()
     return [n for n in r.json() if (n.get("title") or "").strip()]
-
-
-# Palabras que aparecen en casi todos los titulares y no distinguen una
-# historia de otra.
-VACIAS = {
-    "de", "del", "la", "el", "los", "las", "en", "y", "a", "con", "por",
-    "para", "su", "sus", "un", "una", "que", "se", "al", "lo", "es", "tras",
-    "sobre", "mas", "moto", "motogp", "motos",
-}
-
-
-def _fichas(titulo: str) -> set[str]:
-    """
-    Palabras significativas del titular, sin acentos ni puntuacion y
-    recortadas a 6 letras.
-
-    El recorte hace de raiz burda y es lo que decide la comparacion:
-    "campeona" y "campeones" son la misma historia, igual que "mundial" y
-    "mundiales", pero como palabras completas no coinciden nunca. Sin el
-    recorte, dos notas del titulo de Daniela Guillen entraban las dos.
-    """
-    t = unicodedata.normalize("NFD", (titulo or "").lower())
-    t = "".join(c for c in t if unicodedata.category(c) != "Mn")
-    t = "".join(c if c.isalnum() or c.isspace() else " " for c in t)
-    return {p[:6] for p in t.split() if len(p) > 2 and p not in VACIAS}
-
-
-def misma_historia(a: str, b: str) -> bool:
-    """
-    Dos titulares que cuentan lo mismo.
-
-    El agente deduplica por URL, asi que la misma historia entra tantas
-    veces como medios la publiquen. En el sitio molesta; en un boletin de
-    seis notas es la mitad del correo.
-    """
-    fa, fb = _fichas(a), _fichas(b)
-    if not fa or not fb:
-        return False
-    comunes = len(fa & fb)
-
-    # Dos condiciones, y las dos hacen falta.
-    #
-    # El 0.35 sobre el titular mas corto es bajo a proposito: dos medios
-    # cuentan la misma historia con palabras distintas. Con 0.5 entraban
-    # las dos versiones del fichaje de Chantra por Honda, que solo
-    # comparten "chantra" y "honda".
-    #
-    # Y hacen falta al menos dos palabras compartidas, no solo el
-    # porcentaje: un titular con dos palabras significativas que comparta
-    # una sola ya daria 0.5, y se fusionarian dos historias distintas por
-    # coincidir en una marca.
-    return comunes >= 2 and comunes / min(len(fa), len(fb)) >= 0.35
 
 
 def elegir(notas: list[dict], total: int, por_categoria: int) -> list[dict]:

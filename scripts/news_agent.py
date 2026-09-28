@@ -58,6 +58,15 @@ RSS_FEEDS = [
 ]
 
 
+# Dominios que no son medios: bing.com son enlaces de agregador que
+# NewsAPI devuelve cuando no resuelve la fuente original, y globenewswire
+# es un cable de boletines corporativos. Sumaban 34 notas en la base.
+FUENTES_VETADAS = ("bing.com", "globenewswire.com")
+
+# Cuantos dias hacia atras se comparan titulares para no repetir historia.
+DIAS_DE_MEMORIA = 5
+
+
 # ── Catalogo de categorias ───────────────────────────────────────────────────
 # Tiene que coincidir con src/lib/categories.ts: una categoria que no este
 # ahi no aparece en ninguna seccion del sitio. Claude a veces inventa
@@ -499,10 +508,43 @@ def main():
         print("No articles found. Done.")
         return
 
+    # Fuera lo que no es un medio. Va antes de todo lo demas porque no
+    # tiene sentido ni comparar estas notas.
+    antes = len(articles)
+    articles = [
+        a for a in articles
+        if not any(d in (a.get("link") or "") for d in FUENTES_VETADAS)
+    ]
+    if len(articles) < antes:
+        print(f"   {antes - len(articles)} descartados por fuente vetada")
+
     print("🔍 Checking duplicates in DB...")
     existing_urls = get_existing_urls()
-    new_articles  = [a for a in articles if a["link"] and a["link"] not in existing_urls]
-    print(f"   {len(new_articles)} nuevos artículos a procesar\n")
+    new_articles = [a for a in articles if a["link"] and a["link"] not in existing_urls]
+    print(f"   {len(new_articles)} nuevos por URL")
+
+    # Y ahora por historia, no por URL. La deduplicacion anterior solo
+    # miraba el enlace, asi que la misma noticia entraba tantas veces como
+    # medios la publicaran.
+    #
+    # Va antes de llamar a Claude a proposito: una nota descartada aqui no
+    # cuesta ni una peticion ni una imagen.
+    print(f"🧬 Buscando historias repetidas (memoria de {DIAS_DE_MEMORIA} dias)...")
+    anteriores = get_titulos_recientes()
+    unicos = []
+    repetidos = 0
+    for a in new_articles:
+        titulo = a.get("title") or ""
+        previo = ya_contada(titulo, anteriores + [u.get("title") or "" for u in unicos])
+        if previo:
+            repetidos += 1
+            print(f"    ⏭️  {titulo[:52]}")
+            print(f"        ya contada: {previo[:52]}")
+            continue
+        unicos.append(a)
+
+    new_articles = unicos
+    print(f"   {repetidos} repetidas · {len(new_articles)} a procesar")
     if not new_articles:
         print("All articles already saved. Done.")
         return
@@ -535,6 +577,36 @@ def main():
             print(f"    ❌ Error: {e}")
 
     print(f"\n✅ Done! {saved} artículos guardados en Supabase.")
+
+
+def get_titulos_recientes(dias: int = DIAS_DE_MEMORIA) -> list[str]:
+    """
+    Los titulares ya publicados, para no repetir historia.
+
+    Se comparan contra el titular original del candidato, que Claude
+    todavia no reescribio. Los dos textos son distintos, pero los nombres
+    propios sobreviven a la reescritura —Chantra, Honda, Motegi— y son
+    justo lo que decide si es la misma historia.
+    """
+    desde = (datetime.now(timezone.utc) - timedelta(days=dias)).isoformat()
+    try:
+        r = httpx.get(
+            f"{SUPABASE_URL}/rest/v1/{TABLE_PATH}",
+            headers=db_headers(),
+            params={
+                "select": "title",
+                "created_at": f"gte.{desde}",
+                "order": "created_at.desc",
+                "limit": "300",
+            },
+            timeout=30,
+        )
+        if r.status_code == 200:
+            return [f["title"] for f in r.json() if f.get("title")]
+    except Exception as e:
+        print(f"    ⚠️  No se pudieron leer los titulares recientes: {e}")
+    # Ante la duda se deja pasar: mejor una nota repetida que perder el dia.
+    return []
 
 
 def get_existing_urls() -> set[str]:
