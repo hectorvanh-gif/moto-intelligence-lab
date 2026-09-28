@@ -86,7 +86,7 @@ const CalendarioMotoGP = () => {
       <main className="container mx-auto px-4 lg:px-8 py-10 lg:py-14">
         <div className="max-w-4xl mx-auto">
           <p className="font-display text-xs tracking-widest text-primary mb-3">
-            HORA DE MÉXICO · CENTRO
+            HORA DE MÉXICO
           </p>
           <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground leading-tight mb-4">
             Calendario MotoGP {temporada}
@@ -137,7 +137,7 @@ const CalendarioMotoGP = () => {
                     {cuando(proxima.carrera)}
                   </p>
                   <p className="font-body text-xs text-muted-foreground mt-1">
-                    hora del centro de México (CDMX)
+                    hora de México
                   </p>
                 </div>
               )}
@@ -205,7 +205,7 @@ const CalendarioMotoGP = () => {
                       )}
                       {c.carrera ? (
                         <span className="font-mono text-sm text-primary">
-                          Carrera · {cuando(c.carrera)} h CDMX
+                          Carrera · {cuando(c.carrera)} h MX
                         </span>
                       ) : (
                         <span className="font-mono text-xs text-muted-foreground">
@@ -241,10 +241,9 @@ const CalendarioMotoGP = () => {
           {datos && (
             <p className="font-body text-xs text-muted-foreground flex items-center gap-2 mb-10">
               <Clock className="w-3.5 h-3.5 shrink-0" />
-              Horarios en hora del centro de México (CDMX). Si andas en
-              Sonora resta 1 hora, en Baja California resta 2, y en Quintana
-              Roo suma 1. Datos del calendario oficial de MotoGP, actualizados
-              el{" "}
+              Horarios en hora de México. Si andas en Sonora resta 1 hora, en
+              Baja California resta 2, y en Quintana Roo suma 1. Datos del
+              calendario oficial de MotoGP, actualizados el{" "}
               {new Date(datos.actualizado).toLocaleDateString("es-MX", {
                 day: "numeric",
                 month: "long",
