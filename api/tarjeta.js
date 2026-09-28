@@ -67,6 +67,15 @@ const FIJAS = {
   },
   // Es la pagina pensada para compartirse en grupos de moteros, asi que
   // su tarjeta importa mas que la de ninguna otra.
+  "/privacidad": {
+    title: "Aviso de privacidad | Moto Lab 249",
+    description: "Qué datos guardamos, quién los procesa y cómo pedir que se borren.",
+  },
+  "/terminos": {
+    title: "Términos de uso | Moto Lab 249",
+    description:
+      "Cómo se produce el contenido, de quién son las notas originales y qué esperar de un sitio escrito con ayuda de IA.",
+  },
   "/contacto": {
     title: "Escríbenos | Moto Lab 249",
     description:

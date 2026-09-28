@@ -97,20 +97,20 @@ const Footer = () => {
               </h4>
               <ul className="space-y-2">
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/privacidad"
                     className="font-body text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    Política de Privacidad
-                  </a>
+                    Aviso de privacidad
+                  </Link>
                 </li>
                 <li>
-                  <a
-                    href="#"
+                  <Link
+                    to="/terminos"
                     className="font-body text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    Términos de Uso
-                  </a>
+                    Términos de uso
+                  </Link>
                 </li>
               </ul>
             </div>

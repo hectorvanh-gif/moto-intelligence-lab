@@ -191,6 +191,22 @@ const NewsArticlePage = () => {
                   <ExternalLink className="w-4 h-4" />
                 </a>
               </div>
+
+              {/* El buzon, aqui y no solo en el pie: a alguien se le
+                  ocurre escribir justo cuando acaba de leer algo que le
+                  parecio mal o incompleto. */}
+              <div className="border-t border-border/50 pt-6 mt-8">
+                <p className="font-body text-sm text-muted-foreground">
+                  ¿Viste un dato mal o falta algo?{" "}
+                  <Link
+                    to="/contacto"
+                    className="text-primary hover:underline font-medium"
+                  >
+                    Escríbenos
+                  </Link>
+                  .
+                </p>
+              </div>
             </article>
           )}
         </main>

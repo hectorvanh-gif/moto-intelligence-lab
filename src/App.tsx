@@ -11,6 +11,8 @@ import HubPage from "./pages/HubPage";
 import Nosotros from "./pages/Nosotros";
 import CalendarioMotoGP from "./pages/CalendarioMotoGP";
 import Contacto from "./pages/Contacto";
+import Privacidad from "./pages/Privacidad";
+import Terminos from "./pages/Terminos";
 import Analytics from "./components/Analytics";
 import ScrollToTop from "./components/ScrollToTop";
 import { HUBS } from "@/lib/hubs";
@@ -40,6 +42,8 @@ const App = () => (
             <Route path="/nosotros" element={<Nosotros />} />
             <Route path="/calendario-motogp" element={<CalendarioMotoGP />} />
             <Route path="/contacto" element={<Contacto />} />
+            <Route path="/privacidad" element={<Privacidad />} />
+            <Route path="/terminos" element={<Terminos />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
