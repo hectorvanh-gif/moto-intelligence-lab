@@ -1,6 +1,6 @@
 {
   "temporada": 2026,
-  "actualizado": "2026-10-02T11:23:04.772825-06:00",
+  "actualizado": "2026-10-03T09:39:28.899676-06:00",
   "zona": "America/Mexico_City",
   "fuente": "https://www.motogp.com/es/calendar",
   "total": 22,
@@ -1593,20 +1593,20 @@
         {
           "clave": "Q1",
           "nombre": "Clasificación 1",
-          "iso": "2026-10-02T19:50:00-06:00",
+          "iso": "2026-10-02T19:58:00-06:00",
           "dia_semana": "viernes",
           "dia": 2,
           "mes": "octubre",
-          "hora": "19:50"
+          "hora": "19:58"
         },
         {
           "clave": "Q2",
           "nombre": "Clasificación 2",
-          "iso": "2026-10-02T20:15:00-06:00",
+          "iso": "2026-10-02T20:23:00-06:00",
           "dia_semana": "viernes",
           "dia": 2,
           "mes": "octubre",
-          "hora": "20:15"
+          "hora": "20:23"
         },
         {
           "clave": "SPR",
@@ -1620,11 +1620,11 @@
         {
           "clave": "WUP",
           "nombre": "Warm Up",
-          "iso": "2026-10-03T18:40:00-06:00",
+          "iso": "2026-10-03T18:35:00-06:00",
           "dia_semana": "sábado",
           "dia": 3,
           "mes": "octubre",
-          "hora": "18:40"
+          "hora": "18:35"
         },
         {
           "clave": "RAC",
