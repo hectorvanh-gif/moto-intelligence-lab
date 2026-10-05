@@ -1,4 +1,18 @@
 {
+  "_comentario": [
+    "La primera regla manda los rastreadores a api/tarjeta, que devuelve la",
+    "pagina ya armada. Las personas caen en la segunda y reciben la SPA.",
+    "",
+    "Googlebot y bingbot se agregaron el 5 de octubre de 2026, cuando se",
+    "descubrio que Google tenia CERO paginas indexadas: en la primera pasada",
+    "recibia el cascaron del SPA y las 722 URLs se veian identicas entre si.",
+    "",
+    "Esto solo es legitimo mientras api/tarjeta devuelva el MISMO contenido",
+    "que ve una persona: titulo, fecha, cuerpo completo y enlaces. Es el",
+    "dynamic rendering que Google documenta. Si algun dia se recorta a una",
+    "ficha, hay que sacar a googlebot de esta lista el mismo dia, porque",
+    "entonces si seria servirle a Google algo distinto que a la gente."
+  ],
   "rewrites": [
     {
       "source": "/((?!api/).*)",
@@ -6,7 +20,7 @@
         {
           "type": "header",
           "key": "user-agent",
-          "value": "(?i).*(facebookexternalhit|whatsapp|twitterbot|telegrambot|slackbot|linkedinbot|discordbot).*"
+          "value": "(?i).*(googlebot|bingbot|facebookexternalhit|whatsapp|twitterbot|telegrambot|slackbot|linkedinbot|discordbot).*"
         }
       ],
       "destination": "/api/tarjeta?ruta=/$1"
