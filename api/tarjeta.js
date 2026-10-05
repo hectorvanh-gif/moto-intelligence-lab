@@ -28,6 +28,15 @@
  *
  * vercel.json manda aqui a los rastreadores por user-agent. Las personas
  * reciben la aplicacion normal.
+ *
+ * AVISO para quien edite esto: googlebot y bingbot estan en esa lista de
+ * user-agents. Si algun dia se recorta lo que devuelve este archivo a una
+ * ficha, hay que sacarlos de vercel.json EL MISMO DIA, porque entonces si
+ * seria servirle a Google algo distinto de lo que ve la gente.
+ *
+ * (La nota va aqui y no en vercel.json porque JSON no admite comentarios:
+ * meterle una llave "_comentario" tumba el build entero con "should NOT
+ * have additional property". Ya paso.)
  */
 
 const SUPABASE_URL =
