@@ -108,6 +108,12 @@ def enviar(asunto: str, cuerpo: str, seco: bool) -> bool:
         headers={
             "Authorization": f"Bearer {RESEND_KEY}",
             "Content-Type": "application/json",
+            # Hace falta. La API de Resend esta detras de Cloudflare, que
+            # responde 403 con "error code: 1010" a la firma por omision de
+            # urllib ("Python-urllib/3.11") antes de que la peticion llegue
+            # a Resend. El boletin no se topa con esto porque usa httpx.
+            # Con cualquier User-Agent propio pasa.
+            "User-Agent": "MotoLab249-Vigia/1.0",
         },
     )
     try:
