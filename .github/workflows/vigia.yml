@@ -1,0 +1,32 @@
+name: Vigia
+
+# Corre aparte del agente a proposito. Un paso dentro del workflow del
+# agente no puede avisar que el workflow del agente no corrio, y eso es
+# justo lo que GitHub hace solo: desactiva los schedules de un repo sin
+# actividad. Este pregunta por el resultado (hay notas nuevas en la base?),
+# no por el proceso.
+on:
+  schedule:
+    # 10:30 de Mexico (CST = UTC-6), hora y media despues del agente.
+    - cron: '30 16 * * *'
+  workflow_dispatch:
+
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # Sin "Install dependencies": vigia.py es solo libreria estandar.
+      - name: Revisar que el sitio siga publicando
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        run: python scripts/vigia.py

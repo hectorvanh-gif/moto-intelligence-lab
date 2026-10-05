@@ -31,3 +31,15 @@ jobs:
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
         run: python scripts/news_agent.py
+
+      # Avisa en el momento y con la liga al run. El vigia de las 10:30
+      # tambien lo detecta, pero este dice cual paso se cayo.
+      #
+      # vigia.py no usa dependencias, asi que este paso funciona incluso
+      # cuando lo que se cayo fue el "Install dependencies" de arriba.
+      - name: Avisar si algo se cayo
+        if: failure()
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          GITHUB_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: python scripts/vigia.py --falla "Moto News Agent"
