@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { useNewsByCategory } from "@/hooks/useNews";
-import type { Category } from "@/lib/categories";
+import { etiqueta, type Category } from "@/lib/categories";
 import NewsCard from "./NewsCard";
 import { Skeleton } from "@/components/ui/skeleton";
 

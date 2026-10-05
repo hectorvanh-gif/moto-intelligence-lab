@@ -4,7 +4,7 @@ import { es, enUS } from "date-fns/locale";
 import { ArrowRight, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLatestNews } from "@/hooks/useNews";
-import { byValue, colorFor , etiqueta } from "@/lib/categories";
+import { byValue, colorFor, etiqueta } from "@/lib/categories";
 import { cleanText } from "@/lib/text";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IDIOMA, t } from "@/lib/i18n";

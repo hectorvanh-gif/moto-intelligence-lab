@@ -23,13 +23,21 @@ const COMUNES = "id,created_at,image_url,category,source_url,votes";
  * "*" llegarian tambien title_en, summary_en y content_en en cada renglon,
  * o sea el doble de bytes por nota para no usarlos.
  */
-export const CAMPOS =
+export const CAMPOS = (
   IDIOMA === "en"
     ? `${COMUNES},title:title_en,summary:summary_en,content:content_en`
     : // En español se pide title_en de mas, solo como bandera: es la unica
       // forma de saber si la nota existe tambien en ingles, que es lo que
       // decide si la pagina anuncia una alternativa en hreflang.
-      `${COMUNES},title,summary,content,title_en`;
+      `${COMUNES},title,summary,content,title_en`
+) as "*";
+// El `as "*"` es por los tipos, no por lo que se manda. supabase-js analiza
+// la cadena del select como tipo literal para deducir la forma del renglon,
+// y una cadena armada en tiempo de ejecucion no la puede leer: falla con
+// ParserError "Unexpected input: ,title_en". Decirle "*" le da justo la
+// forma correcta, porque con los alias los renglones llegan con los mismos
+// nombres de columna de la tabla en los dos idiomas. Lo que viaja a
+// PostgREST sigue siendo la lista de arriba.
 
 /** Columna que decide si una nota existe en este idioma. */
 export const COLUMNA_TITULO = IDIOMA === "en" ? "title_en" : "title";

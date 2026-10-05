@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import { CATEGORIES , etiqueta } from "@/lib/categories";
+import { CATEGORIES, etiqueta } from "@/lib/categories";
 import { HUBS } from "@/lib/hubs";
 import { IDIOMA, t } from "@/lib/i18n";
 

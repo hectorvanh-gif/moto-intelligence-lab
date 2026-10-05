@@ -7,7 +7,7 @@ import Footer from "@/components/Footer";
 import NewsCard from "@/components/NewsCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import { CATEGORIES, bySlug , etiqueta } from "@/lib/categories";
+import { CATEGORIES, bySlug, etiqueta } from "@/lib/categories";
 import { SITE_URL } from "@/lib/site";
 import { useMeta } from "@/hooks/useMeta";
 import { urlCanonica } from "@/lib/i18n";
