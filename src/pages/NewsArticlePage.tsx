@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { format } from "date-fns";
 import { es, enUS } from "date-fns/locale";
 import { ArrowLeft, ExternalLink, Clock, Tag } from "lucide-react";
@@ -14,13 +14,38 @@ import VoteButton from "@/components/VoteButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMeta } from "@/hooks/useMeta";
 import { IDIOMA, t, urlCanonica } from "@/lib/i18n";
+import { idDeRuta, rutaCorrecta, rutaDeNota } from "../../shared/slug.js";
 
 const NewsArticlePage = () => {
-  const { id } = useParams<{ id: string }>();
-  const { data: article, isLoading, error } = useArticle(id);
+  // El parametro trae "968" o "968-titulo-de-la-nota". La nota se busca
+  // SIEMPRE por el numero: el titulo del slug es decorativo y puede estar
+  // viejo, porque el reprocesamiento reescribe titulares.
+  const { id: parametro } = useParams<{ id: string }>();
+  const navigate = useNavigate();
+  const id = idDeRuta(parametro);
+  const { data: article, isLoading, error } = useArticle(id || undefined);
 
   const siteUrl = SITE_URL;
-  const articleUrl = urlCanonica(`/noticias/${id}`);
+  const articleUrl = urlCanonica(
+    article?.title ? rutaDeNota(id, article.title) : `/noticias/${id}`
+  );
+
+  /**
+   * Lleva la URL a la buena cuando se llego por una vieja (/noticias/968)
+   * o por una con el titulo cambiado.
+   *
+   * Con replace y no push: el boton de atras tiene que regresar a donde
+   * venia el lector, no a la URL vieja, que lo volveria a mover.
+   *
+   * Para Google el 301 de verdad lo hace api/tarjeta.js; esto es para las
+   * personas y para que la barra de direcciones muestre la URL que se
+   * comparte.
+   */
+  const rutaBuena =
+    article?.title && id ? rutaCorrecta(parametro, id, article.title) : null;
+  useEffect(() => {
+    if (rutaBuena) navigate(rutaBuena, { replace: true });
+  }, [rutaBuena, navigate]);
 
   /**
    * Las notas anteriores al 5 de octubre de 2026 solo existen en español.
@@ -86,6 +111,11 @@ const NewsArticlePage = () => {
       : "Cargando artículo | Moto Lab 249";
   const descripcion = cleanText(article?.summary) || t("pie.lema");
 
+  // El titulo de la otra version, para armar su URL. Viaja en title_en
+  // cuando se esta en español y en title_es cuando se esta en ingles.
+  const tituloOtroIdioma =
+    IDIOMA === "en" ? article?.title_es : article?.title_en;
+
   useMeta({
     title: titulo,
     description: descripcion,
@@ -100,7 +130,11 @@ const NewsArticlePage = () => {
     // En ingles basta con que la pagina tenga titulo (si lo tiene, es que
     // hay traduccion, y el español siempre existe). En español hace falta
     // mirar title_en, que viaja solo para esto.
-    bilingue: IDIOMA === "en" ? !!article?.title : !!article?.title_en,
+    bilingue: IDIOMA === "en" ? !!article?.title_es : !!article?.title_en,
+    // La URL de la otra version lleva SU titulo en el slug, no este.
+    rutaOtroIdioma: tituloOtroIdioma
+      ? rutaDeNota(id, tituloOtroIdioma)
+      : undefined,
   });
 
   return (

@@ -58,19 +58,32 @@ const CLASE_ALT = "alternativa-idioma";
  * 2026 solo estan en español: anunciar una alternativa en ingles que
  * devuelve una pagina sin contenido es peor que no anunciar ninguna.
  */
-function ponerAlternativas(ruta: string, hayOtroIdioma: boolean) {
+function ponerAlternativas(
+  ruta: string,
+  hayOtroIdioma: boolean,
+  rutaOtro?: string
+) {
   document.head
     .querySelectorAll(`link.${CLASE_ALT}`)
     .forEach((el) => el.remove());
 
   if (!hayOtroIdioma) return;
 
+  // Casi siempre las dos versiones comparten ruta (/nosotros y /en/nosotros).
+  // Las notas no: cada idioma lleva su propio titulo en el slug, y por eso
+  // `rutaOtro`. Apuntar hreflang a una URL que redirige es justo lo que
+  // Google pide no hacer.
+  const propia = ruta;
+  const ajena = rutaOtro || ruta;
+  const [enEs, enIn] =
+    IDIOMA === "es" ? [propia, ajena] : [ajena, propia];
+
   const idiomas: Array<[string, string]> = [
-    ["es", rutaEn("es", ruta)],
-    ["en", rutaEn("en", ruta)],
+    ["es", rutaEn("es", enEs)],
+    ["en", rutaEn("en", enIn)],
     // x-default es la que se le sirve a quien no encaja en ninguna; el
     // español, que es el idioma principal del sitio.
-    ["x-default", rutaEn("es", ruta)],
+    ["x-default", rutaEn("es", enEs)],
   ];
 
   for (const [lang, href] of idiomas) {
@@ -98,6 +111,11 @@ interface Meta {
    * el sitio fijo lo esta; las notas pasan false cuando no tienen ingles.
    */
   bilingue?: boolean;
+  /**
+   * La ruta de ESTA pagina en el otro idioma, sin el prefijo, cuando no es
+   * la misma. Solo las notas la necesitan: su slug lleva el titulo dentro.
+   */
+  rutaOtroIdioma?: string;
 }
 
 export function useMeta({
@@ -108,6 +126,7 @@ export function useMeta({
   type = "website",
   jsonLd,
   bilingue = true,
+  rutaOtroIdioma,
 }: Meta) {
   useEffect(() => {
     // Se escriben siempre los cuatro, incluida la imagen por omision: si
@@ -140,7 +159,7 @@ export function useMeta({
       const ruta = canonical
         .replace(SITE_URL, "")
         .replace(new RegExp(`^${PREFIJO.en}`), "") || "/";
-      ponerAlternativas(ruta, bilingue);
+      ponerAlternativas(ruta, bilingue, rutaOtroIdioma);
     }
 
     if (!jsonLd) return;
@@ -156,5 +175,5 @@ export function useMeta({
     document.head.appendChild(script);
 
     return () => script.remove();
-  }, [title, description, canonical, image, type, jsonLd, bilingue]);
+  }, [title, description, canonical, image, type, jsonLd, bilingue, rutaOtroIdioma]);
 }

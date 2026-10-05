@@ -20,11 +20,14 @@ export interface NewsArticle {
   /** Contador de votos. Se suma desde api/votar.js, nunca desde el navegador. */
   votes: number | null;
   /**
-   * Solo llega en español, y solo como bandera: dice si la nota existe
-   * tambien en ingles. En ingles no viene, porque alla `title` YA es el
-   * titulo en ingles.
+   * El titulo en el OTRO idioma. Llega title_en cuando se esta en español
+   * y title_es cuando se esta en ingles.
+   *
+   * Dice si la nota existe del otro lado, y da el slug para construir su
+   * URL, que no es la misma: cada idioma lleva su propio titulo dentro.
    */
   title_en?: string | null;
+  title_es?: string | null;
 }
 
 /** Las mas recientes, sin filtrar por categoria. */

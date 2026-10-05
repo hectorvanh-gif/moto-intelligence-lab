@@ -5,6 +5,7 @@ import type { NewsArticle } from "@/hooks/useNews";
 import { cleanText } from "@/lib/text";
 import VoteButton from "./VoteButton";
 import { IDIOMA, t } from "@/lib/i18n";
+import { rutaDeNota } from "../../shared/slug.js";
 
 interface NewsCardProps {
   article: NewsArticle;
@@ -27,7 +28,7 @@ const NewsCard = ({ article }: NewsCardProps) => {
 
   return (
     <Link
-      to={`/noticias/${article.id}`}
+      to={rutaDeNota(article.id, article.title)}
       className="group relative bg-card rounded-lg overflow-hidden border border-border/50 hover:border-primary/50 transition-all duration-300 electric-hover block"
     >
       {/* Image Container */}

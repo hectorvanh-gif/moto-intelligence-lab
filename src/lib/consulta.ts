@@ -23,13 +23,15 @@ const COMUNES = "id,created_at,image_url,category,source_url,votes";
  * "*" llegarian tambien title_en, summary_en y content_en en cada renglon,
  * o sea el doble de bytes por nota para no usarlos.
  */
+// Cada idioma pide ademas el titulo del OTRO. Sirve para dos cosas: saber
+// si la nota existe del otro lado (y solo entonces anunciar hreflang), y
+// armar la URL del otro idioma, que lleva su propio slug —"...-domino-el-
+// caos" contra "...-dominated-the-chaos"—. Sin esto el hreflang apuntaria
+// a una URL que redirige, y Google pide que apunte a la canonica.
 export const CAMPOS = (
   IDIOMA === "en"
-    ? `${COMUNES},title:title_en,summary:summary_en,content:content_en`
-    : // En español se pide title_en de mas, solo como bandera: es la unica
-      // forma de saber si la nota existe tambien en ingles, que es lo que
-      // decide si la pagina anuncia una alternativa en hreflang.
-      `${COMUNES},title,summary,content,title_en`
+    ? `${COMUNES},title:title_en,summary:summary_en,content:content_en,title_es:title`
+    : `${COMUNES},title,summary,content,title_en`
 ) as "*";
 // El `as "*"` es por los tipos, no por lo que se manda. supabase-js analiza
 // la cadena del select como tipo literal para deducir la forma del renglon,

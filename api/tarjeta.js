@@ -39,6 +39,8 @@
  * have additional property". Ya paso.)
  */
 
+import { idDeRuta, rutaCorrecta, rutaDeNota } from "../shared/slug.js";
+
 const SUPABASE_URL =
   process.env.SUPABASE_URL || "https://rbumxwchxgjbtxsxutbl.supabase.co";
 const LLAVE_PUBLICA =
@@ -340,11 +342,37 @@ export default async function handler(req, res) {
   // Solo se anuncia alternativa en el otro idioma cuando existe de verdad:
   // prometerle a Google una traduccion que no esta es peor que callarse.
   let bilingue = true;
+  // Las rutas de las dos versiones, sin prefijo. Casi siempre son la misma
+  // (/nosotros), pero una nota lleva su titulo dentro del slug y entonces
+  // cada idioma tiene la suya.
+  let rutaEs = null;
+  let rutaIn = null;
 
-  const enNota = limpia.match(/^\/noticias\/(\d+)$/);
+  // Acepta /noticias/968 y /noticias/968-titulo-de-la-nota.
+  const enNota = limpia.match(/^\/noticias\/([^/]+)$/);
 
   if (enNota) {
-    const nota = await notaDe(enNota[1]);
+    const idNota = idDeRuta(enNota[1]);
+    const nota = idNota ? await notaDe(idNota) : null;
+
+    // Una nota que no existe tiene que responder 404, no 200.
+    //
+    // Antes /noticias/999999 devolvia la ficha por omision con codigo 200:
+    // un "soft 404". Google los trata como paginas de baja calidad y se
+    // gasta presupuesto de rastreo visitandolas, que es justo lo que no
+    // sobra cuando intentas entrar al indice.
+    if (!nota) {
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      return res.status(404).send(
+        `<!DOCTYPE html><html lang="${idioma}"><head><meta charset="utf-8">` +
+          `<title>${idioma === "en" ? "Story not found" : "Nota no encontrada"} | Moto Lab 249</title>` +
+          `<meta name="robots" content="noindex">` +
+          `</head><body><h1>${idioma === "en" ? "Story not found" : "Nota no encontrada"}</h1>` +
+          `<p><a href="${prefijo || "/"}">${escapar(T.volver)}</a></p>` +
+          `</body></html>`
+      );
+    }
+
     if (nota) {
       const titulo = idioma === "en" ? nota.title_en : nota.title;
       const resumen = idioma === "en" ? nota.summary_en : nota.summary;
@@ -362,9 +390,22 @@ export default async function handler(req, res) {
             `<meta name="robots" content="noindex">` +
             `</head><body><h1>Not available in English</h1>` +
             `<p>This story was published before we started writing in English.</p>` +
-            `<p><a href="/noticias/${enNota[1]}">Read it in Spanish</a></p>` +
+            `<p><a href="${rutaDeNota(idNota, nota.title)}">Read it in Spanish</a></p>` +
             `</body></html>`
         );
+      }
+
+      // El 301 de verdad, el que mueve a Google de la URL vieja sin slug
+      // a la buena. Va despues del 404 del ingles para no redirigir a una
+      // pagina que de todos modos no existe en este idioma.
+      const buena = rutaCorrecta(enNota[1], idNota, limpiar(titulo));
+      if (buena) {
+        res.setHeader("Location", prefijo + buena);
+        res.setHeader(
+          "Cache-Control",
+          "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800"
+        );
+        return res.status(301).end();
       }
 
       meta = {
@@ -378,6 +419,10 @@ export default async function handler(req, res) {
       tipo = "article";
       publicada = nota.created_at || "";
       bilingue = !!(nota.title_en && nota.title);
+      if (bilingue) {
+        rutaEs = rutaDeNota(idNota, limpiar(nota.title));
+        rutaIn = rutaDeNota(idNota, limpiar(nota.title_en));
+      }
 
       const fecha = publicada.slice(0, 10);
       cuerpo = `
@@ -460,9 +505,9 @@ ${pintarLista(notas, idioma, T)}`;
 <link rel="canonical" href="${escapar(url)}">
 ${
   bilingue
-    ? `<link rel="alternate" hreflang="es" href="${escapar(SITIO + sinPrefijo || SITIO)}">
-<link rel="alternate" hreflang="en" href="${escapar(SITIO + "/en" + sinPrefijo)}">
-<link rel="alternate" hreflang="x-default" href="${escapar(SITIO + sinPrefijo || SITIO)}">`
+    ? `<link rel="alternate" hreflang="es" href="${escapar(SITIO + (rutaEs || sinPrefijo) || SITIO)}">
+<link rel="alternate" hreflang="en" href="${escapar(SITIO + "/en" + (rutaIn || sinPrefijo))}">
+<link rel="alternate" hreflang="x-default" href="${escapar(SITIO + (rutaEs || sinPrefijo) || SITIO)}">`
     : ""
 }
 <meta property="og:type" content="${tipo}">

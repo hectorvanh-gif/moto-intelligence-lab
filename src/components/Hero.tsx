@@ -8,6 +8,7 @@ import { byValue, colorFor, etiqueta } from "@/lib/categories";
 import { cleanText } from "@/lib/text";
 import { Skeleton } from "@/components/ui/skeleton";
 import { IDIOMA, t } from "@/lib/i18n";
+import { rutaDeNota } from "../../shared/slug.js";
 
 /**
  * La portada abre con la nota del dia, no con un eslogan. Antes habia un
@@ -96,7 +97,7 @@ const Hero = () => {
 
               <h2 className="font-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-tight mb-5 animate-slide-up animation-delay-100">
                 <Link
-                  to={`/noticias/${article.id}`}
+                  to={rutaDeNota(article.id, article.title)}
                   className="hover:text-primary transition-colors"
                 >
                   {cleanText(article.title)}
@@ -111,7 +112,7 @@ const Hero = () => {
 
               <div className="flex flex-col sm:flex-row gap-4 animate-slide-up animation-delay-300">
                 <Button variant="hero" size="lg" asChild>
-                  <Link to={`/noticias/${article.id}`}>
+                  <Link to={rutaDeNota(article.id, article.title)}>
                     {t("portada.leerNota")}
                     <ArrowRight className="w-4 h-4" />
                   </Link>

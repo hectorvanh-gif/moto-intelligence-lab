@@ -4,6 +4,7 @@
  */
 
 import { writeFileSync } from "fs";
+import { rutaDeNota } from "../shared/slug.js";
 
 const SUPABASE_URL = "https://rbumxwchxgjbtxsxutbl.supabase.co";
 const SUPABASE_KEY = "sb_publishable_FJ0Skr8u_WADS-KpchPLGA_o3eq9ps3";
@@ -21,7 +22,7 @@ async function generateSitemap() {
 
   while (true) {
     const res = await fetch(
-      `${SUPABASE_URL}/rest/v1/moto_news?select=id,created_at&category=neq.DESCARTADO` +
+      `${SUPABASE_URL}/rest/v1/moto_news?select=id,created_at,title&category=neq.DESCARTADO` +
         `&order=created_at.desc&limit=${PAGINA}&offset=${offset}`,
       {
         headers: {
@@ -72,7 +73,9 @@ async function generateSitemap() {
 
   // Dynamic article pages
   const articleUrls = articles.map((a) => ({
-    loc: `${SITE_URL}/noticias/${a.id}`,
+    // La misma funcion que usan el sitio y el prerender. Si el sitemap
+    // anunciara otra URL, Google rastrearia una redireccion en cada nota.
+    loc: `${SITE_URL}${rutaDeNota(a.id, a.title)}`,
     changefreq: "weekly",
     priority: "0.8",
     lastmod: a.created_at ? a.created_at.split("T")[0] : today,
