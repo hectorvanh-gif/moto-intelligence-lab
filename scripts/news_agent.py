@@ -407,12 +407,22 @@ Si SÍ es sobre motos responde SOLO con este JSON (sin texto adicional):
   "cuerpo": "la nota contada con TUS palabras en 3 párrafos separados por \\n, entre 500 y 900 caracteres en total",
   "category": "MOTOGP|SUPERBIKE|ENDURO|AVENTURA|NAKED|SPORT|ELECTRICA|NOTICIA",
   "ig_title": "TÍTULO IMPACTANTE EN MAYÚSCULAS, máx 55 caracteres",
-  "ig_caption": "1-2 frases breves y emocionantes, máx 120 caracteres, para imagen Instagram"
+  "ig_caption": "1-2 frases breves y emocionantes, máx 120 caracteres, para imagen Instagram",
+  "title_en": "the same headline in English, max 80 characters",
+  "summary_en": "the same summary in English, max 250 characters",
+  "cuerpo_en": "the same body in English, 3 paragraphs separated by \\n"
 }}
 
 REGLA DEL CUERPO: no copies frases del texto original. Reescríbelo. Si el
 material es tan corto que no alcanza para 3 párrafos, escribe menos, pero
 nunca pegues el texto de la fuente.
+
+REGLA DEL INGLÉS: los tres campos _en son la misma nota escrita para un
+lector en inglés, no una traducción palabra por palabra. Usa los términos
+que se usan de verdad en inglés ("qualifying", "crash", "championship
+standings", "factory team"). Los nombres propios, equipos y circuitos no se
+traducen. Si no puedes escribir el inglés, deja los tres campos _en vacíos
+en vez de inventar: la nota se publica solo en español y ya.
 
 Título: {article['title']}
 Contenido: {article['content'][:1500]}"""
@@ -422,7 +432,12 @@ Contenido: {article['content'][:1500]}"""
         # 500 no alcanzaba desde que el JSON incluye "cuerpo": la respuesta
         # llegaba cortada a media frase y no se podia parsear, asi que la mitad
         # de las notas caian al fallback.
-        max_tokens=1500,
+        #
+        # Y 1500 se queda corto desde que el JSON trae tambien la version en
+        # ingles, que casi duplica la salida. Cortarse aqui es caro: una
+        # respuesta truncada no parsea y tira la nota entera al fallback, no
+        # solo el ingles.
+        max_tokens=3000,
         messages=[
             {"role": "user", "content": prompt},
             # Prellenar la respuesta con "{" impide que el modelo escriba
@@ -481,6 +496,22 @@ def insert_article(article: dict, processed: dict, ig_image_url: str | None = No
         "ig_caption":   processed.get("ig_caption", "")[:120],
         "ig_image_url": ig_image_url,
     }
+
+    # El ingles solo si vino completo. Se quedan en NULL y no en cadena vacia
+    # a proposito: el sitio en ingles lista las notas que tienen title_en, y
+    # una cadena vacia pasaria ese filtro y publicaria una nota en blanco.
+    #
+    # Las notas anteriores al 5 de octubre de 2026 no tienen ingles y no se
+    # van a traducir hacia atras: el sitio en ingles arranca vacio y se llena
+    # solo, a ~12 notas por dia.
+    en = {
+        "title_en":   (processed.get("title_en") or "").strip()[:80],
+        "summary_en": (processed.get("summary_en") or "").strip()[:500],
+        "content_en": (processed.get("cuerpo_en") or "").strip()[:5000],
+    }
+    if all(en.values()):
+        record.update(en)
+
     # Fechar la nota con el dia en que paso la noticia, no con el dia en que
     # la recogimos. En la corrida diaria no cambia nada porque son el mismo
     # dia; al recuperar una semana caida es la diferencia entre rellenar el
@@ -488,11 +519,25 @@ def insert_article(article: dict, processed: dict, ig_image_url: str | None = No
     if article.get("published"):
         record["created_at"] = article["published"]
     headers = {**db_headers(), "Prefer": "return=representation"}
-    try:
-        r = httpx.post(
+
+    def _post(cuerpo: dict):
+        return httpx.post(
             f"{SUPABASE_URL}/rest/v1/{TABLE_PATH}",
-            headers=headers, json=record, timeout=15,
+            headers=headers, json=cuerpo, timeout=15,
         )
+
+    try:
+        r = _post(record)
+
+        # Si las columnas del ingles todavia no existen en la base, PostgREST
+        # contesta PGRST204 y se perderia la nota entera por un campo opcional.
+        # Se reintenta sin ingles: mas vale publicar solo en español que no
+        # publicar. Pasa una sola vez, entre que sale este codigo y se corre
+        # el ALTER TABLE.
+        if r.status_code == 400 and any(c in r.text for c in en):
+            print("    ⚠️  Sin columnas de ingles en la base; guardo solo español")
+            r = _post({k: v for k, v in record.items() if k not in en})
+
         if r.status_code in (200, 201):
             data = r.json()
             if data:
