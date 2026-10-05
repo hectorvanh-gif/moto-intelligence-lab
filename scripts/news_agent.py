@@ -304,6 +304,11 @@ def fetch_from_newsapi(days: int = 1) -> list[dict]:
                         "link": url,
                         "content": clean(content),
                         "image_url": item.get("urlToImage"),
+                        # Se guarda para fechar la nota con el dia en que
+                        # ocurrio y no con el dia en que la recogimos. Solo
+                        # importa al recuperar dias viejos; en la corrida
+                        # diaria los dos son el mismo dia.
+                        "published": item.get("publishedAt"),
                     })
                 print(f"   [NewsAPI:{query}] → {count} artículos")
             else:
@@ -347,6 +352,9 @@ def fetch_from_rss(hours: int = 25) -> list[dict]:
                     "title": clean(title), "link": link,
                     "content": content_clean or clean(title),
                     "image_url": _extract_image(entry, content),
+                    # Ya la teniamos para filtrar por ventana; ahora tambien
+                    # viaja hasta el insert para fechar la nota.
+                    "published": pub.isoformat() if pub else None,
                 })
             print(f"   [RSS:{name}] → {count} artículos")
         except Exception as e:
@@ -473,6 +481,12 @@ def insert_article(article: dict, processed: dict, ig_image_url: str | None = No
         "ig_caption":   processed.get("ig_caption", "")[:120],
         "ig_image_url": ig_image_url,
     }
+    # Fechar la nota con el dia en que paso la noticia, no con el dia en que
+    # la recogimos. En la corrida diaria no cambia nada porque son el mismo
+    # dia; al recuperar una semana caida es la diferencia entre rellenar el
+    # archivo y publicar siete dias de noticias viejas como si fueran de hoy.
+    if article.get("published"):
+        record["created_at"] = article["published"]
     headers = {**db_headers(), "Prefer": "return=representation"}
     try:
         r = httpx.post(
@@ -490,15 +504,30 @@ def insert_article(article: dict, processed: dict, ig_image_url: str | None = No
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
-def main():
+def main(dias: int = 1, maximo: int = MAX_ARTICLES_PER_RUN):
+    """
+    dias   cuanto hacia atras buscar. 1 es la corrida diaria.
+    maximo tope de notas a publicar en una corrida.
+
+    Los dos existen para recuperar dias caidos. El agente mira una ventana
+    fija, asi que lo que no cazo el dia que corrio no lo vuelve a ver nunca:
+    cuando se cayo del 28 de septiembre al 4 de octubre no quedaron noticias
+    "pendientes" en ninguna cola, simplemente se perdieron. Con --dias se
+    vuelven a pedir a las fuentes.
+    """
     print("🏍️  Moto Intelligence Lab — News Agent")
-    print(f"📅  {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}\n")
+    print(f"📅  {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}")
+    if dias != 1:
+        print(f"⏪  Recuperando {dias} dias hacia atras (tope {maximo})")
+    print()
 
     print("📡 Fetching from NewsAPI...")
-    articles = fetch_from_newsapi(days=1)
+    articles = fetch_from_newsapi(days=dias)
 
     print("\n📡 Fetching from RSS feeds...")
-    rss = fetch_from_rss(hours=25)
+    # +1 dia de colchon: los feeds traen la hora de publicacion y la corrida
+    # diaria usa 25h, no 24, para no perder la nota que cae justo en el borde.
+    rss = fetch_from_rss(hours=dias * 24 + 1)
     seen = {a["link"] for a in articles}
     for a in rss:
         if a["link"] not in seen:
@@ -553,8 +582,8 @@ def main():
 
     print("🤖 Claude: summarizing, filtering and generating Instagram images...")
     saved = 0
-    for i, article in enumerate(new_articles[:MAX_ARTICLES_PER_RUN]):
-        print(f"  [{i+1}/{min(len(new_articles), MAX_ARTICLES_PER_RUN)}] {article['title'][:65]}...")
+    for i, article in enumerate(new_articles[:maximo]):
+        print(f"  [{i+1}/{min(len(new_articles), maximo)}] {article['title'][:65]}...")
         try:
             processed = summarize_with_claude(article)
             if processed is None:
@@ -627,4 +656,12 @@ def get_existing_urls() -> set[str]:
 
 
 if __name__ == "__main__":
-    main()
+    import argparse
+
+    p = argparse.ArgumentParser(description="Agente de noticias de Moto Lab 249")
+    p.add_argument("--dias", type=int, default=1,
+                   help="cuanto hacia atras buscar (1 = corrida diaria)")
+    p.add_argument("--maximo", type=int, default=MAX_ARTICLES_PER_RUN,
+                   help=f"tope de notas por corrida (por omision {MAX_ARTICLES_PER_RUN})")
+    args = p.parse_args()
+    main(dias=args.dias, maximo=args.maximo)

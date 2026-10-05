@@ -5,6 +5,18 @@ on:
     # 9:00 AM hora México (CST = UTC-6) todos los días
     - cron: '0 15 * * *'
   workflow_dispatch: # Permite dispararlo manualmente desde GitHub
+    inputs:
+      # Para recuperar dias caidos. El agente mira una ventana fija, asi que
+      # lo que no cazo el dia que corrio no lo vuelve a ver: no hay cola de
+      # "pendientes". Con esto se le vuelven a pedir a las fuentes.
+      dias:
+        description: 'Dias hacia atras (1 = normal)'
+        required: false
+        default: '1'
+      maximo:
+        description: 'Tope de notas en la corrida'
+        required: false
+        default: '15'
 
 jobs:
   fetch-news:
@@ -30,7 +42,12 @@ jobs:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           NEWSAPI_KEY: ${{ secrets.NEWSAPI_KEY }}
-        run: python scripts/news_agent.py
+        # El `||` da el respaldo: en la corrida programada no hay inputs y
+        # github.event.inputs.dias llega vacio, no ausente.
+        run: >
+          python scripts/news_agent.py
+          --dias ${{ github.event.inputs.dias || '1' }}
+          --maximo ${{ github.event.inputs.maximo || '15' }}
 
       # Avisa en el momento y con la liga al run. El vigia de las 10:30
       # tambien lo detecta, pero este dice cual paso se cayo.
