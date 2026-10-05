@@ -530,7 +530,8 @@ def insert_article(article: dict, processed: dict, ig_image_url: str | None = No
         r = _post(record)
 
         # Si las columnas del ingles todavia no existen en la base, PostgREST
-        # contesta PGRST204 y se perderia la nota entera por un campo opcional.
+        # contesta 400 nombrando la columna que falta (PGRST204 al insertar,
+        # 42703 al leer) y se perderia la nota entera por un campo opcional.
         # Se reintenta sin ingles: mas vale publicar solo en español que no
         # publicar. Pasa una sola vez, entre que sale este codigo y se corre
         # el ALTER TABLE.
