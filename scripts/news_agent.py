@@ -18,6 +18,8 @@ from urllib.parse import quote
 
 import feedparser
 import httpx
+
+from historias import ya_contada
 import anthropic
 from PIL import Image, ImageDraw, ImageFont
 
