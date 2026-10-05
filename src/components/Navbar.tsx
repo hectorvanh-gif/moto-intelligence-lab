@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { COMUNIDAD_URL } from "@/lib/comunidad";
 import CategoryBar from "./CategoryBar";
+import SelectorIdioma from "./SelectorIdioma";
+import { t } from "@/lib/i18n";
 
 /**
  * La barra de arriba: logotipo, comunidad y suscribirse. La navegacion por
@@ -34,16 +36,17 @@ const Navbar = () => {
             </Link>
 
             <div className="flex items-center gap-4 lg:gap-7">
+              <SelectorIdioma />
               <a
                 href={COMUNIDAD_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-display text-xs tracking-widest text-muted-foreground hover:text-primary transition-colors"
+                className="font-display text-xs tracking-widest text-muted-foreground hover:text-primary transition-colors hidden sm:block"
               >
-                COMUNIDAD
+                {t("nav.comunidad")}
               </a>
               <Button variant="nav" size="sm" asChild>
-                <Link to="/#suscribete">SUSCRIBIRSE</Link>
+                <Link to="/#suscribete">{t("nav.suscribirse")}</Link>
               </Button>
             </div>
           </div>

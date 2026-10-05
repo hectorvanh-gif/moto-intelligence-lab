@@ -9,6 +9,7 @@ import { useHubNews } from "@/hooks/useNews";
 import { hubBySlug } from "@/lib/hubs";
 import { SITE_URL } from "@/lib/site";
 import { useMeta } from "@/hooks/useMeta";
+import { urlCanonica } from "@/lib/i18n";
 
 interface Props {
   slug: string;
@@ -35,7 +36,7 @@ const HubPage = ({ slug }: Props) => {
 
   if (!hub) return null;
 
-  const canonical = `${SITE_URL}/${hub.slug}`;
+  const canonical = urlCanonica(`/${hub.slug}`);
 
   // FAQPage: es lo que hace que Google pueda mostrar las preguntas
   // desplegables debajo del resultado.
@@ -79,54 +80,8 @@ const HubPage = ({ slug }: Props) => {
           </div>
         </header>
 
-        <main className="container mx-auto px-4 lg:px-8">
-          {/* Contenido propio */}
-          <article className="max-w-4xl mx-auto py-14 lg:py-20 space-y-12">
-            {hub.sections.map((section) => (
-              <section key={section.heading}>
-                <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground mb-5 flex items-center gap-3">
-                  <span className="w-2 h-7 rounded-sm bg-primary shrink-0" />
-                  {section.heading}
-                </h2>
-                <div className="space-y-4">
-                  {section.body.map((paragraph, i) => (
-                    <p
-                      key={i}
-                      className="font-body text-base lg:text-lg text-muted-foreground leading-relaxed"
-                    >
-                      <RichText text={paragraph} />
-                    </p>
-                  ))}
-                </div>
-              </section>
-            ))}
-
-            {/* Preguntas frecuentes */}
-            {hub.faq.length > 0 && (
-              <section>
-                <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
-                  <span className="w-2 h-7 rounded-sm bg-primary shrink-0" />
-                  PREGUNTAS FRECUENTES
-                </h2>
-                <dl className="space-y-6">
-                  {hub.faq.map((f) => (
-                    <div key={f.q} className="border-l-2 border-border pl-5">
-                      <dt className="font-display text-base font-bold text-foreground mb-2">
-                        {f.q}
-                      </dt>
-                      <dd className="font-body text-muted-foreground leading-relaxed">
-                        {f.a}
-                      </dd>
-                    </div>
-                  ))}
-                </dl>
-              </section>
-            )}
-          </article>
-        </main>
-
         {/* Notas del tema */}
-        <section className="border-t border-border/50 py-14 lg:py-20">
+        <section className="py-14 lg:py-20">
           <div className="container mx-auto px-4 lg:px-8">
             <div className="flex items-end justify-between mb-8 gap-4">
               <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground tracking-wide flex items-center gap-3">
@@ -171,6 +126,53 @@ const HubPage = ({ slug }: Props) => {
             )}
           </div>
         </section>
+
+
+        <main className="container mx-auto px-4 lg:px-8 border-t border-border/50">
+          {/* Contenido propio */}
+          <article className="max-w-4xl mx-auto py-14 lg:py-20 space-y-12">
+            {hub.sections.map((section) => (
+              <section key={section.heading}>
+                <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground mb-5 flex items-center gap-3">
+                  <span className="w-2 h-7 rounded-sm bg-primary shrink-0" />
+                  {section.heading}
+                </h2>
+                <div className="space-y-4">
+                  {section.body.map((paragraph, i) => (
+                    <p
+                      key={i}
+                      className="font-body text-base lg:text-lg text-muted-foreground leading-relaxed"
+                    >
+                      <RichText text={paragraph} />
+                    </p>
+                  ))}
+                </div>
+              </section>
+            ))}
+
+            {/* Preguntas frecuentes */}
+            {hub.faq.length > 0 && (
+              <section>
+                <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground mb-6 flex items-center gap-3">
+                  <span className="w-2 h-7 rounded-sm bg-primary shrink-0" />
+                  PREGUNTAS FRECUENTES
+                </h2>
+                <dl className="space-y-6">
+                  {hub.faq.map((f) => (
+                    <div key={f.q} className="border-l-2 border-border pl-5">
+                      <dt className="font-display text-base font-bold text-foreground mb-2">
+                        {f.q}
+                      </dt>
+                      <dd className="font-body text-muted-foreground leading-relaxed">
+                        {f.a}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </section>
+            )}
+          </article>
+        </main>
 
         <NewsletterBand />
         <Footer />

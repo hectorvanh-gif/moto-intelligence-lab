@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { NeonInput } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { t } from "@/lib/i18n";
 
 /**
  * Captura de correos. Vivia dentro del Hero ocupando una pantalla completa;
@@ -17,8 +18,8 @@ const NewsletterBand = () => {
     e.preventDefault();
     if (!email) {
       toast({
-        title: "Error",
-        description: "Por favor ingresa tu email",
+        title: t("boletin.error"),
+        description: t("boletin.faltaCorreo"),
         variant: "destructive",
       });
       return;
@@ -31,13 +32,13 @@ const NewsletterBand = () => {
     if (error) {
       if (error.code === "23505") {
         toast({
-          title: "Ya estás registrado",
-          description: "Este email ya forma parte del Lab 249.",
+          title: t("boletin.yaTitulo"),
+          description: t("boletin.yaTexto"),
         });
       } else {
         toast({
-          title: "Error al registrarse",
-          description: "Intenta de nuevo en un momento.",
+          title: t("boletin.falloTitulo"),
+          description: t("boletin.falloTexto"),
           variant: "destructive",
         });
       }
@@ -56,10 +57,10 @@ const NewsletterBand = () => {
       }).catch(() => null);
 
       toast({
-        title: "¡Bienvenido al Lab!",
+        title: t("boletin.bienvenido"),
         description: envio?.ok
-          ? "Te mandamos un correo de confirmación. Revisa tu bandeja."
-          : "Cada lunes te llega el resumen de la semana.",
+          ? t("boletin.confirmacion")
+          : t("boletin.cadaLunes"),
       });
       setEmail("");
     }
@@ -88,7 +89,7 @@ const NewsletterBand = () => {
           >
             <NeonInput
               type="email"
-              placeholder="tu@email.com"
+              placeholder={t("boletin.placeholder")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="flex-1"
@@ -100,7 +101,7 @@ const NewsletterBand = () => {
               disabled={isLoading}
               className="whitespace-nowrap"
             >
-              {isLoading ? "PROCESANDO..." : "UNIRME AL LAB 249"}
+              {isLoading ? t("boletin.enviando") : t("boletin.boton")}
             </Button>
           </form>
 

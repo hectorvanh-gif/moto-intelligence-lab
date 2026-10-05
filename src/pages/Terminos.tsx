@@ -3,6 +3,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { SITE_URL } from "@/lib/site";
 import { useMeta } from "@/hooks/useMeta";
+import { urlCanonica } from "@/lib/i18n";
 
 /**
  * Terminos de uso.
@@ -17,7 +18,7 @@ const Terminos = () => {
     title: "Términos de uso | Moto Lab 249",
     description:
       "Cómo se produce el contenido de Moto Lab 249, de quién son las notas originales y qué esperar de un sitio escrito con ayuda de IA.",
-    canonical: `${SITE_URL}/terminos`,
+    canonical: urlCanonica("/terminos"),
   });
 
   return (

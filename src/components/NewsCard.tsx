@@ -4,6 +4,7 @@ import { es } from "date-fns/locale";
 import type { NewsArticle } from "@/hooks/useNews";
 import { cleanText } from "@/lib/text";
 import VoteButton from "./VoteButton";
+import { t } from "@/lib/i18n";
 
 interface NewsCardProps {
   article: NewsArticle;
@@ -21,7 +22,7 @@ const NewsCard = ({ article }: NewsCardProps) => {
       const words = clean.split(" ").slice(0, 20);
       return words.join(" ") + (clean.split(" ").length > 20 ? "..." : "");
     }
-    return "Sin contenido disponible";
+    return t("tarjeta.sinContenido");
   };
 
   return (
@@ -34,7 +35,7 @@ const NewsCard = ({ article }: NewsCardProps) => {
         {article.image_url ? (
           <img
             src={article.image_url}
-            alt={article.title || "Noticia"}
+            alt={article.title || t("tarjeta.alt")}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             loading="lazy"
           />
@@ -56,7 +57,7 @@ const NewsCard = ({ article }: NewsCardProps) => {
       {/* Content */}
       <div className="p-4 space-y-3">
         <h3 className="font-display font-bold text-foreground text-lg leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-          {cleanText(article.title) || "Sin título"}
+          {cleanText(article.title) || t("tarjeta.sinTitulo")}
         </h3>
         <p className="text-muted-foreground text-sm leading-relaxed line-clamp-2">
           {getSummary()}

@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { CATEGORIES } from "@/lib/categories";
 import { HUBS } from "@/lib/hubs";
+import { t } from "@/lib/i18n";
 
 /**
  * La unica fila de navegacion por tema del sitio.
@@ -54,7 +55,7 @@ const CategoryBar = () => {
     // No es una categoria, es un destino: el calendario con los horarios
     // en hora de Mexico. Va primero porque es lo unico del sitio que no
     // existe en ningun otro lado.
-    { to: "/calendario-motogp", label: "CALENDARIO" },
+    { to: "/calendario-motogp", label: t("nav.calendario") },
     ...HUBS.map((h) => ({ to: `/${h.slug}`, label: h.navLabel })),
     ...CATEGORIES.filter(
       (c) => c.value !== "NOTICIA" && !CUBIERTAS_POR_SECCION.includes(c.value)

@@ -1,6 +1,7 @@
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { format } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, enUS } from "date-fns/locale";
 import { ArrowLeft, ExternalLink, Clock, Tag } from "lucide-react";
 import { useArticle } from "@/hooks/useArticle";
 import { SITE_URL } from "@/lib/site";
@@ -12,16 +13,33 @@ import NewsletterBand from "@/components/NewsletterBand";
 import VoteButton from "@/components/VoteButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMeta } from "@/hooks/useMeta";
+import { IDIOMA, t, urlCanonica } from "@/lib/i18n";
 
 const NewsArticlePage = () => {
   const { id } = useParams<{ id: string }>();
   const { data: article, isLoading, error } = useArticle(id);
 
   const siteUrl = SITE_URL;
-  const articleUrl = `${siteUrl}/noticias/${id}`;
+  const articleUrl = urlCanonica(`/noticias/${id}`);
+
+  /**
+   * Las notas anteriores al 5 de octubre de 2026 solo existen en español.
+   * Abierta una de ellas desde /en, el titulo llega en null.
+   *
+   * Se manda al lector a la version en español con replace: asi el boton
+   * de atras del navegador lo regresa de donde venia y no a esta pagina,
+   * que volveria a rebotarlo. Es location y no navigate porque cambiar de
+   * idioma cambia el basename del router, y eso pide recarga.
+   */
+  const sinTraducir = IDIOMA === "en" && !!article && !article.title;
+  useEffect(() => {
+    if (sinTraducir) window.location.replace(`/noticias/${id}`);
+  }, [sinTraducir, id]);
 
   const formattedDate = article?.created_at
-    ? format(new Date(article.created_at), "d 'de' MMMM 'de' yyyy", { locale: es })
+    ? format(new Date(article.created_at), IDIOMA === "en" ? "MMMM d, yyyy" : "d 'de' MMMM 'de' yyyy", {
+        locale: IDIOMA === "en" ? enUS : es,
+      })
     : "";
 
   const categoryColor = colorFor(article?.category);
@@ -63,9 +81,10 @@ const NewsArticlePage = () => {
 
   const titulo = article?.title
     ? `${cleanText(article.title)} | Moto Lab 249`
-    : "Cargando artículo | Moto Lab 249";
-  const descripcion =
-    cleanText(article?.summary) || "Noticias de motociclismo, todos los días.";
+    : IDIOMA === "en"
+      ? "Loading story | Moto Lab 249"
+      : "Cargando artículo | Moto Lab 249";
+  const descripcion = cleanText(article?.summary) || t("pie.lema");
 
   useMeta({
     title: titulo,
@@ -74,6 +93,14 @@ const NewsArticlePage = () => {
     image: article?.image_url || `${siteUrl}/og-image.jpg`,
     type: "article",
     jsonLd,
+    // Solo se anuncia alternativa en el otro idioma cuando existe de
+    // verdad. Una nota vieja solo esta en español, y prometerle a Google
+    // una version en ingles que rebota a español es peor que callarse.
+    //
+    // En ingles basta con que la pagina tenga titulo (si lo tiene, es que
+    // hay traduccion, y el español siempre existe). En español hace falta
+    // mirar title_en, que viaja solo para esto.
+    bilingue: IDIOMA === "en" ? !!article?.title : !!article?.title_en,
   });
 
   return (
@@ -88,7 +115,7 @@ const NewsArticlePage = () => {
             className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors mb-8 font-display text-sm tracking-wider"
           >
             <ArrowLeft className="w-4 h-4" />
-            VOLVER AL ARCHIVO
+            {t("nota.volver")}
           </Link>
 
           {/* Loading */}

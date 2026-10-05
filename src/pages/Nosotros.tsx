@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import NewsletterBand from "@/components/NewsletterBand";
 import { SITE_URL } from "@/lib/site";
 import { useMeta } from "@/hooks/useMeta";
+import { urlCanonica } from "@/lib/i18n";
 
 /**
  * Quienes somos.
@@ -23,7 +24,7 @@ const Nosotros = () => {
     title: "Qué es Moto Lab 249 | Noticias de moto",
     description:
       "Un filtro para la prensa de moto: más de 40 fuentes revisadas cada mañana, sin relleno. Quién está detrás de Moto Lab 249 y cómo trabajamos.",
-    canonical: `${SITE_URL}/nosotros`,
+    canonical: urlCanonica("/nosotros"),
   });
 
   return (

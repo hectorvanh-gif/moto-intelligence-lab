@@ -7,6 +7,7 @@ import { useLatestNews } from "@/hooks/useNews";
 import { byValue, colorFor } from "@/lib/categories";
 import { cleanText } from "@/lib/text";
 import { Skeleton } from "@/components/ui/skeleton";
+import { t } from "@/lib/i18n";
 
 /**
  * La portada abre con la nota del dia, no con un eslogan. Antes habia un
@@ -107,12 +108,12 @@ const Hero = () => {
               <div className="flex flex-col sm:flex-row gap-4 animate-slide-up animation-delay-300">
                 <Button variant="hero" size="lg" asChild>
                   <Link to={`/noticias/${article.id}`}>
-                    LEER LA NOTA
+                    {t("portada.leerNota")}
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                 </Button>
                 <Button variant="outline" size="lg" asChild>
-                  <a href="#portada">VER LO ÚLTIMO</a>
+                  <a href="#portada">{t("portada.verLoUltimo")}</a>
                 </Button>
               </div>
             </>
@@ -120,7 +121,7 @@ const Hero = () => {
 
           {!isLoading && !article && (
             <p className="font-body text-lg text-muted-foreground">
-              Aún no hay noticias publicadas. Vuelve pronto.
+              {t("portada.vacio")}
             </p>
           )}
         </div>

@@ -16,6 +16,7 @@ import Terminos from "./pages/Terminos";
 import Analytics from "./components/Analytics";
 import ScrollToTop from "./components/ScrollToTop";
 import { HUBS } from "@/lib/hubs";
+import { BASENAME } from "@/lib/i18n";
 
 const queryClient = new QueryClient();
 
@@ -24,7 +25,11 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        {/* basename es "/en" cuando la URL cuelga de /en, y "/" si no. Con
+            eso los <Link to="/x"> que ya existian en toda la app apuntan
+            solos a /en/x, sin tocar un solo enlace. Lo decide i18n.ts una
+            vez por carga; cambiar de idioma recarga la pagina. */}
+        <BrowserRouter basename={BASENAME}>
           <ScrollToTop />
           <Analytics />
           <Routes>

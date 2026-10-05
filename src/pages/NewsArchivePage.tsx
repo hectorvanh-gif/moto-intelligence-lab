@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { CATEGORIES, bySlug } from "@/lib/categories";
 import { SITE_URL } from "@/lib/site";
 import { useMeta } from "@/hooks/useMeta";
+import { urlCanonica } from "@/lib/i18n";
 
 /**
  * Sirve dos rutas:
@@ -37,7 +38,9 @@ const NewsArchivePage = () => {
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   const heading = category ? category.label : "ARCHIVO DE NOTICIAS";
-  const canonical = category ? `${SITE_URL}/categoria/${category.slug}` : `${SITE_URL}/noticias`;
+  const canonical = category
+    ? urlCanonica(`/categoria/${category.slug}`)
+    : urlCanonica("/noticias");
   const title = category
     ? `${category.label} | Moto Lab 249`
     : "Archivo de Noticias | Moto Lab 249";

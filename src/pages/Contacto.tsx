@@ -7,6 +7,7 @@ import { NeonInput } from "@/components/ui/input";
 import { toast } from "@/hooks/use-toast";
 import { SITE_URL } from "@/lib/site";
 import { useMeta } from "@/hooks/useMeta";
+import { urlCanonica } from "@/lib/i18n";
 
 /**
  * El buzon. No es una caja de comentarios: lo que se escribe aqui llega
@@ -24,7 +25,7 @@ const Contacto = () => {
     title: "Escríbenos | Moto Lab 249",
     description:
       "¿Viste algo mal, tienes una nota que contar o quieres que cubramos algo? Escríbenos.",
-    canonical: `${SITE_URL}/contacto`,
+    canonical: urlCanonica("/contacto"),
   });
 
   const enviar = async (e: React.FormEvent<HTMLFormElement>) => {

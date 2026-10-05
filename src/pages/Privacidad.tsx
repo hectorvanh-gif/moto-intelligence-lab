@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { SITE_URL } from "@/lib/site";
 import { useMeta } from "@/hooks/useMeta";
+import { urlCanonica } from "@/lib/i18n";
 
 /**
  * Aviso de privacidad.
@@ -20,7 +21,7 @@ const Privacidad = () => {
     title: "Aviso de privacidad | Moto Lab 249",
     description:
       "Qué datos guarda Moto Lab 249, para qué, quién los procesa y cómo pedir que se borren.",
-    canonical: `${SITE_URL}/privacidad`,
+    canonical: urlCanonica("/privacidad"),
   });
 
   return (

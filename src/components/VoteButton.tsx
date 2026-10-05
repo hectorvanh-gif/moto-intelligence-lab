@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Flame } from "lucide-react";
+import { t } from "@/lib/i18n";
 
 /**
  * Voto para una nota.
@@ -84,8 +85,8 @@ const VoteButton = ({ articleId, votes, size = "sm" }: Props) => {
       type="button"
       onClick={votar}
       disabled={votado || enviando}
-      aria-label={votado ? "Ya votaste esta nota" : "Votar por esta nota"}
-      title={votado ? "Ya votaste esta nota" : "Votar por esta nota"}
+      aria-label={votado ? t("voto.yaVotaste") : t("voto.porEsta")}
+      title={votado ? t("voto.yaVotaste") : t("voto.porEsta")}
       className={`inline-flex items-center gap-2 rounded-full border transition-colors ${
         grande ? "px-4 py-2 text-sm" : "px-2.5 py-1 text-xs"
       } ${
@@ -98,7 +99,7 @@ const VoteButton = ({ articleId, votes, size = "sm" }: Props) => {
       <span className="font-mono tabular-nums">{total}</span>
       {grande && (
         <span className="font-display tracking-widest">
-          {votado ? "VOTADA" : "VOTAR"}
+          {votado ? t("voto.votada") : t("voto.votar")}
         </span>
       )}
     </button>

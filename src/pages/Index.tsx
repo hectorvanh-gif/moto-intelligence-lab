@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import { homeCategories } from "@/lib/categories";
 import { SITE_URL } from "@/lib/site";
 import { useMeta } from "@/hooks/useMeta";
+import { urlCanonica } from "@/lib/i18n";
 
 const Index = () => {
   const categories = homeCategories();
@@ -17,7 +18,7 @@ const Index = () => {
     title: "Noticias de motos y MotoGP | Moto Lab 249",
     description:
       "Lo que pasó hoy en el motociclismo: MotoGP, motos eléctricas, doble propósito y lanzamientos. Resumido y al punto, sin relleno.",
-    canonical: SITE_URL,
+    canonical: urlCanonica("/"),
   });
 
   // El salto al ancla vive en ScrollToTop, junto con el resto del manejo

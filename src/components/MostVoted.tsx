@@ -1,6 +1,7 @@
 import { Flame } from "lucide-react";
 import { useMostVoted } from "@/hooks/useNews";
 import NewsCard from "./NewsCard";
+import { t } from "@/lib/i18n";
 
 /**
  * El ranking de las notas mas votadas del ultimo mes.
@@ -26,7 +27,7 @@ const MostVoted = () => {
           </span>
           <div>
             <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground tracking-wide">
-              LO MÁS VOTADO
+              {t("portada.loMasVotado")}
             </h2>
             <p className="font-body text-xs text-muted-foreground">
               Lo que eligieron los lectores este mes

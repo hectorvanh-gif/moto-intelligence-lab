@@ -1,5 +1,6 @@
 import { ArrowRight, Users } from "lucide-react";
 import { COMUNIDAD_URL } from "@/lib/comunidad";
+import { t } from "@/lib/i18n";
 
 /**
  * El cierre de la portada: un boton y nada mas.
@@ -23,7 +24,7 @@ const AboutMission = () => {
         >
           <Users className="w-7 h-7 lg:w-8 lg:h-8 shrink-0" />
           <span className="font-display text-xl sm:text-2xl lg:text-3xl font-bold tracking-widest text-center">
-            SÚMATE A LA COMUNIDAD
+            {t("portada.comunidad")}
           </span>
           <ArrowRight className="w-7 h-7 lg:w-8 lg:h-8 shrink-0 transition-transform group-hover:translate-x-1" />
         </a>

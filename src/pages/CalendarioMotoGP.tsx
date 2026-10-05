@@ -7,6 +7,7 @@ import NewsletterBand from "@/components/NewsletterBand";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SITE_URL } from "@/lib/site";
 import { useMeta } from "@/hooks/useMeta";
+import { urlCanonica } from "@/lib/i18n";
 
 /**
  * Calendario de MotoGP con los horarios en hora de Mexico.
@@ -72,7 +73,7 @@ const CalendarioMotoGP = () => {
     title: `Calendario MotoGP ${temporada} en hora de México | Moto Lab 249`,
     description:
       "Todas las carreras de MotoGP con el horario convertido a la hora de México. Varias no se corren en domingo aquí: revisa antes de perdértelas.",
-    canonical: `${SITE_URL}/calendario-motogp`,
+    canonical: urlCanonica("/calendario-motogp"),
   });
 
   const proxima = datos?.carreras.find((c) => c.ronda === datos.proxima_ronda);

@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 import { useLatestNews } from "@/hooks/useNews";
 import NewsCard from "./NewsCard";
 import { Skeleton } from "@/components/ui/skeleton";
+import { t } from "@/lib/i18n";
 
 /**
  * Las notas que siguen a la principal. La primera ya la muestra el Hero,
@@ -19,7 +20,7 @@ const FrontPage = () => {
       <div className="container mx-auto px-4 lg:px-8">
         {error && (
           <p className="text-center text-destructive font-medium py-10">
-            Error al cargar las noticias. Intenta de nuevo más tarde.
+            {t("portada.error")}
           </p>
         )}
 
@@ -30,14 +31,14 @@ const FrontPage = () => {
                 <div className="flex items-center gap-3">
                   <span className="w-2.5 h-8 rounded-sm bg-primary" />
                   <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground tracking-wide">
-                    LO MÁS RECIENTE
+                    {t("portada.loMasReciente")}
                   </h2>
                 </div>
                 <Link
                   to="/noticias"
                   className="group inline-flex items-center gap-2 font-display text-xs tracking-widest text-muted-foreground hover:text-primary transition-colors shrink-0"
                 >
-                  VER TODO
+                  {t("portada.verTodo")}
                   <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
@@ -61,7 +62,7 @@ const FrontPage = () => {
 
               {!isLoading && rest.length === 0 && (
                 <p className="text-center text-muted-foreground py-10">
-                  Aún no hay noticias publicadas. Vuelve pronto.
+                  {t("portada.vacio")}
                 </p>
               )}
             </div>

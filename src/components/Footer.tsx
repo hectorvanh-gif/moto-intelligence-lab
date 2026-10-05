@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Facebook, Instagram } from "lucide-react";
 import { COMUNIDAD_URL } from "@/lib/comunidad";
 import { FACEBOOK_URL, INSTAGRAM_URL } from "@/lib/redes";
+import { t } from "@/lib/i18n";
 
 /**
  * El pie. Tenia un segundo formulario de newsletter que mostraba
@@ -28,7 +29,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="font-body text-muted-foreground text-sm">
-              Noticias de motociclismo, todos los días.
+              {t("pie.lema")}
             </p>
             {/* El dominio escrito como palabra, a proposito. La marca se
                 escribe separada ("Moto Lab 249") en todo el sitio, asi que
@@ -44,7 +45,7 @@ const Footer = () => {
           <div className="flex flex-col sm:flex-row gap-8 lg:justify-center">
             <div>
               <h4 className="font-display text-xs tracking-widest text-foreground mb-4">
-                SITIO
+                {t("pie.sitio")}
               </h4>
               <ul className="space-y-2">
                 <li>
@@ -52,7 +53,7 @@ const Footer = () => {
                     to="/nosotros"
                     className="font-body text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    Qué es Moto Lab 249
+                    {t("pie.queEs")}
                   </Link>
                 </li>
                 <li>
@@ -60,7 +61,7 @@ const Footer = () => {
                     to="/calendario-motogp"
                     className="font-body text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    Calendario MotoGP
+                    {t("pie.calendario")}
                   </Link>
                 </li>
                 <li>
@@ -68,7 +69,7 @@ const Footer = () => {
                     to="/noticias"
                     className="font-body text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    Archivo completo
+                    {t("pie.archivo")}
                   </Link>
                 </li>
                 <li>
@@ -76,7 +77,7 @@ const Footer = () => {
                     to="/contacto"
                     className="font-body text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    Escríbenos
+                    {t("pie.escribenos")}
                   </Link>
                 </li>
                 <li>
@@ -86,14 +87,14 @@ const Footer = () => {
                     rel="noopener noreferrer"
                     className="font-body text-sm text-primary hover:text-primary/80 transition-colors"
                   >
-                    Entrar a la comunidad
+                    {t("pie.comunidad")}
                   </a>
                 </li>
               </ul>
             </div>
             <div>
               <h4 className="font-display text-xs tracking-widest text-foreground mb-4">
-                LEGAL
+                {t("pie.legal")}
               </h4>
               <ul className="space-y-2">
                 <li>
@@ -101,7 +102,7 @@ const Footer = () => {
                     to="/privacidad"
                     className="font-body text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    Aviso de privacidad
+                    {t("pie.privacidad")}
                   </Link>
                 </li>
                 <li>
@@ -109,14 +110,14 @@ const Footer = () => {
                     to="/terminos"
                     className="font-body text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    Términos de uso
+                    {t("pie.terminos")}
                   </Link>
                 </li>
               </ul>
             </div>
             <div>
               <h4 className="font-display text-xs tracking-widest text-foreground mb-4">
-                SÍGUENOS
+                {t("pie.siguenos")}
               </h4>
               <div className="flex flex-col gap-3">
                 <a
@@ -151,7 +152,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t border-border/30 text-center">
           <p className="digital-code">
-            © 2026 MOTO LAB 249 // TODOS LOS DERECHOS RESERVADOS // MÉXICO
+            {t("pie.derechos")}
           </p>
         </div>
       </div>
