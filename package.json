@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "node scripts/generate-sitemap.js && vite build",
+    "_nota_typecheck": "tsc --noEmit a secas NO revisa nada: tsconfig.json tiene files:[] y delega por referencias. Usa npm run typecheck.",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"

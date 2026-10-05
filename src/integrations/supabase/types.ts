@@ -30,6 +30,10 @@ export type Database = {
           source_url: string | null
           summary: string | null
           title: string | null
+          title_en: string | null
+          summary_en: string | null
+          content_en: string | null
+          votes: number | null
         }
         Insert: {
           category?: string | null
@@ -44,6 +48,10 @@ export type Database = {
           source_url?: string | null
           summary?: string | null
           title?: string | null
+          title_en?: string | null
+          summary_en?: string | null
+          content_en?: string | null
+          votes?: number | null
         }
         Update: {
           category?: string | null
@@ -58,6 +66,10 @@ export type Database = {
           source_url?: string | null
           summary?: string | null
           title?: string | null
+          title_en?: string | null
+          summary_en?: string | null
+          content_en?: string | null
+          votes?: number | null
         }
         Relationships: []
       }
