@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, enUS } from "date-fns/locale";
 import type { NewsArticle } from "@/hooks/useNews";
 import { cleanText } from "@/lib/text";
 import VoteButton from "./VoteButton";
-import { t } from "@/lib/i18n";
+import { IDIOMA, t } from "@/lib/i18n";
 
 interface NewsCardProps {
   article: NewsArticle;
@@ -12,7 +12,7 @@ interface NewsCardProps {
 
 const NewsCard = ({ article }: NewsCardProps) => {
   const formattedDate = article.created_at
-    ? format(new Date(article.created_at), "yyyy.MM.dd // HH:mm 'UTC'", { locale: es })
+    ? format(new Date(article.created_at), "yyyy.MM.dd // HH:mm 'UTC'", { locale: IDIOMA === "en" ? enUS : es })
     : "";
 
   const getSummary = () => {

@@ -23,7 +23,7 @@ const CategoryRow = ({ category }: Props) => {
           <div className="flex items-center gap-3">
             <span className={`w-2.5 h-8 rounded-sm ${category.color}`} />
             <h2 className="font-display text-xl sm:text-2xl font-bold text-foreground tracking-wide">
-              {category.label}
+              {etiqueta(category)}
             </h2>
           </div>
           <Link

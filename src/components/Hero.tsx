@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
-import { es } from "date-fns/locale";
+import { es, enUS } from "date-fns/locale";
 import { ArrowRight, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLatestNews } from "@/hooks/useNews";
-import { byValue, colorFor } from "@/lib/categories";
+import { byValue, colorFor , etiqueta } from "@/lib/categories";
 import { cleanText } from "@/lib/text";
 import { Skeleton } from "@/components/ui/skeleton";
-import { t } from "@/lib/i18n";
+import { IDIOMA, t } from "@/lib/i18n";
 
 /**
  * La portada abre con la nota del dia, no con un eslogan. Antes habia un
@@ -29,7 +29,11 @@ const Hero = () => {
 
   const category = article ? byValue(article.category) : undefined;
   const fecha = article?.created_at
-    ? format(new Date(article.created_at), "d 'de' MMMM, HH:mm", { locale: es })
+    ? format(
+        new Date(article.created_at),
+        IDIOMA === "en" ? "MMMM d, HH:mm" : "d 'de' MMMM, HH:mm",
+        { locale: IDIOMA === "en" ? enUS : es }
+      )
     : "";
 
   return (
@@ -59,7 +63,7 @@ const Hero = () => {
           <h1 className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 bg-primary/5 mb-6 animate-slide-up">
             <span className="w-2 h-2 bg-primary rounded-full animate-pulse-glow" />
             <span className="font-display text-xs tracking-widest text-primary">
-              NOTICIAS DE MOTOS Y MOTOGP
+              {t("portada.titulo")}
             </span>
           </h1>
 
@@ -81,7 +85,7 @@ const Hero = () => {
                       article.category
                     )}`}
                   >
-                    {category.label}
+                    {etiqueta(category)}
                   </span>
                 )}
                 <time className="flex items-center gap-1.5 text-muted-foreground text-xs font-mono tracking-wider">

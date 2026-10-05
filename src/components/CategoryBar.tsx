@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
-import { CATEGORIES } from "@/lib/categories";
+import { CATEGORIES , etiqueta } from "@/lib/categories";
 import { HUBS } from "@/lib/hubs";
-import { t } from "@/lib/i18n";
+import { IDIOMA, t } from "@/lib/i18n";
 
 /**
  * La unica fila de navegacion por tema del sitio.
@@ -56,10 +56,13 @@ const CategoryBar = () => {
     // en hora de Mexico. Va primero porque es lo unico del sitio que no
     // existe en ningun otro lado.
     { to: "/calendario-motogp", label: t("nav.calendario") },
-    ...HUBS.map((h) => ({ to: `/${h.slug}`, label: h.navLabel })),
+    ...HUBS.map((h) => ({
+      to: `/${h.slug}`,
+      label: IDIOMA === "en" ? h.navLabelEn : h.navLabel,
+    })),
     ...CATEGORIES.filter(
       (c) => c.value !== "NOTICIA" && !CUBIERTAS_POR_SECCION.includes(c.value)
-    ).map((c) => ({ to: `/categoria/${c.slug}`, label: c.label })),
+    ).map((c) => ({ to: `/categoria/${c.slug}`, label: etiqueta(c) })),
   ];
 
   // Lo que no este en ORDEN —una categoria nueva del agente— se va al

@@ -1,3 +1,5 @@
+import { IDIOMA } from "@/lib/i18n";
+
 /**
  * Fuente de verdad de las categorias.
  *
@@ -11,18 +13,20 @@ export interface Category {
   value: string;
   slug: string;
   label: string;
+  /** Solo donde el nombre cambia de idioma: MOTOGP o ENDURO se escriben igual. */
+  labelEn?: string;
   color: string;
 }
 
 export const CATEGORIES: Category[] = [
   { value: "MOTOGP", slug: "motogp", label: "MOTOGP", color: "bg-red-600" },
   { value: "SUPERBIKE", slug: "superbike", label: "SUPERBIKE", color: "bg-orange-600" },
-  { value: "ELECTRICA", slug: "electricas", label: "ELÉCTRICAS", color: "bg-teal-600" },
-  { value: "AVENTURA", slug: "aventura", label: "AVENTURA", color: "bg-blue-700" },
+  { value: "ELECTRICA", slug: "electricas", label: "ELÉCTRICAS", labelEn: "ELECTRIC", color: "bg-teal-600" },
+  { value: "AVENTURA", slug: "aventura", label: "AVENTURA", labelEn: "ADVENTURE", color: "bg-blue-700" },
   { value: "ENDURO", slug: "enduro", label: "ENDURO", color: "bg-green-700" },
   { value: "SPORT", slug: "sport", label: "SPORT", color: "bg-yellow-600" },
   { value: "NAKED", slug: "naked", label: "NAKED", color: "bg-purple-700" },
-  { value: "NOTICIA", slug: "noticia", label: "NOTICIA", color: "bg-gray-600" },
+  { value: "NOTICIA", slug: "noticia", label: "NOTICIA", labelEn: "NEWS", color: "bg-gray-600" },
 ];
 
 /** Las que aparecen en el navbar. El resto vive en el archivo. */
@@ -45,3 +49,13 @@ export const navCategories = (): Category[] =>
 
 export const homeCategories = (): Category[] =>
   HOME_CATEGORY_SLUGS.map(bySlug).filter((c): c is Category => Boolean(c));
+
+/**
+ * La etiqueta en el idioma de esta carga.
+ *
+ * `labelEn` solo esta puesto donde el nombre de verdad cambia. MOTOGP,
+ * SUPERBIKE, ENDURO, SPORT y NAKED se escriben igual en los dos idiomas y
+ * duplicarlos solo daria dos sitios donde equivocarse.
+ */
+export const etiqueta = (c?: Category): string =>
+  (IDIOMA === "en" ? c?.labelEn : undefined) || c?.label || "";

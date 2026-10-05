@@ -31,6 +31,8 @@ export interface Hub {
   h1: string;
   /** Etiqueta corta para el navbar: el h1 completo no cabe. */
   navLabel: string;
+  /** La misma, en ingles. */
+  navLabelEn: string;
   kicker: string;
   lead: string;
   sections: HubSection[];
@@ -49,6 +51,7 @@ export const HUBS: Hub[] = [
       "Guía de motos doble propósito en México: qué son, en qué fijarte antes de comprar, qué cilindraje elegir y las marcas que más se buscan.",
     h1: "MOTOS DOBLE PROPÓSITO",
     navLabel: "DOBLE PROPÓSITO",
+    navLabelEn: "DUAL-SPORT",
     kicker: "GUÍA DE COMPRA",
     lead:
       "La doble propósito es la moto que no te obliga a escoger entre el asfalto y la terracería. En México es de las categorías que más crece, y también una de las que más confunde a la hora de comprar, porque el nombre se usa para cosas muy distintas.",
@@ -121,6 +124,7 @@ export const HUBS: Hub[] = [
       "Guía de motos eléctricas en México: los tipos que existen, qué revisar de la batería y la autonomía, y las marcas que más se buscan.",
     h1: "MOTOS ELÉCTRICAS",
     navLabel: "ELÉCTRICAS",
+    navLabelEn: "ELECTRIC",
     kicker: "GUÍA DE COMPRA",
     lead:
       "\"Moto eléctrica\" es el término más buscado de todo el mundo de las motos en español, y también el más revuelto: bajo el mismo nombre se venden cosas tan distintas como una moto de calle, una bicimoto y un juguete para niños. Antes de comparar precios hay que saber qué estás comparando.",
@@ -186,6 +190,7 @@ export const HUBS: Hub[] = [
       "MotoGP explicado: las tres categorías, el formato de fin de semana con sprint, cómo se reparten los puntos, y todas las noticias del campeonato.",
     h1: "MOTOGP",
     navLabel: "MOTOGP",
+    navLabelEn: "MOTOGP",
     kicker: "EL CAMPEONATO",
     lead:
       "MotoGP es la categoría reina del motociclismo de velocidad. Si estás entrando ahora, esto es lo que necesitas para seguir un fin de semana de carreras sin perderte.",
@@ -230,6 +235,7 @@ export const HUBS: Hub[] = [
       "Motos de enduro: en qué se diferencian del motocross y de la doble propósito, qué necesitas para empezar y las noticias de enduro y rally.",
     h1: "ENDURO",
     navLabel: "ENDURO",
+    navLabelEn: "ENDURO",
     kicker: "GUÍA Y NOTICIAS",
     lead:
       "El enduro es el motociclismo fuera del asfalto llevado a su forma más exigente: terreno difícil, tramos largos y una moto construida para eso y para poco más.",
