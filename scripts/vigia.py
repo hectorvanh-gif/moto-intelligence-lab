@@ -129,11 +129,11 @@ def aviso_de_falla(workflow: str, seco: bool) -> int:
     """Lo llama el workflow que se cayo, con if: failure()."""
     run = os.environ.get("GITHUB_RUN_URL", "")
     cuerpo = (
-        f"El workflow \"{workflow}\" termino en error.\n\n"
-        f"{'Run: ' + run if run else 'Revisa la pestana Actions del repo.'}\n\n"
+        f"El workflow \"{workflow}\" terminó en error.\n\n"
+        f"{'Run: ' + run if run else 'Revisa la pestaña Actions del repo.'}\n\n"
         "Mientras siga en rojo, el sitio no publica notas nuevas."
     )
-    ok = enviar(f"Moto Lab: fallo {workflow}", cuerpo, seco)
+    ok = enviar(f"Moto Lab: falló {workflow}", cuerpo, seco)
     return 0 if ok else 1
 
 
@@ -145,9 +145,9 @@ def revisar(seco: bool) -> int:
         # No poder contar tambien es noticia: significa que Supabase no
         # contesta, y si no contesta al vigia tampoco le contesta al sitio.
         cuerpo = (
-            "El vigia no pudo contar las notas en Supabase.\n\n"
+            "El vigía no pudo contar las notas en Supabase.\n\n"
             f"{type(e).__name__}: {e}\n\n"
-            "Puede ser Supabase caido o la llave de servicio vencida. "
+            "Puede ser Supabase caído o la llave de servicio vencida. "
             "Si Supabase no contesta, la portada tampoco carga."
         )
         enviar("Moto Lab: no se pudo revisar la base", cuerpo, seco)
@@ -160,22 +160,22 @@ def revisar(seco: bool) -> int:
         return 0
 
     cuerpo = (
-        f"No hay notas nuevas en las ultimas {VENTANA_HORAS} horas.\n\n"
-        f"En los ultimos {CONTEXTO_DIAS} dias se publicaron {semana}.\n\n"
+        f"No hay notas nuevas en las últimas {VENTANA_HORAS} horas.\n\n"
+        f"En los últimos {CONTEXTO_DIAS} días se publicaron {semana}.\n\n"
         + (
-            "El conteo de la semana tambien esta en cero: el agente lleva "
-            "dias sin publicar, no es un dia flojo de noticias.\n\n"
+            "El conteo de la semana también está en cero: el agente lleva "
+            "días sin publicar, no es un día flojo de noticias.\n\n"
             if semana == 0
-            else "La semana sigue con notas, asi que puede ser un dia flojo "
-            "o algo que se rompio apenas.\n\n"
+            else "La semana sigue con notas, así que puede ser un día flojo "
+            "o algo que se rompió apenas.\n\n"
         )
-        + "Revisa el ultimo run de \"Moto News Agent\" en la pestana "
+        + "Revisa el último run de \"Moto News Agent\" en la pestaña "
         "Actions del repo.\n\n"
         "Dos cosas que ya pasaron y se ven igual desde afuera: el script "
         "revienta y el run queda en rojo, o el run queda en verde y no "
-        "encuentra articulos porque una llave vencio."
+        "encuentra artículos porque una llave venció."
     )
-    enviar("Moto Lab: el sitio no esta publicando", cuerpo, seco)
+    enviar("Moto Lab: el sitio no está publicando", cuerpo, seco)
     return 1
 
 
