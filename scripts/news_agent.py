@@ -480,7 +480,12 @@ Contenido: {article['content'][:1500]}"""
 
 
 # ── DB insert ─────────────────────────────────────────────────────────────────
-def insert_article(article: dict, processed: dict, ig_image_url: str | None = None) -> int | None:
+def insert_article(
+    article: dict,
+    processed: dict,
+    ig_image_url: str | None = None,
+    fechar_con_la_fuente: bool = False,
+) -> int | None:
     """Insert article (with ig_image_url already set) and return its new ID."""
     record = {
         "title":        processed.get("title", article["title"])[:80],
@@ -512,11 +517,20 @@ def insert_article(article: dict, processed: dict, ig_image_url: str | None = No
     if all(en.values()):
         record.update(en)
 
-    # Fechar la nota con el dia en que paso la noticia, no con el dia en que
-    # la recogimos. En la corrida diaria no cambia nada porque son el mismo
-    # dia; al recuperar una semana caida es la diferencia entre rellenar el
-    # archivo y publicar siete dias de noticias viejas como si fueran de hoy.
-    if article.get("published"):
+    # created_at es CUANDO LO PUBLICAMOS NOSOTROS, no cuando lo publico la
+    # fuente. Lo normal es dejar que lo ponga la base.
+    #
+    # Se fecha con la fuente solo al recuperar dias caidos (--dias > 1), que
+    # es para lo que se invento: asi una semana rescatada rellena el archivo
+    # en su sitio en vez de aparecer entera como noticias de hoy.
+    #
+    # Hacerlo SIEMPRE fue un error y duro un dia. Las fuentes publican a lo
+    # largo del dia y el agente recoge una ventana de 25h, asi que casi toda
+    # nota recogida hoy trae fecha de ayer. Con eso: la portada ordena por
+    # created_at y se veia atrasada un dia, y el vigia —que cuenta notas de
+    # las ultimas 26h para saber si el sitio sigue vivo— veia cero y mandaba
+    # alarma todos los dias habiendo publicado.
+    if fechar_con_la_fuente and article.get("published"):
         record["created_at"] = article["published"]
     headers = {**db_headers(), "Prefer": "return=representation"}
 
@@ -642,7 +656,14 @@ def main(dias: int = 1, maximo: int = MAX_ARTICLES_PER_RUN):
             ig_url = generate_ig_image(article, processed, file_key)
 
             # INSERT with ig_image_url already populated — webhook fires with complete data
-            article_id = insert_article(article, processed, ig_image_url=ig_url)
+            article_id = insert_article(
+                article,
+                processed,
+                ig_image_url=ig_url,
+                # Solo en corridas de recuperacion. En la diaria la fecha
+                # la pone la base, que es la hora en que publicamos.
+                fechar_con_la_fuente=dias > 1,
+            )
             if not article_id:
                 continue
 
