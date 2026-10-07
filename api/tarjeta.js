@@ -29,6 +29,14 @@
  * vercel.json manda aqui a los rastreadores por user-agent. Las personas
  * reciben la aplicacion normal.
  *
+ * Este <head> se escribe a mano, asi que TODO lo que index.html declara y
+ * deba ver un rastreador hay que repetirlo aqui. Ya se olvido una vez: los
+ * <link rel="icon">. Entre el 5 y el 7 de octubre de 2026, Google rastreo
+ * el sitio sin ninguna declaracion de favicon y siguio mostrando en los
+ * resultados el corazon de Lovable, el icono de la plantilla con la que
+ * nacio el sitio. El archivo correcto estaba publicado y era rastreable;
+ * lo que faltaba era que la pagina dijera cual era.
+ *
  * AVISO para quien edite esto: googlebot y bingbot estan en esa lista de
  * user-agents. Si algun dia se recorta lo que devuelve este archivo a una
  * ficha, hay que sacarlos de vercel.json EL MISMO DIA, porque entonces si
@@ -501,6 +509,9 @@ ${pintarLista(notas, idioma, T)}`;
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${t}</title>
+<link rel="icon" type="image/png" sizes="192x192" href="${SITIO}/logo-moto-192.png">
+<link rel="icon" href="${SITIO}/logo-moto.ico" sizes="48x48">
+<link rel="apple-touch-icon" href="${SITIO}/apple-touch-icon.png">
 <meta name="description" content="${d}">
 <link rel="canonical" href="${escapar(url)}">
 ${
