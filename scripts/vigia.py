@@ -34,6 +34,7 @@ Variables:
 import argparse
 import json
 import os
+import re
 import sys
 import urllib.error
 import urllib.parse
@@ -137,6 +138,122 @@ def aviso_de_falla(workflow: str, seco: bool) -> int:
     return 0 if ok else 1
 
 
+SITIO = "https://motolab249.com"
+UA_PERSONA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/120.0 Safari/537.36"
+)
+UA_GOOGLE = (
+    "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+)
+
+# Por debajo de esto, la pagina de una nota no trae el cuerpo: alguien
+# recorto el prerender a una ficha. Una nota normal pasa de 4 KB.
+MINIMO_NOTA = 2000
+
+
+def _bajar(ruta: str, ua: str) -> str:
+    pet = urllib.request.Request(f"{SITIO}{ruta}", headers={"User-Agent": ua})
+    with urllib.request.urlopen(pet, timeout=25) as r:
+        return r.read().decode("utf-8", "replace")
+
+
+def _iconos(html: str) -> set[str]:
+    """Los href de los <link rel="icon"> y apple-touch-icon, sin dominio."""
+    encontrados = set()
+    for m in re.finditer(r'<link[^>]+rel="(?:icon|apple-touch-icon)"[^>]*>', html):
+        href = re.search(r'href="([^"]+)"', m.group(0))
+        if href:
+            encontrados.add(href.group(1).replace(SITIO, ""))
+    return encontrados
+
+
+def _etiqueta(html: str, patron: str) -> str:
+    m = re.search(patron, html)
+    return m.group(1).strip() if m else ""
+
+
+def revisar_paridad() -> list[str]:
+    """
+    Compara lo que recibe Google contra lo que recibe una persona.
+
+    Existe por un error propio. El sitio es una SPA, asi que a los
+    rastreadores se les sirve el HTML ya armado desde api/tarjeta.js, un
+    <head> escrito a mano. El 5 de octubre de 2026 se escribio sin los
+    <link rel="icon"> y durante dos dias Google rastreo el sitio sin saber
+    cual era el icono, siguiendo con el corazon de la plantilla con la que
+    nacio el sitio. El archivo correcto estaba publicado todo el tiempo.
+
+    Son dos codigos distintos pintando la misma pagina, asi que se pueden
+    separar otra vez. Esto lo detecta al dia siguiente en vez de a las dos
+    semanas, y de paso vigila que lo servido a Google siga siendo lo mismo
+    que ve la gente, que es la condicion que hace legitimo el prerender.
+    """
+    problemas: list[str] = []
+
+    try:
+        persona = _bajar("/", UA_PERSONA)
+        google = _bajar("/", UA_GOOGLE)
+    except Exception as e:
+        return [f"No se pudo comparar la portada: {type(e).__name__}: {e}"]
+
+    # 1. Los iconos que declara la pagina real tienen que estar tambien en
+    #    la que recibe Google. Este es el error que ya paso.
+    faltan = _iconos(persona) - _iconos(google)
+    if faltan:
+        problemas.append(
+            "A Google le falta declaracion de icono: "
+            + ", ".join(sorted(faltan))
+            + ". Mientras falte, los resultados de busqueda siguen con el "
+            "icono viejo aunque el archivo este bien."
+        )
+
+    # 2. Cada pagina con su propio titulo. Que todas compartieran el de la
+    #    portada fue lo que hundio la indexacion la primera vez.
+    try:
+        nota = _ultima_nota()
+        rutas = ["/", "/enduro"] + ([f"/noticias/{nota}"] if nota else [])
+        titulos = {}
+        for ruta in rutas:
+            html = _bajar(ruta, UA_GOOGLE)
+            titulos[ruta] = _etiqueta(html, r"<title>([^<]*)</title>")
+
+            if not _etiqueta(html, r'rel="canonical" href="([^"]+)"'):
+                problemas.append(f"{ruta} llega a Google sin canonical.")
+
+            # 3. Y con cuerpo. Si una nota adelgaza, alguien recorto el
+            #    prerender a una ficha, y entonces se le esta sirviendo a
+            #    Google algo distinto de lo que ve la gente.
+            if ruta.startswith("/noticias/") and len(html) < MINIMO_NOTA:
+                problemas.append(
+                    f"{ruta} solo trae {len(html)} bytes para Google: "
+                    "parece una ficha sin el cuerpo de la nota."
+                )
+
+        repetidos = [r for r, t in titulos.items() if list(titulos.values()).count(t) > 1]
+        if repetidos:
+            problemas.append(
+                "Estas paginas comparten titulo para Google: "
+                + ", ".join(sorted(repetidos))
+                + ". Asi las trata como duplicados."
+            )
+    except Exception as e:
+        problemas.append(f"No se pudo comparar las paginas: {type(e).__name__}: {e}")
+
+    return problemas
+
+
+def _ultima_nota() -> int | None:
+    try:
+        filas = _pedir(
+            f"{SUPABASE_URL}/rest/v1/{TABLA}",
+            {"select": "id", "order": "created_at.desc", "limit": "1"},
+        )
+        return filas[0]["id"] if filas else None
+    except Exception:
+        return None
+
+
 def revisar(seco: bool) -> int:
     try:
         recientes = contar_desde(VENTANA_HORAS)
@@ -156,8 +273,26 @@ def revisar(seco: bool) -> int:
     print(f"Notas en las ultimas {VENTANA_HORAS}h: {recientes}")
     print(f"Notas en los ultimos {CONTEXTO_DIAS} dias: {semana}")
 
+    # Lo que recibe Google contra lo que recibe una persona.
+    paridad = revisar_paridad()
+    for p in paridad:
+        print(f"  PARIDAD: {p}")
+    if not paridad:
+        print("Paridad con Google: bien")
+
+    if paridad:
+        cuerpo = (
+            "Lo que recibe Google ya no es lo mismo que ve una persona:\n\n"
+            + "\n\n".join(f"- {p}" for p in paridad)
+            + "\n\nEl sitio es una SPA y a los rastreadores se les sirve el "
+            "HTML armado desde api/tarjeta.js, que es un <head> escrito a "
+            "mano. Si alguien agregó algo a index.html, hay que agregarlo "
+            "ahí también."
+        )
+        enviar("Moto Lab: Google ve algo distinto que la gente", cuerpo, seco)
+
     if recientes > 0:
-        return 0
+        return 1 if paridad else 0
 
     cuerpo = (
         f"No hay notas nuevas en las últimas {VENTANA_HORAS} horas.\n\n"
