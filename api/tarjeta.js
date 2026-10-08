@@ -321,7 +321,7 @@ function pintarLista(notas, idioma, T) {
       const resumen = escapar(limpiar(n.summary));
       const fecha = (n.created_at || "").slice(0, 10);
       return `<li>
-<h3><a href="${prefijo}/noticias/${n.id}">${titulo}</a></h3>
+<h3><a href="${prefijo}${rutaDeNota(n.id, limpiar(n.title))}">${titulo}</a></h3>
 ${resumen ? `<p>${resumen}</p>` : ""}
 ${fecha ? `<p><time datetime="${escapar(n.created_at)}">${escapar(fecha)}</time></p>` : ""}
 </li>`;

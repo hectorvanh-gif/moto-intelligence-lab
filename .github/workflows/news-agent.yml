@@ -18,6 +18,10 @@ on:
         required: false
         default: '15'
 
+# El sitemap se regenera aqui, asi que el bot necesita poder commitear.
+permissions:
+  contents: write
+
 jobs:
   fetch-news:
     runs-on: ubuntu-latest
@@ -48,6 +52,24 @@ jobs:
           python scripts/news_agent.py
           --dias ${{ github.event.inputs.dias || '1' }}
           --maximo ${{ github.event.inputs.maximo || '15' }}
+
+      # El sitemap se generaba solo al compilar, o sea solo cuando alguien
+      # subia codigo. El agente publica a Supabase sin tocar el repo, asi
+      # que las notas del dia no entraban al sitemap hasta el siguiente
+      # despliegue: llego a ir dos dias atrasado. Ahora se regenera aqui
+      # mismo, y el commit ademas dispara el build de Vercel.
+      - name: Actualizar el sitemap con las notas nuevas
+        run: |
+          node scripts/generate-sitemap.js
+          if git diff --quiet public/sitemap.xml; then
+            echo "Sin notas nuevas en el sitemap."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/sitemap.xml
+          git commit -m "Actualiza el sitemap con las notas del dia"
+          git push
 
       # Avisa en el momento y con la liga al run. El vigia de las 10:30
       # tambien lo detecta, pero este dice cual paso se cayo.
