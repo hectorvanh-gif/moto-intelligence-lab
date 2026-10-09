@@ -1,6 +1,6 @@
 {
   "temporada": 2026,
-  "actualizado": "2026-10-08T12:22:35.836230-06:00",
+  "actualizado": "2026-10-09T11:55:26.464712-06:00",
   "zona": "America/Mexico_City",
   "fuente": "https://www.motogp.com/es/calendar",
   "total": 22,
@@ -1678,11 +1678,11 @@
         {
           "clave": "PR",
           "nombre": "Práctica",
-          "iso": "2026-10-09T01:00:00-06:00",
+          "iso": "2026-10-09T01:35:00-06:00",
           "dia_semana": "viernes",
           "dia": 9,
           "mes": "octubre",
-          "hora": "01:00"
+          "hora": "01:35"
         },
         {
           "clave": "FP2",
