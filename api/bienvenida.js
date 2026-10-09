@@ -33,6 +33,72 @@ const LINEA = "#27272a";
 
 const correoValido = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
 
+/** A donde llegan los avisos internos. El mismo buzon que el de contacto. */
+const BUZON = process.env.AVISO_PARA || "motolab249@gmail.com";
+
+/**
+ * Avisa a la casa que alguien se suscribio.
+ *
+ * Nunca lanza: lo llama el endpoint despues de haber guardado el alta y de
+ * haber mandado la bienvenida, y un fallo aqui no puede tumbar ninguna de
+ * las dos. Si no sale el aviso, el suscriptor igual quedo registrado.
+ */
+async function avisarALaCasa(email) {
+  try {
+    // El total, para que el aviso diga tambien como va la lista y no solo
+    // que entro uno. Si falla el conteo se manda el aviso igual.
+    let total = null;
+    try {
+      const r = await fetch(
+        `${SUPABASE_URL}/rest/v1/subscribers?select=id&limit=1`,
+        {
+          headers: {
+            apikey: SERVICE_KEY,
+            Authorization: `Bearer ${SERVICE_KEY}`,
+            Prefer: "count=exact",
+          },
+        }
+      );
+      const rango = r.headers.get("content-range") || "";
+      const n = rango.split("/")[1];
+      if (n && n !== "*") total = Number(n);
+    } catch {
+      /* el conteo es un extra */
+    }
+
+    const cuando = new Date().toLocaleString("es-MX", {
+      timeZone: "America/Mexico_City",
+      dateStyle: "long",
+      timeStyle: "short",
+    });
+
+    await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${RESEND_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: REMITENTE,
+        to: [BUZON],
+        // Responder al aviso le escribe al suscriptor, no a la casa.
+        reply_to: email,
+        subject: total
+          ? `Nuevo suscriptor (${total} en total)`
+          : "Nuevo suscriptor",
+        text:
+          `Se suscribio: ${email}\n\n` +
+          `Cuando: ${cuando} (hora de México)\n` +
+          (total ? `Total de la lista: ${total}\n` : "") +
+          `\nYa quedo guardado en Supabase y ya recibio su correo de ` +
+          `bienvenida. Puedes responder a este aviso para escribirle.`,
+      }),
+    });
+  } catch (e) {
+    console.error("bienvenida: no se pudo avisar a la casa:", e?.message);
+  }
+}
+
 function cuerpo() {
   return `<!DOCTYPE html>
 <html lang="es"><head><meta charset="utf-8">
@@ -134,6 +200,12 @@ export default async function handler(req, res) {
       console.error("bienvenida: Resend", envio.status, detalle.slice(0, 200));
       return res.status(502).json({ error: "no se pudo enviar" });
     }
+
+    // Y el aviso para la casa. Va despues y sin await bloqueante sobre el
+    // resultado: si este falla, el suscriptor ya quedo guardado y ya
+    // recibio su bienvenida, que es lo que le importa a el. Nadie pierde
+    // un alta porque el aviso interno no haya salido.
+    await avisarALaCasa(email);
 
     return res.status(200).json({ ok: true });
   } catch (e) {
