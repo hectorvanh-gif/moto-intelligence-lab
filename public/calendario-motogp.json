@@ -1,10 +1,10 @@
 {
   "temporada": 2026,
-  "actualizado": "2026-10-11T11:16:37.252070-06:00",
+  "actualizado": "2026-10-12T14:51:21.493206-06:00",
   "zona": "America/Mexico_City",
   "fuente": "https://www.motogp.com/es/calendar",
   "total": 22,
-  "proxima_ronda": 17,
+  "proxima_ronda": 18,
   "carreras": [
     {
       "ronda": 1,
@@ -1646,7 +1646,7 @@
       "inicio": "2026-10-09",
       "fin": "2026-10-11",
       "zona_circuito": "ASIA/MAKASSAR",
-      "corrida": false,
+      "corrida": true,
       "carrera": {
         "clave": "RAC",
         "nombre": "Carrera",
