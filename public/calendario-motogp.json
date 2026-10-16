@@ -1,6 +1,6 @@
 {
   "temporada": 2026,
-  "actualizado": "2026-10-15T10:14:30.658318-06:00",
+  "actualizado": "2026-10-16T10:00:11.247602-06:00",
   "zona": "America/Mexico_City",
   "fuente": "https://www.motogp.com/es/calendar",
   "total": 22,
@@ -1742,7 +1742,7 @@
     },
     {
       "ronda": 18,
-      "nombre": "Grand Prix Of Australia ",
+      "nombre": "Red Bull Grand Prix Of Australia",
       "pais": "Australia",
       "bandera": "au",
       "circuito": "Phillip Island",
