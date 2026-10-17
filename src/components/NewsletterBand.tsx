@@ -77,7 +77,7 @@ const NewsletterBand = () => {
       <div className="relative container mx-auto px-4 lg:px-8">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="font-display text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-3">
-            LAS NOTAS QUE IMPORTAN, <span className="text-primary">UNA VEZ POR SEMANA</span>
+            {t("boletin.titulo1")} <span className="text-primary">{t("boletin.titulo2")}</span>
           </h2>
           <p className="font-body text-muted-foreground mb-8">
             Sin relleno y sin spam. Lo que pasó en el motociclismo, filtrado y resumido.
@@ -109,7 +109,7 @@ const NewsletterBand = () => {
               tabla de suscriptores en cero y el formulario rechazando altas.
               No poner cifras de suscriptores hasta que sean ciertas. */}
           <p className="font-body text-sm text-muted-foreground mt-5">
-            Cada lunes. Te puedes salir cuando quieras.
+            {t("boletin.salirse")}
           </p>
         </div>
       </div>

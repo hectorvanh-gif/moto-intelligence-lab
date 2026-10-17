@@ -166,9 +166,9 @@ const NewsArticlePage = () => {
           {/* Error */}
           {error && (
             <div className="text-center py-20">
-              <p className="text-destructive text-lg">Artículo no encontrado.</p>
+              <p className="text-destructive text-lg">{t("nota.noEncontrada2")}</p>
               <Link to="/noticias" className="text-primary hover:underline mt-4 block">
-                Ver todas las noticias
+                {t("nota.verTodas")}
               </Link>
             </div>
           )}

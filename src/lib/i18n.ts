@@ -168,6 +168,22 @@ const DICC = {
     es: "© 2026 MOTO LAB 249 // TODOS LOS DERECHOS RESERVADOS",
     en: "© 2026 MOTO LAB 249 // ALL RIGHTS RESERVED",
   },
+  // El credito va delante y la marca aparte, como enlace, para que el texto
+  // del enlace sea el nombre y nada mas. "A project by" y no "A ... project"
+  // porque asi la marca queda al final en los dos idiomas y basta una clave.
+  "pie.credito": { es: "Un proyecto de", en: "A project by" },
+
+  // Se quedaron en español cuando se armo la version en ingles. Se veian
+  // en /en al lado de texto ya traducido.
+  "boletin.titulo1": { es: "LAS NOTAS QUE IMPORTAN,", en: "THE STORIES THAT MATTER," },
+  "boletin.titulo2": { es: "UNA VEZ POR SEMANA", en: "ONCE A WEEK" },
+  "boletin.salirse": {
+    es: "Cada lunes. Te puedes salir cuando quieras.",
+    en: "Every Monday. You can leave whenever you want.",
+  },
+  "tarjeta.sinImagen": { es: "Sin imagen", en: "No image" },
+  "nota.noEncontrada2": { es: "Artículo no encontrado.", en: "Story not found." },
+  "nota.verTodas": { es: "Ver todas las noticias", en: "See all stories" },
 
   // Archivo y secciones
   "archivo.titulo": { es: "TODAS LAS NOTAS", en: "ALL STORIES" },

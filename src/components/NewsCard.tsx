@@ -42,7 +42,7 @@ const NewsCard = ({ article }: NewsCardProps) => {
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-card to-background flex items-center justify-center">
-            <span className="text-muted-foreground text-sm">Sin imagen</span>
+            <span className="text-muted-foreground text-sm">{t("tarjeta.sinImagen")}</span>
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-card via-transparent to-transparent" />
