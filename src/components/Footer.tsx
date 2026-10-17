@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Facebook, Instagram } from "lucide-react";
 import { COMUNIDAD_URL } from "@/lib/comunidad";
-import { FACEBOOK_URL, INSTAGRAM_URL } from "@/lib/redes";
+import { FACEBOOK_URL, INSTAGRAM_URL, MAAT_HOUSE_URL } from "@/lib/redes";
 import { t } from "@/lib/i18n";
 
 /**
@@ -153,6 +153,24 @@ const Footer = () => {
         <div className="mt-12 pt-8 border-t border-border/30 text-center">
           <p className="digital-code">
             {t("pie.derechos")}
+          </p>
+          {/* Credito de la agencia. El texto del enlace es el nombre de la
+              marca y nada mas: nunca palabras clave. Mas tenue que la linea
+              de derechos, al nivel del texto legal.
+
+              Ojo: esto tambien va en api/tarjeta.js. Googlebot recibe el
+              HTML de ahi, no esta app, asi que un enlace que solo exista
+              aqui no lo ve nadie mas que las personas. */}
+          <p className="font-body text-xs text-muted-foreground/70 mt-3">
+            {t("pie.credito")}{" "}
+            <a
+              href={MAAT_HOUSE_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-primary transition-colors"
+            >
+              MAAT House
+            </a>
           </p>
         </div>
       </div>

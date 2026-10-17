@@ -151,6 +151,9 @@ UA_GOOGLE = (
 # recorto el prerender a una ficha. Una nota normal pasa de 4 KB.
 MINIMO_NOTA = 2000
 
+# El credito del pie. Tiene que aparecer en los dos HTML.
+MAAT_HOUSE = "https://maathouse.com"
+
 
 def _bajar(ruta: str, ua: str) -> str:
     pet = urllib.request.Request(f"{SITIO}{ruta}", headers={"User-Agent": ua})
@@ -196,6 +199,18 @@ def revisar_paridad() -> list[str]:
         google = _bajar("/", UA_GOOGLE)
     except Exception as e:
         return [f"No se pudo comparar la portada: {type(e).__name__}: {e}"]
+
+    # 0. El credito de la agencia tiene que estar en los dos. El enlace a
+    #    maathouse.com solo sirve de algo si lo ve Google, y Google recibe
+    #    el HTML del prerender, no esta app. Si existiera solo en uno de los
+    #    dos lados no se notaria mirando el sitio.
+    for donde, html in (("la pagina real", persona), ("lo que recibe Google", google)):
+        if MAAT_HOUSE not in html:
+            problemas.append(
+                f"Falta el enlace a {MAAT_HOUSE} en {donde}. "
+                "Va en src/components/Footer.tsx y en api/tarjeta.js, "
+                "y tiene que estar en los dos."
+            )
 
     # 1. Los iconos que declara la pagina real tienen que estar tambien en
     #    la que recibe Google. Este es el error que ya paso.

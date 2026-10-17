@@ -10,3 +10,14 @@ export const FACEBOOK_URL =
   "https://www.facebook.com/profile.php?id=61594973842217";
 
 export const INSTAGRAM_URL = "https://www.instagram.com/motolab.249/";
+
+/**
+ * La agencia que hizo el sitio. Moto Lab es un proyecto propio de MAAT
+ * House, no un encargo, y por eso el credito del pie dice "Un proyecto de"
+ * y no "Sitio por".
+ *
+ * La misma direccion esta escrita en api/tarjeta.js, que arma el HTML que
+ * reciben los rastreadores. Si cambia, hay que cambiarla alli tambien: el
+ * vigia comprueba a diario que el enlace exista en los dos.
+ */
+export const MAAT_HOUSE_URL = "https://maathouse.com";

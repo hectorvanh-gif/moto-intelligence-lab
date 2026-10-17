@@ -56,6 +56,9 @@ const LLAVE_PUBLICA =
   "sb_publishable_FJ0Skr8u_WADS-KpchPLGA_o3eq9ps3";
 
 const SITIO = "https://motolab249.com";
+// La agencia. La misma direccion vive en src/lib/redes.ts para la app;
+// el vigia comprueba a diario que el enlace exista en los dos HTML.
+const MAAT_HOUSE = "https://maathouse.com";
 const IMAGEN = `${SITIO}/og-image.jpg?v=2`;
 
 /**
@@ -234,6 +237,7 @@ const TEXTOS = {
     masRecientes: "Lo más reciente",
     publicada: "Publicada el",
     sitio: "Moto Lab 249 · Noticias de motociclismo, todos los días.",
+    credito: "Un proyecto de",
   },
   en: {
     volver: "Back to the homepage",
@@ -242,6 +246,7 @@ const TEXTOS = {
     masRecientes: "Latest news",
     publicada: "Published on",
     sitio: "Moto Lab 249 · Motorcycle news, every day.",
+    credito: "A project by",
   },
 };
 
@@ -543,6 +548,7 @@ ${cuerpo}
 <a href="${prefijo}/noticias">${escapar(T.archivo)}</a>
 <a href="${prefijo}/calendario-motogp">MotoGP</a>
 </nav>
-<footer><p>${escapar(T.sitio)}</p></footer>
+<footer><p>${escapar(T.sitio)}</p>
+<p>${escapar(T.credito)} <a href="${MAAT_HOUSE}" rel="noopener">MAAT House</a></p></footer>
 </body></html>`);
 }
