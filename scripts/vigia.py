@@ -171,6 +171,20 @@ def _iconos(html: str) -> set[str]:
     return encontrados
 
 
+def _bundle_de(html: str) -> str | None:
+    """La ruta del bundle de JavaScript que carga la portada.
+
+    Hace falta porque lo que pinta React no esta en el HTML sino aqui
+    dentro, como cadena compilada. El nombre lleva un hash que cambia en
+    cada build, asi que se lee del HTML en vez de escribirlo a mano.
+    """
+    m = re.search(r"/?assets/index-[A-Za-z0-9_-]+\.js", html)
+    if not m:
+        return None
+    ruta = m.group(0)
+    return ruta if ruta.startswith("/") else "/" + ruta
+
+
 def _etiqueta(html: str, patron: str) -> str:
     m = re.search(patron, html)
     return m.group(1).strip() if m else ""
@@ -200,17 +214,32 @@ def revisar_paridad() -> list[str]:
     except Exception as e:
         return [f"No se pudo comparar la portada: {type(e).__name__}: {e}"]
 
-    # 0. El credito de la agencia tiene que estar en los dos. El enlace a
-    #    maathouse.com solo sirve de algo si lo ve Google, y Google recibe
-    #    el HTML del prerender, no esta app. Si existiera solo en uno de los
-    #    dos lados no se notaria mirando el sitio.
-    for donde, html in (("la pagina real", persona), ("lo que recibe Google", google)):
-        if MAAT_HOUSE not in html:
-            problemas.append(
-                f"Falta el enlace a {MAAT_HOUSE} en {donde}. "
-                "Va en src/components/Footer.tsx y en api/tarjeta.js, "
-                "y tiene que estar en los dos."
-            )
+    # 0. El credito de la agencia tiene que estar en los dos lados.
+    #
+    #    Pero NO se busca igual en cada uno. El sitio es una SPA: el HTML que
+    #    recibe una persona es un cascaron y el pie lo pinta React al
+    #    ejecutarse, asi que el enlace nunca aparece en ese HTML —esta en el
+    #    bundle de JavaScript—. Buscarlo en el HTML daba alarma todos los
+    #    dias con el sitio perfectamente bien; paso el 18 de octubre de 2026.
+    #
+    #    Del lado de Google si va en el HTML, porque ese lo arma el
+    #    prerender ya montado.
+    if MAAT_HOUSE not in google:
+        problemas.append(
+            f"Falta el enlace a {MAAT_HOUSE} en lo que recibe Google. "
+            "Va en api/tarjeta.js. Sin eso el backlink no lo ve nadie mas "
+            "que las personas, que es justo para lo que no sirve."
+        )
+
+    bundle = _bundle_de(persona)
+    if not bundle:
+        problemas.append("No se encontro el bundle de JavaScript en la portada.")
+    elif MAAT_HOUSE not in _bajar(bundle, UA_PERSONA):
+        problemas.append(
+            f"Falta el enlace a {MAAT_HOUSE} en lo que ve una persona. "
+            "Va en src/components/Footer.tsx. Si solo esta del lado de "
+            "Google, se le esta sirviendo algo que la gente no ve."
+        )
 
     # 1. Los iconos que declara la pagina real tienen que estar tambien en
     #    la que recibe Google. Este es el error que ya paso.
