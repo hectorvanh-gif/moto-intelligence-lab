@@ -1,6 +1,6 @@
 {
   "temporada": 2026,
-  "actualizado": "2026-10-24T09:19:38.170760-06:00",
+  "actualizado": "2026-10-25T09:29:31.482138-06:00",
   "zona": "America/Mexico_City",
   "fuente": "https://www.motogp.com/es/calendar",
   "total": 22,
@@ -1753,11 +1753,11 @@
       "carrera": {
         "clave": "RAC",
         "nombre": "Carrera",
-        "iso": "2026-10-24T21:00:00-06:00",
+        "iso": "2026-10-24T23:30:00-06:00",
         "dia_semana": "sábado",
         "dia": 24,
         "mes": "octubre",
-        "hora": "21:00"
+        "hora": "23:30"
       },
       "sprint": {
         "clave": "SPR",
@@ -1835,11 +1835,11 @@
         {
           "clave": "RAC",
           "nombre": "Carrera",
-          "iso": "2026-10-24T21:00:00-06:00",
+          "iso": "2026-10-24T23:30:00-06:00",
           "dia_semana": "sábado",
           "dia": 24,
           "mes": "octubre",
-          "hora": "21:00"
+          "hora": "23:30"
         }
       ]
     },
