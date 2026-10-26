@@ -1,10 +1,10 @@
 {
   "temporada": 2026,
-  "actualizado": "2026-10-25T09:29:31.482138-06:00",
+  "actualizado": "2026-10-26T12:11:03.667918-06:00",
   "zona": "America/Mexico_City",
   "fuente": "https://www.motogp.com/es/calendar",
   "total": 22,
-  "proxima_ronda": 18,
+  "proxima_ronda": 19,
   "carreras": [
     {
       "ronda": 1,
@@ -1749,7 +1749,7 @@
       "inicio": "2026-10-23",
       "fin": "2026-10-25",
       "zona_circuito": "AUSTRALIA/MELBOURNE",
-      "corrida": false,
+      "corrida": true,
       "carrera": {
         "clave": "RAC",
         "nombre": "Carrera",
