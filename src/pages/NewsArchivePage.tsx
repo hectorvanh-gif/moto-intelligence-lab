@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useNewsArchive, PAGE_SIZE } from "@/hooks/useNewsArchive";
 import Navbar from "@/components/Navbar";
@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { CATEGORIES, bySlug, etiqueta } from "@/lib/categories";
 import { SITE_URL } from "@/lib/site";
 import { useMeta } from "@/hooks/useMeta";
-import { urlCanonica } from "@/lib/i18n";
+import { IDIOMA, urlCanonica } from "@/lib/i18n";
 
 /**
  * Sirve dos rutas:
@@ -23,13 +23,17 @@ import { urlCanonica } from "@/lib/i18n";
 const NewsArchivePage = () => {
   const { slug } = useParams<{ slug?: string }>();
   const category = bySlug(slug);
-  const [page, setPage] = useState(1);
+  // La pagina vive en la URL (?pagina=2) y no en estado local: sin una URL
+  // propia, Google no podia pasar de las primeras notas. Los filtros de
+  // categoria enlazan sin ?pagina, asi que cambiar de categoria vuelve a la 1.
+  const [searchParams] = useSearchParams();
+  const pagina = searchParams.get("pagina") || "";
+  const page = /^[1-9]\d{0,3}$/.test(pagina) ? Number(pagina) : 1;
 
-  // Al cambiar de categoria hay que volver a la primera pagina, o se queda
-  // pidiendo la pagina 7 de una categoria que tiene dos.
+  // ScrollToTop solo reacciona a cambios de ruta, y aqui la ruta no cambia.
   useEffect(() => {
-    setPage(1);
-  }, [slug]);
+    window.scrollTo(0, 0);
+  }, [page]);
 
   const { data, isLoading } = useNewsArchive(page, category?.value ?? "TODAS");
 
@@ -38,12 +42,14 @@ const NewsArchivePage = () => {
   const totalPages = Math.ceil(total / PAGE_SIZE);
 
   const heading = category ? category.label : "ARCHIVO DE NOTICIAS";
-  const canonical = category
-    ? urlCanonica(`/categoria/${category.slug}`)
-    : urlCanonica("/noticias");
-  const title = category
-    ? `${category.label} | Moto Lab 249`
-    : "Archivo de Noticias | Moto Lab 249";
+  const ruta = category ? `/categoria/${category.slug}` : "/noticias";
+  const rutaDePagina = (n: number) => (n === 1 ? ruta : `${ruta}?pagina=${n}`);
+  const canonical = urlCanonica(rutaDePagina(page));
+  const nombre = category ? category.label : "Archivo de Noticias";
+  const title =
+    page > 1
+      ? `${nombre} · ${IDIOMA === "en" ? "Page" : "Página"} ${page} | Moto Lab 249`
+      : `${nombre} | Moto Lab 249`;
   const description = category
     ? `Noticias de ${category.label.toLowerCase()}: resultados, lanzamientos y lo último del motociclismo.`
     : "Archivo completo de noticias de motos: MotoGP, eléctricas, doble propósito, enduro y lanzamientos. El medio de motociclismo de México.";
@@ -66,7 +72,8 @@ const NewsArchivePage = () => {
     );
   }
 
-  useMeta({ title, description, canonical });
+  // En ingles hay menos notas: la pagina 30 de aqui no existe alla.
+  useMeta({ title, description, canonical, bilingue: page === 1 });
 
   return (
     <>
@@ -161,29 +168,35 @@ const NewsArchivePage = () => {
           {/* Paginacion */}
           {totalPages > 1 && (
             <div className="flex items-center justify-center gap-4 mt-12">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className="font-display tracking-wider"
-              >
-                <ChevronLeft className="w-4 h-4 mr-1" />
-                ANTERIOR
-              </Button>
+              {page > 1 ? (
+                <Button asChild variant="outline" size="sm" className="font-display tracking-wider">
+                  <Link to={rutaDePagina(page - 1)}>
+                    <ChevronLeft className="w-4 h-4 mr-1" />
+                    ANTERIOR
+                  </Link>
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" disabled className="font-display tracking-wider">
+                  <ChevronLeft className="w-4 h-4 mr-1" />
+                  ANTERIOR
+                </Button>
+              )}
               <span className="font-mono text-sm text-muted-foreground">
                 {page} / {totalPages}
               </span>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                disabled={page === totalPages}
-                className="font-display tracking-wider"
-              >
-                SIGUIENTE
-                <ChevronRight className="w-4 h-4 ml-1" />
-              </Button>
+              {page < totalPages ? (
+                <Button asChild variant="outline" size="sm" className="font-display tracking-wider">
+                  <Link to={rutaDePagina(page + 1)}>
+                    SIGUIENTE
+                    <ChevronRight className="w-4 h-4 ml-1" />
+                  </Link>
+                </Button>
+              ) : (
+                <Button variant="outline" size="sm" disabled className="font-display tracking-wider">
+                  SIGUIENTE
+                  <ChevronRight className="w-4 h-4 ml-1" />
+                </Button>
+              )}
             </div>
           )}
         </main>

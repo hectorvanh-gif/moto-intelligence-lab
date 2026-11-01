@@ -3,13 +3,14 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { format } from "date-fns";
 import { es, enUS } from "date-fns/locale";
 import { ArrowLeft, ExternalLink, Clock, Tag } from "lucide-react";
-import { useArticle } from "@/hooks/useArticle";
+import { useArticle, useNeighborArticles } from "@/hooks/useArticle";
 import { SITE_URL } from "@/lib/site";
 import { cleanText } from "@/lib/text";
 import { byValue, colorFor } from "@/lib/categories";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import NewsletterBand from "@/components/NewsletterBand";
+import NewsCard from "@/components/NewsCard";
 import VoteButton from "@/components/VoteButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMeta } from "@/hooks/useMeta";
@@ -24,6 +25,7 @@ const NewsArticlePage = () => {
   const navigate = useNavigate();
   const id = idDeRuta(parametro);
   const { data: article, isLoading, error } = useArticle(id || undefined);
+  const { data: vecinas = [] } = useNeighborArticles(article);
 
   const siteUrl = SITE_URL;
   const articleUrl = urlCanonica(
@@ -269,6 +271,19 @@ const NewsArticlePage = () => {
                 </p>
               </div>
             </article>
+          )}
+
+          {vecinas.length > 0 && (
+            <section className="border-t border-border/50 pt-10 mt-10">
+              <h2 className="font-display text-xl font-bold tracking-wider text-foreground mb-6">
+                {t("nota.masNotas")}
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {vecinas.map((vecina) => (
+                  <NewsCard key={vecina.id} article={vecina} />
+                ))}
+              </div>
+            </section>
           )}
         </main>
 

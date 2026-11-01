@@ -72,8 +72,14 @@ const IMAGEN = `${SITIO}/og-image.jpg?v=2`;
  */
 const DESDE_EL_CAMBIO_DE_MARCA = "2026-09-22";
 
-/** Cuantas notas se listan en una pagina de listado. */
+/**
+ * Cuantas notas se listan en una pagina de listado. Es el mismo PAGE_SIZE
+ * de useNewsArchive: ?pagina=2 tiene que traer lo mismo aqui que en la app.
+ */
 const EN_LISTADO = 24;
+
+/** Cuantas notas vecinas se enlazan a cada lado de una nota. */
+const VECINAS = 3;
 
 const POR_OMISION = {
   es: {
@@ -235,6 +241,8 @@ const TEXTOS = {
     archivo: "Ver todas las notas",
     fuente: "Ver la nota original",
     masRecientes: "Lo más reciente",
+    masNotas: "Más notas",
+    pagina: "Página",
     publicada: "Publicada el",
     sitio: "Moto Lab 249 · Noticias de motociclismo, todos los días.",
     credito: "Un proyecto de",
@@ -244,6 +252,8 @@ const TEXTOS = {
     archivo: "See every story",
     fuente: "Read the original",
     masRecientes: "Latest news",
+    masNotas: "More stories",
+    pagina: "Page",
     publicada: "Published on",
     sitio: "Moto Lab 249 · Motorcycle news, every day.",
     credito: "A project by",
@@ -295,7 +305,7 @@ async function notaDe(id) {
  * En ingles se filtran las que no estan traducidas: una lista con los
  * titulos en blanco es justo la pagina delgada que hay que evitar.
  */
-async function listaDe(categoria, idioma) {
+function consultaDeLista(categoria, idioma) {
   const campos =
     idioma === "en"
       ? "id,title:title_en,summary:summary_en,created_at,category"
@@ -304,9 +314,59 @@ async function listaDe(categoria, idioma) {
   let q = `select=${campos}&category=neq.DESCARTADO`;
   if (categoria && categoria !== "todas") q += `&category=eq.${categoria}`;
   if (idioma === "en") q += "&title_en=not.is.null";
-  q += `&order=created_at.desc&limit=${EN_LISTADO}`;
+  return q;
+}
 
-  return (await supabase(q)) || [];
+async function listaDe(categoria, idioma) {
+  const q = consultaDeLista(categoria, idioma);
+  return (await supabase(`${q}&order=created_at.desc&limit=${EN_LISTADO}`)) || [];
+}
+
+/**
+ * Una pagina del archivo, con el total para saber cuantas paginas hay.
+ *
+ * Sin esto, Google solo podia llegar a las 24 notas mas recientes siguiendo
+ * enlaces: el 1 de noviembre de 2026 tenia 10 paginas indexadas de 908, y la
+ * nota que se inspecciono salia como "Google no reconoce esta URL".
+ */
+async function paginaDeLista(categoria, idioma, pagina) {
+  const q = consultaDeLista(categoria, idioma);
+  const desde = (pagina - 1) * EN_LISTADO;
+  try {
+    const r = await fetch(
+      `${SUPABASE_URL}/rest/v1/moto_news?${q}&order=created_at.desc&limit=${EN_LISTADO}&offset=${desde}`,
+      {
+        headers: {
+          apikey: LLAVE_PUBLICA,
+          Authorization: `Bearer ${LLAVE_PUBLICA}`,
+          Prefer: "count=exact",
+        },
+      }
+    );
+    if (!r.ok) return { notas: [], total: 0 };
+    const total = Number((r.headers.get("content-range") || "").split("/")[1]) || 0;
+    return { notas: await r.json(), total };
+  } catch {
+    return { notas: [], total: 0 };
+  }
+}
+
+/**
+ * Las notas publicadas justo antes y justo despues, en la misma categoria.
+ *
+ * Son las vecinas y no las mas recientes a proposito: con las mas recientes,
+ * todas las notas enlazarian a las mismas seis y las viejas seguirian sin
+ * que nadie las enlace.
+ */
+async function vecinasDe(idNota, nota, idioma) {
+  if (!nota.category || nota.category === "DESCARTADO" || !nota.created_at) return [];
+  const q = `${consultaDeLista(nota.category, idioma)}&id=neq.${idNota}`;
+  const fecha = encodeURIComponent(nota.created_at);
+  const [nuevas, viejas] = await Promise.all([
+    supabase(`${q}&created_at=gt.${fecha}&order=created_at.asc&limit=${VECINAS}`),
+    supabase(`${q}&created_at=lt.${fecha}&order=created_at.desc&limit=${VECINAS}`),
+  ]);
+  return [...(nuevas || []).reverse(), ...(viejas || [])];
 }
 
 /** El cuerpo de la nota, en parrafos, tal como lo pinta el sitio. */
@@ -317,7 +377,7 @@ function parrafos(texto) {
     .filter(Boolean);
 }
 
-function pintarLista(notas, idioma, T) {
+function pintarLista(notas, idioma, T, encabezado = T.masRecientes) {
   if (!notas.length) return "";
   const prefijo = idioma === "en" ? "/en" : "";
   const filas = notas
@@ -333,11 +393,38 @@ ${fecha ? `<p><time datetime="${escapar(n.created_at)}">${escapar(fecha)}</time>
     })
     .join("\n");
 
-  return `<h2>${escapar(T.masRecientes)}</h2>\n<ul>\n${filas}\n</ul>`;
+  return `<h2>${escapar(encabezado)}</h2>\n<ul>\n${filas}\n</ul>`;
+}
+
+/** Un enlace a cada pagina: asi la ultima queda a dos clics, no a 38. */
+function pintarPaginas(base, pagina, total, T) {
+  if (total <= 1) return "";
+  const enlaces = Array.from({ length: total }, (_, i) => {
+    const n = i + 1;
+    if (n === pagina) return `<span aria-current="page">${n}</span>`;
+    return `<a href="${base}${n === 1 ? "" : `?pagina=${n}`}">${n}</a>`;
+  }).join("\n");
+  return `<nav aria-label="${escapar(T.pagina)}">\n${enlaces}\n</nav>`;
+}
+
+function noEncontrada(res, idioma, prefijo, T) {
+  const titulo = idioma === "en" ? "Page not found" : "Página no encontrada";
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  return res.status(404).send(
+    `<!DOCTYPE html><html lang="${idioma}"><head><meta charset="utf-8">` +
+      `<title>${titulo} | Moto Lab 249</title>` +
+      `<meta name="robots" content="noindex">` +
+      `</head><body><h1>${titulo}</h1>` +
+      `<p><a href="${prefijo}/noticias">${escapar(T.archivo)}</a></p>` +
+      `</body></html>`
+  );
 }
 
 export default async function handler(req, res) {
   const rutaCruda = String(req.query.ruta || "/").split("?")[0];
+  const pagina = /^[1-9]\d{0,3}$/.test(String(req.query.pagina))
+    ? Number(req.query.pagina)
+    : 1;
 
   // El idioma sale de la ruta, igual que en el sitio: todo lo que cuelga
   // de /en esta en ingles.
@@ -360,6 +447,8 @@ export default async function handler(req, res) {
   // cada idioma tiene la suya.
   let rutaEs = null;
   let rutaIn = null;
+  // Lo que va despues de la ruta en el canonical: ?pagina=N en los listados.
+  let consulta = "";
 
   // Acepta /noticias/968 y /noticias/968-titulo-de-la-nota.
   const enNota = limpia.match(/^\/noticias\/([^/]+)$/);
@@ -438,6 +527,7 @@ export default async function handler(req, res) {
       }
 
       const fecha = publicada.slice(0, 10);
+      const vecinas = await vecinasDe(idNota, nota, idioma);
       cuerpo = `
 <article>
 <h1>${escapar(limpiar(titulo))}</h1>
@@ -447,7 +537,8 @@ ${imagen !== IMAGEN ? `<img src="${escapar(imagen)}" alt="${escapar(limpiar(titu
 ${resumen ? `<p>${escapar(limpiar(resumen))}</p>` : ""}
 ${parrafos(texto).map((p) => `<p>${escapar(p)}</p>`).join("\n")}
 ${nota.source_url ? `<p><a href="${escapar(nota.source_url)}" rel="nofollow noopener">${escapar(T.fuente)}</a></p>` : ""}
-</article>`;
+</article>
+${pintarLista(vecinas, idioma, T, T.masNotas)}`;
     }
   }
 
@@ -455,8 +546,38 @@ ${nota.source_url ? `<p><a href="${escapar(nota.source_url)}" rel="nofollow noop
   if (!meta) {
     const fija = FIJAS[limpia] || null;
     const porCategoria = limpia.match(/^\/categoria\/([a-z-]+)$/);
+    const catDeRuta = porCategoria && POR_SLUG[porCategoria[1]];
 
-    if (fija) {
+    // El archivo y las categorias son las unicas rutas paginadas, igual que
+    // en NewsArchivePage.
+    if (limpia === "/noticias" || catDeRuta) {
+      const { notas, total } = await paginaDeLista(catDeRuta || "todas", idioma, pagina);
+      if (pagina > 1 && !notas.length) return noEncontrada(res, idioma, prefijo, T);
+
+      const base = catDeRuta
+        ? {
+            title: `${catDeRuta} | Moto Lab 249`,
+            description:
+              idioma === "en"
+                ? `Latest ${catDeRuta} stories on Moto Lab 249.`
+                : `Lo último de ${catDeRuta} en Moto Lab 249.`,
+          }
+        : fija[idioma];
+      const nombre = base.title.split(" | ")[0];
+      meta =
+        pagina > 1
+          ? { ...base, title: `${nombre} · ${T.pagina} ${pagina} | Moto Lab 249` }
+          : base;
+      if (pagina > 1) {
+        consulta = `?pagina=${pagina}`;
+        // En ingles hay menos notas: la pagina 30 de aqui no existe alla.
+        bilingue = false;
+      }
+      cuerpo = `<h1>${escapar(nombre)}</h1>
+${catDeRuta ? "" : `<p>${escapar(base.description)}</p>`}
+${pintarLista(notas, idioma, T)}
+${pintarPaginas(`${prefijo}${limpia}`, pagina, Math.ceil(total / EN_LISTADO), T)}`;
+    } else if (fija) {
       meta = fija[idioma];
       if (fija.listar) {
         const notas = await listaDe(fija.listar, idioma);
@@ -467,17 +588,6 @@ ${pintarLista(notas, idioma, T)}`;
         cuerpo = `<h1>${escapar(meta.title.split(" | ")[0])}</h1>
 <p>${escapar(meta.description)}</p>`;
       }
-    } else if (porCategoria && POR_SLUG[porCategoria[1]]) {
-      const cat = POR_SLUG[porCategoria[1]];
-      const notas = await listaDe(cat, idioma);
-      meta = {
-        title: `${cat} | Moto Lab 249`,
-        description:
-          idioma === "en"
-            ? `Latest ${cat} stories on Moto Lab 249.`
-            : `Lo último de ${cat} en Moto Lab 249.`,
-      };
-      cuerpo = `<h1>${escapar(cat)}</h1>\n${pintarLista(notas, idioma, T)}`;
     }
   }
 
@@ -486,7 +596,7 @@ ${pintarLista(notas, idioma, T)}`;
     cuerpo = `<h1>${escapar(meta.title.split(" | ")[0])}</h1><p>${escapar(meta.description)}</p>`;
   }
 
-  const url = `${SITIO}${prefijo}${limpia === "/" ? "" : limpia}` || SITIO;
+  const url = `${SITIO}${prefijo}${limpia === "/" ? "" : limpia}${consulta}`;
   const t = escapar(meta.title);
   const d = escapar(meta.description);
   const sinPrefijo = limpia === "/" ? "" : limpia;

@@ -4,7 +4,9 @@ import type { NewsArticle } from "./useNews";
 import { CAMPOS, soloDeEsteIdioma } from "@/lib/consulta";
 import { IDIOMA } from "@/lib/i18n";
 
-const PAGE_SIZE = 9;
+// El mismo EN_LISTADO de api/tarjeta.js: ?pagina=2 tiene que traer lo mismo
+// para Google que para una persona.
+const PAGE_SIZE = 24;
 
 export const useNewsArchive = (page: number = 1, category?: string) => {
   return useQuery({

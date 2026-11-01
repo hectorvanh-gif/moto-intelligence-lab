@@ -1,8 +1,51 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { NewsArticle } from "./useNews";
-import { CAMPOS } from "@/lib/consulta";
+import { CAMPOS, soloDeEsteIdioma } from "@/lib/consulta";
 import { IDIOMA } from "@/lib/i18n";
+
+const VECINAS = 3;
+
+/**
+ * Las notas publicadas justo antes y justo despues, en la misma categoria.
+ * La misma seleccion que vecinasDe en api/tarjeta.js: son las vecinas y no
+ * las mas recientes para que las notas viejas tambien reciban enlaces.
+ */
+export const useNeighborArticles = (article: NewsArticle | null | undefined) => {
+  const id = article?.id;
+  const category = article?.category;
+  const createdAt = article?.created_at;
+
+  return useQuery({
+    queryKey: ["article-neighbors", id, IDIOMA],
+    enabled: !!id && !!category && !!createdAt && category !== "DESCARTADO",
+    queryFn: async (): Promise<NewsArticle[]> => {
+      const base = () =>
+        soloDeEsteIdioma(
+          supabase
+            .from("moto_news")
+            .select(CAMPOS)
+            .eq("category", category as string)
+            .neq("id", id as number)
+        );
+
+      const [nuevas, viejas] = await Promise.all([
+        base()
+          .gt("created_at", createdAt as string)
+          .order("created_at", { ascending: true })
+          .limit(VECINAS),
+        base()
+          .lt("created_at", createdAt as string)
+          .order("created_at", { ascending: false })
+          .limit(VECINAS),
+      ]);
+
+      if (nuevas.error) throw nuevas.error;
+      if (viejas.error) throw viejas.error;
+      return [...(nuevas.data || []).reverse(), ...(viejas.data || [])];
+    },
+  });
+};
 
 /**
  * Una nota por id.
