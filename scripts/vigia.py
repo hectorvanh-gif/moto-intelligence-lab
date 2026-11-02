@@ -151,6 +151,12 @@ UA_GOOGLE = (
 # recorto el prerender a una ficha. Una nota normal pasa de 4 KB.
 MINIMO_NOTA = 2000
 
+# Mientras la publicacion diaria este en pausa, no tiene sentido avisar de
+# que no hay notas nuevas: es lo que se decidio. La comparacion con Google
+# sigue corriendo, porque el sitio sigue en linea y esa si puede romperse.
+# Se reanuda a la vez que el cron de .github/workflows/news-agent.yml.
+PUBLICACION_PAUSADA = True
+
 # El credito del pie. Tiene que aparecer en los dos HTML.
 MAAT_HOUSE = "https://maathouse.com"
 
@@ -334,6 +340,10 @@ def revisar(seco: bool) -> int:
             "ahí también."
         )
         enviar("Moto Lab: Google ve algo distinto que la gente", cuerpo, seco)
+
+    if PUBLICACION_PAUSADA:
+        print("Publicacion en pausa: no se revisa si hay notas nuevas.")
+        return 1 if paridad else 0
 
     if recientes > 0:
         return 1 if paridad else 0
