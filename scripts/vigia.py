@@ -155,7 +155,7 @@ MINIMO_NOTA = 2000
 # que no hay notas nuevas: es lo que se decidio. La comparacion con Google
 # sigue corriendo, porque el sitio sigue en linea y esa si puede romperse.
 # Se reanuda a la vez que el cron de .github/workflows/news-agent.yml.
-PUBLICACION_PAUSADA = True
+PUBLICACION_PAUSADA = False
 
 # El credito del pie. Tiene que aparecer en los dos HTML.
 MAAT_HOUSE = "https://maathouse.com"

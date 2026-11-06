@@ -1,24 +1,20 @@
 name: Moto News Agent
 
 on:
-  # PUBLICACION DIARIA EN PAUSA desde el 2 de noviembre de 2026.
+  # Reanudada el 6 de noviembre de 2026.
   #
-  # No se apago porque fallara: la maquina funciona. Se apago porque el
-  # formato dejo de tener sentido. De 1,011 notas publicadas, las 1,011
-  # tienen menos de 300 palabras (mediana 163) y son parafrasis de medios
-  # que cubren lo mismo horas antes. El 63% es MotoGP, donde no se le gana
-  # a Marca. Cero votos en seis meses.
+  # Estuvo en pausa desde el 2 de noviembre porque como negocio no se
+  # sostenia: notas de 163 palabras de mediana, parafrasis de medios que
+  # cubren lo mismo antes, cero votos en seis meses.
   #
-  # Mientras se replantea para que sirve el sitio, cada corrida añadia seis
-  # paginas delgadas mas.
-  #
-  # Para reanudar: quitar el # de las dos lineas del schedule, y poner
-  # PUBLICACION_PAUSADA = False en scripts/vigia.py, que mientras tanto no
-  # avisa de falta de notas porque dejar de publicar es intencional.
-  #
-  # schedule:
-  #   # 9:00 AM hora México (CST = UTC-6) todos los días
-  #   - cron: '0 15 * * *'
+  # Se reanuda por otra razon, y es buena: el sitio es el portafolio de
+  # MAAT House. Que las noticias se actualicen solas todos los dias es la
+  # demostracion de lo que la agencia sabe construir, y eso un cliente lo
+  # entiende de un vistazo. No tiene que traer trafico: tiene que verse
+  # vivo, y para eso si sirve.
+  schedule:
+    # 9:00 AM hora México (CST = UTC-6) todos los días
+    - cron: '0 15 * * *'
   workflow_dispatch: # Permite dispararlo manualmente desde GitHub
     inputs:
       # Para recuperar dias caidos. El agente mira una ventana fija, asi que
