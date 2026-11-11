@@ -642,6 +642,7 @@ def main(dias: int = 1, maximo: int = MAX_ARTICLES_PER_RUN):
 
     print("🤖 Claude: summarizing, filtering and generating Instagram images...")
     saved = 0
+    fallos: list[str] = []
     for i, article in enumerate(new_articles[:maximo]):
         print(f"  [{i+1}/{min(len(new_articles), maximo)}] {article['title'][:65]}...")
         try:
@@ -672,9 +673,30 @@ def main(dias: int = 1, maximo: int = MAX_ARTICLES_PER_RUN):
             saved += 1
 
         except Exception as e:
+            fallos.append(str(e))
             print(f"    ❌ Error: {e}")
 
     print(f"\n✅ Done! {saved} artículos guardados en Supabase.")
+
+    # Si fallaron TODAS, el proceso termina en rojo.
+    #
+    # Antes no: el try/except de arriba atrapa el error de cada nota y sigue
+    # con la siguiente, asi que el agente acababa en verde habiendo
+    # publicado cero. El 10 de noviembre de 2026 se acabo el saldo de la API
+    # de Anthropic, las 7 notas del dia murieron en un 400 de "credit
+    # balance is too low", y GitHub lo reporto como exito. Nadie se entero
+    # hasta que el vigia aviso al dia siguiente.
+    #
+    # Con esto GitHub marca el run en rojo en el momento y ademas dispara el
+    # paso de "Avisar si algo se cayo", que manda correo con la liga al run.
+    #
+    # Solo cuando no se guardo NADA: que una nota suelta falle es normal y
+    # no debe tumbar la corrida.
+    if saved == 0 and fallos:
+        raise SystemExit(
+            f"Se intentaron {len(fallos)} notas y no se guardo ninguna.\n"
+            f"Primer error: {fallos[0][:200]}"
+        )
 
 
 def get_titulos_recientes(dias: int = DIAS_DE_MEMORIA) -> list[str]:
