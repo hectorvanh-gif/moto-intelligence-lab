@@ -2,69 +2,93 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://motolab249.com</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://motolab249.com/noticias</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://motolab249.com/nosotros</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://motolab249.com/contacto</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
     <loc>https://motolab249.com/privacidad</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
   <url>
     <loc>https://motolab249.com/terminos</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
   <url>
     <loc>https://motolab249.com/calendario-motogp</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://motolab249.com/motogp</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://motolab249.com/motos-electricas</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://motolab249.com/motos-doble-proposito</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://motolab249.com/enduro</loc>
-    <lastmod>2026-11-11</lastmod>
+    <lastmod>2026-11-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://motolab249.com/noticias/1194-silence-s02-paddock-el-escuter-electrico-co-disenado-con</loc>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://motolab249.com/noticias/1193-lecuona-sorprende-iguala-a-razgatlioglu-en-4-carreras-con</loc>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://motolab249.com/noticias/1192-jorge-lorenzo-denuncia-manipulacion-mediatica-sobre-sus</loc>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://motolab249.com/noticias/1191-lorenzo-marquez-supero-a-rossi-en-la-lucha-por-el-mejor</loc>
+    <lastmod>2026-11-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://motolab249.com/noticias/1190-vinales-en-la-cuerda-floja-su-lesion-de-hombro-lo-acerca-a</loc>
