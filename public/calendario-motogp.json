@@ -1,6 +1,6 @@
 {
   "temporada": 2026,
-  "actualizado": "2026-11-21T12:39:42.666084-06:00",
+  "actualizado": "2026-11-22T12:59:17.718178-06:00",
   "zona": "America/Mexico_City",
   "fuente": "https://www.motogp.com/es/calendar",
   "total": 22,
@@ -2117,11 +2117,11 @@
         {
           "clave": "Q2",
           "nombre": "Clasificación 2",
-          "iso": "2026-11-21T05:15:00-06:00",
+          "iso": "2026-11-21T05:20:00-06:00",
           "dia_semana": "sábado",
           "dia": 21,
           "mes": "noviembre",
-          "hora": "05:15"
+          "hora": "05:20"
         },
         {
           "clave": "SPR",
