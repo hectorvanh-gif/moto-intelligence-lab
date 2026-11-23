@@ -1,10 +1,10 @@
 {
   "temporada": 2026,
-  "actualizado": "2026-11-22T12:59:17.718178-06:00",
+  "actualizado": "2026-11-23T17:19:56.972281-06:00",
   "zona": "America/Mexico_City",
   "fuente": "https://www.motogp.com/es/calendar",
   "total": 22,
-  "proxima_ronda": 21,
+  "proxima_ronda": 22,
   "carreras": [
     {
       "ronda": 1,
@@ -2058,7 +2058,7 @@
       "inicio": "2026-11-20",
       "fin": "2026-11-22",
       "zona_circuito": "EUROPE/LISBON",
-      "corrida": false,
+      "corrida": true,
       "carrera": {
         "clave": "RAC",
         "nombre": "Carrera",
